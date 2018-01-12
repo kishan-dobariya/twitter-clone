@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 0px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
@@ -8,11 +8,12 @@ a {
 }
 header{
   background-color: #59adea;
+  border-radius: 10px;
 }
 
 /*--------------------for login page-----------------------------------*/
 #login {
-    padding-top: 50px
+    /*padding-top: 50px*/
 }
 #login .form-wrap {
     width: 30%;

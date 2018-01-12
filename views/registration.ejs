@@ -15,24 +15,58 @@
       <form action="/registration" method="post">
         <div class="form-group">
           <label for="name">Name:</label>
-          <input type="text" class="form-control" id="name" placeholder="Enter Name" name="name">
+          <input type="text" class="form-control" id="name" onchange="validateName()" placeholder="Enter Name" name="name" pattern="[A-Za-z\s]+" title="Only Alphabet" required>
         </div>
+        <p id="nameerror"></p>
         <div class="form-group">
           <label for="username">Username:</label>
-          <input type="text" class="form-control" id="username" placeholder="Enter UserName" name="username">
+          <input type="text" class="form-control" id="username" onchange="validateUsername()" placeholder="Enter UserName" name="username" pattern="[A-Za-z0-9]+" title="Only Digit and Alphabet" required>
         </div>
+        <p id="usernameerror"></p>
         <div class="form-group">
           <label for="email">Email:</label>
-          <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email">
+          <input type="email" class="form-control" id="email" onchange="validateEmail()" placeholder="Enter Email" name="email" required>
         </div>
+        <p id="emailerror"></p>
         <div class="form-group">
           <label for="password">Password:</label>
-          <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+          <input type="password" class="form-control" id="password" onchange="validatePassword()" placeholder="Enter password" name="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" required>
         </div>
+        <p id="passworderror"></p>
         <button type="submit" class="btn btn-primary">Submit</button>
         <button type="button" class="btn btn-link"><a href="http://localhost:8080/login">Already Registered</a></button>
       </form>
     </div>
+    <script type="text/javascript">
+      function validateName(){
+        var first = document.getElementById('name').value;
+        var letter = /^[a-zA-Z]+$/;
+        if(first.match(letter)){
+          document.getElementById('nameerror').innerHTML = "Only letters allowed";
+        }
+      }
+      function validateUsername(){
+        var first = document.getElementById('username').value;
+        var usernameexp = /^[0-9a-zA-Z]+$/;
+        if(first.match(usernameexp)){
+          document.getElementById('usernameerror').innerHTML = "first";
+        }
+      }
+      function validateEmail(){
+        var first = document.getElementById('email').value;
+        var emailexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if(first.match(emailexp)){
+          document.getElementById('emailerror').innerHTML = "Inavalid email";
+        }
+      }
+      function validatePassword(){
+        var first = document.getElementById('password').value;
+        var passwordexp =
+        if(first.match(letterNumber)){
+          document.getElementById('nameerror').innerHTML = " invalid password";
+        }
+      }
+    </script>>
   </body>
 </html>
 
