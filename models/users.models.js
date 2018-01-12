@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//const app = require('../app');
 var UserSchema = mongoose.Schema({
   name: {
     type: String,
@@ -46,9 +46,21 @@ var User = module.exports = mongoose.model('users', UserSchema);
 module.exports.createUser = function(newUser, callback) {
   newUser.save(callback);
 }
-
-module.exports.getUser = function(query, callback) {
-  User.findOne(query, callback);
+// module.exports.getUser = function(query, callback) {
+//   User.findOne(query, function(err ,data) {
+//       if(err) {
+//        reject(err);
+//       }
+//       console.log(data);
+//   });
+// }
+module.exports.getUser = function(query) {
+  return new Promise((resolve, reject) => {
+    User.findOne(query, function(err ,data) {
+      if(err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+  })
 }
-
-

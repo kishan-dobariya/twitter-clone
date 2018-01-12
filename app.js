@@ -1,4 +1,4 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
 const express = require('express');
 const path = require('path');
@@ -8,13 +8,9 @@ const cookieParser = require('cookie-parser');
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
 const routes = require('./routes');
-
 const mongoDb = require('./helpers/mongoDb');
-
 const app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -26,11 +22,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
+
 
 // ========================== Database Connection ==============================
 const mongoURL = mongoDb.makeConnectionString();
+console.log(mongoURL);
 mongoose.connect(mongoURL);
 const db = mongoose.connection;
 
@@ -45,8 +42,7 @@ db.on('error', function(error) {
 
 db.on('connected', function() {
   console.log(chalk.green(mongoURL+' => connected'));
-});
-
+})
 db.once('open', function() {
   console.log(chalk.green('MongoDB connection opened!'));
 });
@@ -80,5 +76,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+app.listen(8080);
 module.exports = app;
