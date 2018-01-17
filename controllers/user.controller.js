@@ -15,7 +15,7 @@ exports.loginPost = async function (req, res) {
     console.log("if");
     let token = jwt.sign({ email: user.email, name: user.name}, 'kkd');
     res.cookie(user.email, token);
-    //res.json({token:token});
+    res.json({token:token})
     console.log("token-------->",token);
     res.redirect('/home');
   }
