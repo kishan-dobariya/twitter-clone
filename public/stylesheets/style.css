@@ -9,7 +9,26 @@ a {
 header{
   background-color: #59adea;
   border-radius: 10px;
+  height: 9vh;
+  margin: 2vh 0 0 0;
+  padding: 0 ;
 }
+
+header a{
+  float: right;
+  color: white;
+  font-weight: bold;
+  margin: 0;
+  padding: 3vh;
+}
+header a:hover{
+  /*background-color: red;*/
+  text-decoration: none;
+
+}
+
+
+
 
 /*--------------------for login page-----------------------------------*/
 #login {

@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const requestController = require('../controllers/test.controller.js');
+const userController = require('../controllers/user.controller.js');
 
-router.get('/login', requestController.loginGet);
-router.post('/login', requestController.loginPost);
-router.get('/registration', requestController.registrationGet);
-router.post('/registration', requestController.registrationPost);
-router.get('/resetpassword', requestController.resetpasswordGet);
-router.post('/resetpassword', requestController.resetpasswordPost);
-
+router.get('/login', userController.loginGet);
+router.post('/login', userController.loginPost);
+router.get('/registration', userController.registrationGet);
+router.post('/registration', userController.registrationPost);
+router.get('/resetpassword', userController.resetpasswordGet);
+router.post('/resetpassword', userController.resetpasswordPost);
+router.post('/setpassword', userController.setpasswordPost);
 module.exports = router;
 
+const homeController = require('../controllers/home.controller.js');
+router.get('/home', homeController.homePageGet);
