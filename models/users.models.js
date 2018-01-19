@@ -40,6 +40,21 @@ var UserSchema = mongoose.Schema({
     type:String,
     ref:'User'
   },
+  bio: {
+    type: String,
+  },
+  location: {
+    type: String,
+  },
+  website: {
+    type: String,
+  },
+  birthdate: {
+    type:Date,
+  },
+  imageURL: {
+      type: String,
+  }
 });
 var User = module.exports = mongoose.model('users', UserSchema);
 module.exports.createUser = function(newUser, callback) {
@@ -76,6 +91,18 @@ module.exports.updatePassword = function(query, newPassword){
       resolve(data);
     });
   });
-  //User.update(query, { $set : {password : newPassword}}, callback);
-  console.log("result------>"+User.update(query, { $set : {password : newPassword}}, callback))
+  //console.log("result------>"+User.update(query, { $set : {password : newPassword}}))
+}
+
+
+
+module.exports.updateProfile = function(query, name, bio, mail,location, dob){
+  return new Promise((resolve, reject) => {
+    User.update(query, { $set : {name : name, bio : bio, email : mail, location : location, birthdate : dob}}, function(err ,data) {
+      if(err) {
+        reject(err);
+      }
+        resolve(data);
+    });
+  });
 }

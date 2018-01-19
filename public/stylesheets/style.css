@@ -24,10 +24,11 @@ header a{
 header a:hover{
   /*background-color: red;*/
   text-decoration: none;
-
 }
 
-
+nav{
+  background-color: red;
+}
 
 
 /*--------------------for login page-----------------------------------*/
@@ -119,5 +120,4 @@ header a:hover{
 #footer a {
     color: inherit;
 }
-
 /*-----------------------finish login style----------------------------------*/

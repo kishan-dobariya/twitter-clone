@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Home</title>
+    <style type="text/css">
+      nav select{
+        -webkit-appearance: none;
+        appearance: none;
+      }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome <%= title %></p>
+    <% include home-header %>
+    <h1>Welcome</h1>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#search").click(function(){
+          $(this).css('border', '2px solid #4AB3F4');;
+        });
+
+        $("p").hover(function(){
+          $(this).css("background-color", "yellow");
+          }, function(){
+          $(this).css("background-color", "pink");
+        });
+
+      });
+    </script>
   </body>
 </html>

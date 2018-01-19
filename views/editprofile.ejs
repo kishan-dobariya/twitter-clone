@@ -6,53 +6,55 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 </head>
 <body>
+  <% include home-header %>
+  <img src="E:/NodeWorkspace/Twitter/images/profilepics/test25.jpg" alt="aa"/>
   <div class="container">
     <h1>Edit Profile</h1>
     <hr>
   <div class="row">
-      <!-- left column -->
-      <div class="col-md-3">
-        <div class="text-center">
-          <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
-          <h6>Upload a different photo...</h6>
-
-          <input type="file" class="form-control">
-        </div>
-      </div>
-
-      <!-- edit form column -->
       <div class="col-md-9 personal-info">
         <h3>Personal info</h3>
-
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal" role="form" action="/editprofile" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Profile Picture</label>
+            <div class="col-lg-8">
+              <input type="file" class="form-control" name="profilepicture">
+            </div>
+          </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Full name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" placeholder="Name">
+              <input class="form-control" type="text" placeholder="Name" name="name" value="<%= name %>">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Bio</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" placeholder="Bio">
+              <input class="form-control" type="text" placeholder="Bio" name="bio" value="<%= bio %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Email:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="email" placeholder="Email" name="email" value="<%= email %>">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Location</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" placeholder="Location">
+              <input class="form-control" type="" placeholder="Location" name="location" value="<%= location %>">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Birthdate</label>
             <div class="col-lg-8">
-              <input class="form-control" type="date" placeholder="Birthdate">
+              <input class="form-control" type="date" placeholder="Birthdate" name="dob" value="<%= birthdate %>">
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
-              <input type="button" class="btn btn-primary" value="Save Changes">
+              <input type="submit" class="btn btn-primary" value="Save Changes">
               <span></span>
               <input type="reset" class="btn btn-default" value="Cancel">
             </div>
@@ -63,11 +65,11 @@
 </div>
 <hr>
 <script type="text/javascript">
-  $(document).ready(function(){
-    $(function () {
-      $('#datetimepicker1').datetimepicker({format: 'yyyy-mm-dd hh:ii'});
-    });
-  });
+  // $(document).ready(function(){
+  //   $(function () {
+  //     $('#datetimepicker1').datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+  //   });
+  // });
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
