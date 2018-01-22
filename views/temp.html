@@ -1,126 +1,180 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Sign Up</title>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <title></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </head>
-  <body>
-    <% include header %>
-    <div class="container">
-      <h2>Sign up</h2>
-      <form action="/registration" method="post">
-        <div class="form-group">
-          <!-- <label for="name">Name:</label> -->
-          <input type="text" class="form-control" id="name" onchange="return validateName()" placeholder="Enter Name" name="name" pattern="[A-Za-z\s]+" title="Only Alphabet" required>
-        </div>
-        <p id="nameerror" style="color: red"> </p>
-        <div class="form-group">
-          <!-- <label for="username">Username:</label> -->
-          <input type="text" class="form-control" id="username" onchange="return validateUsername()" placeholder="Enter UserName" name="username" pattern="[A-Za-z0-9]+" title="Only Digit and Alphabet" required>
-        </div>
-        <p id="usernameerror" style="color: red"> </p>
-        <div class="form-group">
-          <!-- <label for="email">Email:</label> -->
-          <input type="email" class="form-control" id="email" onchange="return validateEmail()" placeholder="Enter Email" name="email" required>
-        </div>
-        <p id="emailerror" style="color: red"></p>
-        <div class="form-group">
-          <!-- <label for="password">Password:</label> -->
-          <input type="password" class="form-control" id="password" onchange="return validatePassword()" placeholder="Enter password" name="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" required>
-        </div>
-        <p id="passworderror" style="color: red"></p>
-        <button type="submit" class="btn btn-primary" onsubmit="return submit()">Submit</button>
-      </form>
-    </div>
-    <script type="text/javascript">
-      function submit(){
-        if(validateName() && validateUsername() && validatePassword() && validateEmail()){
-          return true;
-        }
-        else{
-          return false;
-        }
-      }
-      function validateName(){
-        var first = document.getElementById('name').value;
-        var letter = /^[a-zA-Z]+$/;
-        if(!first.match(letter)){
-          document.getElementById('nameerror').innerHTML = "Only letters allowed";
-          document.getElementById('name').focus();
-          return false;
-        }
-        else{
-          document.getElementById('nameerror').innerHTML = "";
-          return true;
-        }
-      }
-      function validateUsername(){
-        //alert("Hello");
-        var first = document.getElementById('username').value;
-        var letter = /^[a-zA-Z0-9]+$/;
-        if(!first.match(letter)){
-          document.getElementById('usernameerror').innerHTML = "Only letters & digits are allowed";
-          document.getElementById('username').focus();
-          return false;
-        }
-        else{
-          document.getElementById('usernameerror').innerHTML = "";
-          return true;
-        }
-      }
-      function validateEmail(){
-        var first = document.getElementById('email').value;
-        var emailexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if(!first.match(emailexp)){
-          document.getElementById('emailerror').innerHTML = "Invalid email";
-          document.getElementById('email').focus();
-          return false;
-        }
-        else{
-          document.getElementById('emailerror').innerHTML = "";
-          return true;
-        }
-      }
-      function validatePassword(){
-        var first = document.getElementById('password').value;
-        var passwordexp = ("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
-        if(!first.match(letterNumber)){
-          document.getElementById('passworderror').innerHTML = "Password must contain a lowercase, uppercase, number and minimum  8 characters";
-          document.getElementById('password').focus();
-          return false;
-        }
-        else{
-          document.getElementById('passworderror').innerHTML = "";
-          return true;
-        }
-      }
-    </script>
-  </body>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+<body>
+  <% include home-header %>
+  <div class="container">
+    <h1>Edit Profile</h1>
+    <hr>
+  <div class="row">
+      <div class="col-md-9 personal-info">
+        <form class="form-horizontal" role="form" action="/editprofile" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <div class="col-md-3">
+              <div class="text-center">
+                <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                <h6>Upload a different photo...</h6>
+                <input type="file" class="form-control">
+              </div>
+            </div>
+            <!-- <label class="col-lg-3 control-label">Profile Picture</label>
+            <div class="col-lg-8">
+              <input type="file" class="form-control" name="profilepicture">
+            </div> -->
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Name</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" placeholder="Name" name="name" value="<%= name %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Bio</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" placeholder="Bio" name="bio" value="<%= bio %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Email:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="email" placeholder="Email" name="email" value="<%= email %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Location</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="" placeholder="Location" name="location" value="<%= location %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Birthdate</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="date" placeholder="Birthdate" name="dob" value="<%= birthdate %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label"></label>
+            <div class="col-md-8">
+              <input type="submit" class="btn btn-primary" value="Save Changes">
+              <span></span>
+              <input type="reset" class="btn btn-default" value="Cancel">
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+<hr>
+<script type="text/javascript">
+  // $(document).ready(function(){
+  //   $(function () {
+  //     $('#datetimepicker1').datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+  //   });
+  // });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+<div class="container">
+    <h1>Edit Profile</h1>
+    <hr>
+  <div class="row">
+      <!-- left column -->
+
+
+      <!-- edit form column -->
+      <div class="col-md-9 personal-info">
+        <div class="alert alert-info alert-dismissable">
+          <a class="panel-close close" data-dismiss="alert">×</a>
+          <i class="fa fa-coffee"></i>
+          This is an <strong>.alert</strong>. Use this to show important messages to the user.
+        </div>
+        <h3>Personal info</h3>
+
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label class="col-lg-3 control-label">First name:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="Jane">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Last name:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="Bishop">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Company:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Email:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="janesemail@gmail.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Time Zone:</label>
+            <div class="col-lg-8">
+              <div class="ui-select">
+                <select id="user_time_zone" class="form-control">
+                  <option value="Hawaii">(GMT-10:00) Hawaii</option>
+                  <option value="Alaska">(GMT-09:00) Alaska</option>
+                  <option value="Pacific Time (US &amp; Canada)">(GMT-08:00) Pacific Time (US &amp; Canada)</option>
+                  <option value="Arizona">(GMT-07:00) Arizona</option>
+                  <option value="Mountain Time (US &amp; Canada)">(GMT-07:00) Mountain Time (US &amp; Canada)</option>
+                  <option value="Central Time (US &amp; Canada)" selected="selected">(GMT-06:00) Central Time (US &amp; Canada)</option>
+                  <option value="Eastern Time (US &amp; Canada)">(GMT-05:00) Eastern Time (US &amp; Canada)</option>
+                  <option value="Indiana (East)">(GMT-05:00) Indiana (East)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Username:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="text" value="janeuser">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Password:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="password" value="11111122333">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Confirm password:</label>
+            <div class="col-md-8">
+              <input class="form-control" type="password" value="11111122333">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label"></label>
+            <div class="col-md-8">
+              <input type="button" class="btn btn-primary" value="Save Changes">
+              <span></span>
+              <input type="reset" class="btn btn-default" value="Cancel">
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+<hr>

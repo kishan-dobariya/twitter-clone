@@ -2,18 +2,61 @@
 <html>
   <head>
     <title>Home</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+
     <style type="text/css">
       nav select{
         -webkit-appearance: none;
         appearance: none;
       }
+      table.table{
+        text-align: center;
+      }
+      .borderless td, .borderless th, .borderless tr{
+        border: none;
+      }
     </style>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
   </head>
   <body>
     <% include home-header %>
-    <h1>Welcome</h1>
+    <!-- <%= imgpath %> -->
+    <!-- <h1>Welcome</h1> -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-6 col-md-3" style="background-color:lavender;">
+          <div class="col-lg-12" align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"/> </div>
+          <div class="row">
+            <div class="col-lg-8">
+              <h3 style="text-align: center;"><%=name%></h3>
+              <h4 style="text-align: center;"><%= username%></h4>
+            </div>
+            <div class="col-lg-4">
+              <h3 style="text-align: center;"><a href=""></a></h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <table class="table borderless table" align="center">
+              <tr>
+                <th>Tweets</th>
+                <th>Followers</th>
+                <th>Following</th>
+              </tr>
+              <tr>
+                <td>21</td>
+                <td>23</td>
+                <td>25</td>
+              </tr>
+            </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-md-6" style="background-color:lavenderblush;">.col-sm-4</div>
+        <div class="col-xs-6 col-md-3" style="background-color:lavender;">.col-sm-4</div>
+      </div>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript">
@@ -21,13 +64,11 @@
         $("#search").click(function(){
           $(this).css('border', '2px solid #4AB3F4');;
         });
-
         $("p").hover(function(){
           $(this).css("background-color", "yellow");
           }, function(){
           $(this).css("background-color", "pink");
         });
-
       });
     </script>
   </body>

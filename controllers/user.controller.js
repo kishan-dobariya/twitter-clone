@@ -26,25 +26,23 @@ exports.loginPost = async function (req, res) {
   let flag = false;
   let user = await User.getUser({ username : uname});
   console.log(user.password);
-  await bcrypt.compare(upassword, user.password, function(err, res){
-    flag = res;
-    console.log("res--->",res);
+  bcrypt.compare(upassword, user.password).then(function(result){
+    console.log(flag);
+    if(result){
+      console.log("if");
+      let token = jwt.sign({ email: user.email, name: user.name}, 'kkd');
+      res.cookie("userToken", token);
+      session_obj.sess = token;
+      session_obj.username = user.username;
+      // console.log("token-------->",user.username);
+      // console.log("Current session-->",req.session.username);
+      res.redirect('/home');
+    }
+    else{
+      console.log("else");
+      res.render("login");
+    }
   });
-  console.log("flag--->",flag)
-  if(flag){
-    console.log("if");
-    let token = jwt.sign({ email: user.email, name: user.name}, 'kkd');
-    res.cookie("userToken", token);
-    session_obj.sess = token;
-    session_obj.username = user.username;
-    // console.log("token-------->",user.username);
-    // console.log("Current session-->",req.session.username);
-    res.render('home');
-  }
-  else{
-    console.log("else");
-    res.render("login");
-  }
   // console.log(">>>>>", user);
 }
 

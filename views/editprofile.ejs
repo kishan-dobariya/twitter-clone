@@ -7,13 +7,11 @@
 </head>
 <body>
   <% include home-header %>
-  <img src="E:/NodeWorkspace/Twitter/images/profilepics/test25.jpg" alt="aa"/>
   <div class="container">
     <h1>Edit Profile</h1>
     <hr>
   <div class="row">
       <div class="col-md-9 personal-info">
-        <h3>Personal info</h3>
         <form class="form-horizontal" role="form" action="/editprofile" method="post" enctype="multipart/form-data">
           <div class="form-group">
             <label class="col-lg-3 control-label">Profile Picture</label>
@@ -22,7 +20,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-lg-3 control-label">Full name:</label>
+            <label class="col-lg-3 control-label">Name</label>
             <div class="col-lg-8">
               <input class="form-control" type="text" placeholder="Name" name="name" value="<%= name %>">
             </div>

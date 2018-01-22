@@ -5,7 +5,7 @@ var multer  = require('multer');
 
 const router = express.Router();
 const storage = multer.diskStorage({
-  destination: 'images/profilepics/',
+  destination: 'public/images/profilepics/',
   filename: function(req, file, callback){
     callback(null, req.session.username+path.extname(file.originalname));
   }
@@ -26,6 +26,7 @@ router.get('/resetpassword', userController.resetpasswordGet);
 router.post('/resetpassword', userController.resetpasswordPost);
 router.post('/setpassword', userController.setpasswordPost);
 router.get('/home', homeController.homePageGet);
+router.get('/showprofile', homeController.showprofileGet);
 router.get('/editprofile', homeController.editprofileGet);
 router.post('/editprofile', upload.single('profilepicture'), homeController.editprofilePost);
 

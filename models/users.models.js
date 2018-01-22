@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-//const app = require('../app');
 let bcrypt = require('bcrypt');
 var UserSchema = mongoose.Schema({
   name: {
@@ -96,13 +95,25 @@ module.exports.updatePassword = function(query, newPassword){
 
 
 
-module.exports.updateProfile = function(query, name, bio, mail,location, dob){
+module.exports.updateProfile = function(query, name, bio, mail,location, dob, path){
   return new Promise((resolve, reject) => {
+    if(path !== "not difined"){
+      console.log("model if");
+    User.update(query, { $set : {name : name, bio : bio, email : mail, location : location, birthdate : dob, imageURL : path}}, function(err ,data) {
+      if(err) {
+        reject(err);
+      }
+        resolve(data);
+    });
+  }
+  else{
+    console.log("modelelse");
     User.update(query, { $set : {name : name, bio : bio, email : mail, location : location, birthdate : dob}}, function(err ,data) {
       if(err) {
         reject(err);
       }
         resolve(data);
     });
+  }
   });
 }
