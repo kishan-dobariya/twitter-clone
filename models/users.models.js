@@ -90,7 +90,6 @@ module.exports.updatePassword = function(query, newPassword){
       resolve(data);
     });
   });
-  //console.log("result------>"+User.update(query, { $set : {password : newPassword}}))
 }
 
 
@@ -116,4 +115,17 @@ module.exports.updateProfile = function(query, name, bio, mail,location, dob, pa
     });
   }
   });
+}
+
+
+module.exports.searchUser = function(user, callback) {
+    console.log(user);
+    return new Promise((resolve, reject) => {
+    User.find(user, function(err ,data) {
+      if(err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+    })
 }

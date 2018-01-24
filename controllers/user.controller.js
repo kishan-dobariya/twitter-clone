@@ -20,16 +20,16 @@ exports.checkSession = async function(req, res, next){
 exports.loginPost = async function (req, res) {
   let uname = req.body.username;
   let upassword = req.body.password;
-  console.log(uname,upassword);
+  // console.log(uname,upassword);
   let session_obj = req.session;
-  //console.log("session------->",session_obj);
+  // console.log("session------->",session_obj);
   let flag = false;
   let user = await User.getUser({ username : uname});
-  console.log(user.password);
+  // console.log(user.password);
   bcrypt.compare(upassword, user.password).then(function(result){
-    console.log(flag);
+    // console.log(flag);
     if(result){
-      console.log("if");
+      // console.log("if");
       let token = jwt.sign({ email: user.email, name: user.name}, 'kkd');
       res.cookie("userToken", token);
       session_obj.sess = token;
@@ -39,11 +39,10 @@ exports.loginPost = async function (req, res) {
       res.redirect('/home');
     }
     else{
-      console.log("else");
+      // console.log("else");
       res.render("login");
     }
   });
-  // console.log(">>>>>", user);
 }
 
 exports.logoutGet = function (req, res) {
@@ -62,11 +61,10 @@ exports.registrationPost = async function (req, res) {
   let uemail = req.body.email;
   let userexistance = false;
   let encryptPassword, randomSalt;
-  console.log(uname,uemail,upassword,uusername);
+  // console.log(uname,uemail,upassword,uusername);
   let user = await User.getUser({ username : uusername});
   if(user){
     userexistance = true;
-    //res.append("<h3>User Exist</h3>");
   }
   user = await User.getUser({ email : uemail});
   if(user){
@@ -106,12 +104,12 @@ exports.resetpasswordPost = async function (req, res) {
 
 exports.setpasswordPost = async function (req, res) {
   let upassword = req.body.password;
-  let passWord = await User.updatePassword({email : tempEmail}, upassword).then(console.log);
+   let passWord = await User.updatePassword({email : tempEmail}, upassword).then(console.log);
      res.redirect('/login');
 }
 
 exports.homePageGet = function(req, res) {
-  console.log(">111>>>>>", req.cookies['test18@gmail.com']);
+  // console.log(">111>>>>>", req.cookies['test18@gmail.com']);
   res.render("index", {
     title : "name"
   });

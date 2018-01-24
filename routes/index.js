@@ -29,5 +29,8 @@ router.get('/home', homeController.homePageGet);
 router.get('/showprofile', homeController.showprofileGet);
 router.get('/editprofile', homeController.editprofileGet);
 router.post('/editprofile', upload.single('profilepicture'), homeController.editprofilePost);
+router.post('/follow', homeController.addFollowerGet);
+router.get('/search', homeController.searchGet);
+//router.get('/friendprofile', homeController.friendprofileGet);
 
 module.exports = router;
