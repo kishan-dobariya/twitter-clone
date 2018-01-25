@@ -20,26 +20,18 @@ exports.checkSession = async function(req, res, next){
 exports.loginPost = async function (req, res) {
   let uname = req.body.username;
   let upassword = req.body.password;
-  // console.log(uname,upassword);
   let session_obj = req.session;
-  // console.log("session------->",session_obj);
   let flag = false;
   let user = await User.getUser({ username : uname});
-  // console.log(user.password);
   bcrypt.compare(upassword, user.password).then(function(result){
-    // console.log(flag);
     if(result){
-      // console.log("if");
       let token = jwt.sign({ email: user.email, name: user.name}, 'kkd');
       res.cookie("userToken", token);
       session_obj.sess = token;
       session_obj.username = user.username;
-      // console.log("token-------->",user.username);
-      // console.log("Current session-->",req.session.username);
       res.redirect('/home');
     }
     else{
-      // console.log("else");
       res.render("login");
     }
   });
@@ -61,14 +53,12 @@ exports.registrationPost = async function (req, res) {
   let uemail = req.body.email;
   let userexistance = false;
   let encryptPassword, randomSalt;
-  // console.log(uname,uemail,upassword,uusername);
   let user = await User.getUser({ username : uusername});
   if(user){
     userexistance = true;
   }
   user = await User.getUser({ email : uemail});
   if(user){
-    // console.log("email already exist");
     userexistance = true;
   }
   if(!userexistance){
@@ -81,7 +71,6 @@ exports.registrationPost = async function (req, res) {
       res.render('login', {
         msg : "Registration Successfull."
       });
-    // console.log("----->", userInfo);
     });
   }
 }
@@ -109,7 +98,6 @@ exports.setpasswordPost = async function (req, res) {
 }
 
 exports.homePageGet = function(req, res) {
-  // console.log(">111>>>>>", req.cookies['test18@gmail.com']);
   res.render("index", {
     title : "name"
   });

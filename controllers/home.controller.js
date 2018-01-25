@@ -1,6 +1,7 @@
 let session =require('express-session');
 let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
+let Feed = require('../models/userfeed.models');
 
 exports.homePageGet = async function(req, res) {
   if((req.session.sess === req.cookies.userToken) && req.session.sess !== undefined && req.cookies.userToken !== undefined){
@@ -8,11 +9,24 @@ exports.homePageGet = async function(req, res) {
     if(req.query.un == undefined){
       let user = await User.getUser({ username : req.session.username});
       let followercount = await Follower.getFollowers({ following : req.session.username, status : true});
-      // console.log("followers---->",followercount);
       let followingcount = await Follower.getFollowers({ username : req.session.username, status : true});
-      // console.log("followers---->",followingcount);
+      let followerslist = await Follower.searchUser({ username : req.session.username, status : true});
+      console.log("--->",followerslist.length);
       let birthdate = formatDate(user.birthdate);
       let editedpath = editpath(user.imageURL);
+      // let tweets = await Feed.getTweet({ username : req.session.username});
+      // console.log("tweet",followerslist);
+      let tweetArray = [,];
+      followerslist.forEach(async function (follower, index) {
+        console.log("55",follower.following);
+        let tweet = await Feed.getTweet({ username : follower.following});
+          // body...
+          // console.log("tweet",tweet);
+          console.log("index", indexs)
+          tweetArray[index] = tweet;
+          console.log("tweetArray-->",tweetArray);
+        });
+      console.log("tweetArray----->",tweetArray);
       res.render("home", {
         username : user.username,
         name : user.name,
@@ -22,17 +36,15 @@ exports.homePageGet = async function(req, res) {
         birthdate : birthdate,
         imgpath : editedpath,
         followers : followercount,
-        folowings : followingcount
+        folowings : followingcount,
+        tweets : tweetArray,
       });
     }
     else {
       let user = await User.getUser({ username : req.query.un});
       let friendfollowercount = await Follower.getFollowers({ following : req.query.un, status : true});
-      // console.log("followers---->",followercount);
       let friendfollowingcount = await Follower.getFollowers({ username : req.query.un, status : true});
-      // console.log("followers---->",followingcount);
       let status = await Follower.getFollower({username : req.session.username, following : req.query.un});
-      // console.log("status",status);
       if(status === null){
         status = "Follow";
       }
@@ -44,7 +56,6 @@ exports.homePageGet = async function(req, res) {
           status = "Follow";
         }
       }
-      // console.log("------",status);
       let birthdate = formatDate(user.birthdate);
       let editedpath = editpath(user.imageURL);
       res.render("friendprofile", {
@@ -60,7 +71,6 @@ exports.homePageGet = async function(req, res) {
         status : status,
       });
     }
-
   }
   else{
     res.redirect("/login");
@@ -116,32 +126,18 @@ function formatDate(date) {
 }
 
 exports.editprofilePost = async function(req, res) {
-  //res.render('editprofile');
-  // console.log("dfges");
   if(req.file !== undefined){
-    // console.log("homec if");
-    // console.log("file",req.file.path);
     User.updateProfile({username : req.session.username}, req.body.name, req.body.bio, req.body.email, req.body.location, req.body.dob, req.file.path).then(console.log);
     res.redirect("/showprofile");
   }
-  // console.log("files",req.files);
   else{
-    // console.log("homec else");
     User.updateProfile({username : req.session.username}, req.body.name, req.body.bio, req.body.email, req.body.location, req.body.dob, "not difined").then(console.log);
-    // console.log("editprofilePost");
-    // console.log(req.session.username);
-    // console.log(req.body);
-    // console.log(req.body.bio);
     res.redirect("/showprofile");
   }
 }
 
 exports.addFollowerGet = async function(req, res) {
-  // console.log("aa",req.body.un);
-  // console.log("aaa",req.session.username);
-  // console.log("aaa",req.body.status);
   let alreadyFollower = await Follower.getFollower( {username : req.session.username, following : req.body.un});
-  // console.log("duplicate",alreadyFollower);
   if(alreadyFollower == null){
     let newUser = Follower({
       username : req.session.username,
@@ -153,8 +149,6 @@ exports.addFollowerGet = async function(req, res) {
         throw err;
       }
       else{
-        // console.log("Follower added",userInfo);
-        // console.log("1111");
         res.send("Unfollow");
       }
     });
@@ -162,14 +156,10 @@ exports.addFollowerGet = async function(req, res) {
   else{
     await Follower.updateStatus({ username : req.session.username, following : req.body.un,
     }, req.body.status).then(function(data){
-      // console.log(data.ok);
-      // console.log("----",req.body.status);
       if (req.body.status !== "false") {
-        // console.log("iffffffffffffffffffffffffffff");
         res.send("Unfollow")
       }
       else {
-        // console.log("elseeeeeeeeeeeee")
         res.send("Follow");
       }
     })
@@ -177,19 +167,12 @@ exports.addFollowerGet = async function(req, res) {
 }
 
 exports.searchGet = async function(req, res) {
-  // console.log("in searchGet-->",req.query.keyword);
   if(req.query.keyword != ""){
     let searchresult = await User.searchUser({ username : {$regex : ".*"+req.query.keyword+".*"}});
-    // console.log("result-->",searchresult);
     let returnValue = "";
-    // console.log("length-->",searchresult.length);
     searchresult.forEach(function (object) {
-      // body...
-      // console.log(object.username);
       returnValue = returnValue + "<li class='list-group-item'><a href='http://localhost:8080/home?un="+object.username+"'>"+object.username+"</a></li>";
-      // console.log(returnValue);
     });
-    // console.log("yy",returnValue);
     res.send(returnValue);
   }
   else{

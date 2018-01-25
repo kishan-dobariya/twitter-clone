@@ -21,26 +21,22 @@ var followerSchema = mongoose.Schema({
 });
 
 var Follower = module.exports = mongoose.model('follower', followerSchema);
-module.exports.createFollower = function(newFollwer, callback) {
-    // console.log("newFollwer-->",newFollwer);
+  module.exports.createFollower = function(newFollwer, callback) {
       newFollwer.save(callback);
 }
 
 module.exports.getFollower = function(newFollwer, callback) {
-  // console.log("foloer to find",newFollwer);
    return new Promise((resolve, reject) => {
     Follower.findOne(newFollwer, function(err ,data) {
       if(err) {
         reject(err);
       }
-      // console.log(" --------",data);
       resolve(data);
     });
   })
 }
 
 module.exports.searchUser = function(user, callback) {
-  // console.log(user);
   return new Promise((resolve, reject) => {
   Follower.find(user, function(err ,data) {
     if(err) {
@@ -52,7 +48,6 @@ module.exports.searchUser = function(user, callback) {
 }
 
 module.exports.getFollowers = function(user, callback) {
-  // console.log(user);
   return new Promise((resolve, reject) => {
   Follower.count(user, function(err ,data) {
     if(err) {
@@ -64,8 +59,6 @@ module.exports.getFollowers = function(user, callback) {
 }
 
 module.exports.updateStatus = function(query, newstatus){
-  // console.log("aaaaaaaa",newstatus)
-  // console.log("aaaaaaaa",query)
   return new Promise((resolve, reject) => {
     Follower.update(query, { $set : {status : newstatus, }}, function(err ,data) {
       if(err) {

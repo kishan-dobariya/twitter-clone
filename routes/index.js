@@ -16,6 +16,7 @@ const upload = multer({
 
 const userController = require('../controllers/user.controller.js');
 const homeController = require('../controllers/home.controller.js');
+const feedController = require('../controllers/feed.controller.js');
 
 router.get('/login', userController.checkSession, userController.loginGet);
 router.post('/login', userController.loginPost);
@@ -31,6 +32,6 @@ router.get('/editprofile', homeController.editprofileGet);
 router.post('/editprofile', upload.single('profilepicture'), homeController.editprofilePost);
 router.post('/follow', homeController.addFollowerGet);
 router.get('/search', homeController.searchGet);
-//router.get('/friendprofile', homeController.friendprofileGet);
+router.post('/insertfeed', feedController.insertPost);
 
 module.exports = router;

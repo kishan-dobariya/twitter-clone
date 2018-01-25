@@ -66,7 +66,29 @@
             </div>
           </div>
         </div>
-        <div class="col-xs-6 col-md-6" style="background-color:lavenderblush;">.col-sm-4</div>
+        <div class="col-xs-6 col-md-6">
+          <div class="row">
+            <!-- <div id="tweetbox"> -->
+              <div class="col-md-12">
+                <div class="form-group" id="tweetbox" style="background-color: #e8f5fd;padding: 5px;margin: 0">
+                  <input type="text" class="form-control" id="tweet" placeholder="What's happening?" >
+                  <!-- <p style="visibility:hidden;height:5px;" id="space">space</p> --><br>
+                  <button class="btn btn-primary" id="tweetbutton" onclick="click()">Tweet</button>
+                </div>
+              </div>
+              <div>
+                <p><%= tweets %></p>
+                <ul>
+                  <% for ( var i = 0 ; i < tweets.length ; i++ ) { %>
+                   <li>
+                      <%= tweets.Tweet %>
+                   </li>
+                  <% } %>
+                </ul>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
         <div class="col-xs-6 col-md-3" style="background-color:lavender;">.col-sm-4</div>
       </div>
     </div>
@@ -85,8 +107,6 @@
           $(this).css("background-color", "pink");
         });
       });
-    </script>
-    <script>
         $("#searchuser").keyup( function(){
           //alert(document.getElementById("searchuser").value);
           var keywords = document.getElementById("searchuser").value;
@@ -107,6 +127,52 @@
             }
           });
         });
+
+        $("#tweetbutton").click(function(){
+          Tweet = document.getElementById("tweet").value;
+          $.ajax({
+            url: '/insertfeed',
+            type: 'post',
+            data: { tweet : Tweet },
+            success: function( data, textStatus, jQxhr ){
+              // document.getElementById("follow_unfollow").innerHTML = data;
+              console.log("data---",data);
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+          });
+        });
+
+        // $( "#tweet" ).focus(function() {
+        //   // alert( "focus" );
+        //   // alert();
+        //   $("#tweet").addClass("input-lg");
+        //   if(document.getElementById("tweetbutton") == null) {
+        //     $('#tweet').after('<p style="visibility:hidden;height:5px;" id="space">space</p>');
+        //     $("#space").after($('<button class="btn btn-primary" id="tweetbutton" onclick="click()">Tweet</button>'));
+        //   }
+        // });
+        // $("#tweet").blur(function(){
+        //   // alert("blur");
+        //   // alert();
+        //   if(document.getElementById("tweet").value == "") {
+        //     $("#tweet").removeClass("input-lg");
+        //     $( "#space" ).remove();
+        //     $( "#tweetbutton" ).remove();
+        //   }
+        //   else{
+
+        //   }
+        // });
+
+
+        function click() {
+          // body...
+          alert("click");
+        }
+
+
     </script>
   </body>
 </html>

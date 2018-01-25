@@ -68,8 +68,6 @@ module.exports.createUser = function(newUser, callback) {
       newUser.save(callback);
     });
   });
-  //console.log("--->",newUser.password);
-
 }
 module.exports.getUser = function(query) {
   return new Promise((resolve, reject) => {
@@ -81,6 +79,7 @@ module.exports.getUser = function(query) {
     });
   })
 }
+
 module.exports.updatePassword = function(query, newPassword){
   return new Promise((resolve, reject) => {
     User.update(query, { $set : {password : newPassword}}, function(err ,data) {
@@ -91,8 +90,6 @@ module.exports.updatePassword = function(query, newPassword){
     });
   });
 }
-
-
 
 module.exports.updateProfile = function(query, name, bio, mail,location, dob, path){
   return new Promise((resolve, reject) => {
