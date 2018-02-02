@@ -1,123 +1,239 @@
 body {
-  padding: 0px 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	padding: 0px 50px;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
-  color: #00B7FF;
-  text-decoration: none;
+	color: #00B7FF;
+	text-decoration: none;
 }
 header{
-  background-color: #59adea;
-  border-radius: 10px;
-  height: 9vh;
-  margin: 2vh 0 0 0;
-  padding: 0 ;
+	background-color: #59adea;
+	border-radius: 10px;
+	height: 9vh;
+	margin: 2vh 0 0 0;
+	padding: 0 ;
 }
 
 header a{
-  float: right;
-  color: white;
-  font-weight: bold;
-  margin: 0;
-  padding: 3vh;
+	float: right;
+	color: white;
+	font-weight: bold;
+	margin: 0;
+	padding: 3vh;
 }
 header a:hover{
-  /*background-color: red;*/
-  text-decoration: none;
-}
-
-nav{
-  background-color: red;
+	/*background-color: red;*/
+	/*text-decoration: none;*/
+	/*color: red;*/
 }
 
 
 /*--------------------for login page-----------------------------------*/
 #login {
-    /*padding-top: 50px*/
+		/*padding-top: 50px*/
 }
 #login .form-wrap {
-    width: 30%;
-    margin: 0 auto;
+		width: 30%;
+		margin: 0 auto;
 }
 #login h1 {
-    color: #337ab7;
-    font-size: 18px;
-    text-align: center;
-    font-weight: bold;
-    padding-bottom: 20px;
+		color: #337ab7;
+		font-size: 18px;
+		text-align: center;
+		font-weight: bold;
+		padding-bottom: 20px;
 }
 #login .form-group {
-    margin-bottom: 25px;
+		margin-bottom: 25px;
 }
 #login .checkbox {
-    margin-bottom: 20px;
-    position: relative;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
+		margin-bottom: 20px;
+		position: relative;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+		user-select: none;
 }
 #login .checkbox.show:before {
-    content: '\e013';
-    color: #337ab7;
-    font-size: 17px;
-    margin: 1px 0 0 3px;
-    position: absolute;
-    pointer-events: none;
-    font-family: 'Glyphicons Halflings';
+		content: '\e013';
+		color: #337ab7;
+		font-size: 17px;
+		margin: 1px 0 0 3px;
+		position: absolute;
+		pointer-events: none;
+		font-family: 'Glyphicons Halflings';
 }
 #login .checkbox .character-checkbox {
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    vertical-align: middle;
-    display: inline-block;
+		width: 25px;
+		height: 25px;
+		cursor: pointer;
+		border-radius: 3px;
+		border: 1px solid #ccc;
+		vertical-align: middle;
+		display: inline-block;
 }
 #login .checkbox .label {
-    color: #6d6d6d;
-    font-size: 13px;
-    font-weight: normal;
+		color: #6d6d6d;
+		font-size: 13px;
+		font-weight: normal;
 }
 #login .btn.btn-custom {
-    font-size: 14px;
-  margin-bottom: 20px;
+		font-size: 14px;
+	margin-bottom: 20px;
 }
 #login .forget {
-    font-size: 13px;
-  text-align: center;
-  display: block;
+		font-size: 13px;
+	text-align: center;
+	display: block;
 }
 
 /*    --------------------------------------------------
-  :: Inputs & Buttons
-  -------------------------------------------------- */
+	:: Inputs & Buttons
+	-------------------------------------------------- */
 .form-control {
-    color: #212121;
+		color: #212121;
 }
 .btn-custom {
-    color: #fff;
-  background-color: #337ab7;
+		color: #fff;
+	background-color: #337ab7;
 }
 .btn-custom:hover,
 .btn-custom:focus {
-    color: #fff;
+		color: #fff;
 }
 
 /*    --------------------------------------------------
-    :: Footer
-  -------------------------------------------------- */
+		:: Footer
+	-------------------------------------------------- */
 #footer {
-    color: #6d6d6d;
-    font-size: 12px;
-    text-align: center;
+		color: #6d6d6d;
+		font-size: 12px;
+		text-align: center;
 }
 #footer p {
-    margin-bottom: 0;
+		margin-bottom: 0;
 }
 #footer a {
-    color: inherit;
+		color: inherit;
 }
 /*-----------------------finish login style----------------------------------*/
+
+
+
+
+
+
+
+
+
+
+/*-------------------------HOME PAGE STYLE------------------------*/
+nav select{
+	-webkit-appearance: none;
+	appearance: none;
+}
+table.table{
+	text-align: center;
+}
+.borderless td, .borderless th, .borderless tr{
+	border: none;
+}
+button.follow{
+	background-color: transparent;
+}
+a.follow{
+	text-decoration: none;
+}
+a:hover.follow{
+	color: white;
+}
+ul#showuser{
+	position: fixed;
+	top: 43px;
+	right: 233px;
+	z-index: 1;
+}
+.row-eq-height {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display:         flex;
+}
+
+
+
+
+/*------------------------SHOW PROFILE CSS-----------------------------------*/
+
+		.user-row {
+		margin-bottom: 14px;
+		}
+
+		.user-row:last-child {
+				margin-bottom: 0;
+		}
+
+		.dropdown-user {
+				margin: 13px 0;
+				padding: 5px;
+				height: 100%;
+		}
+
+		.dropdown-user:hover {
+				cursor: pointer;
+		}
+
+		.table-user-information > tbody > tr {
+				border-top: 1px solid rgb(221, 221, 221);
+		}
+
+		.table-user-information > tbody > tr:first-child {
+				border-top: 0;
+		}
+
+
+		.table-user-information > tbody > tr > td {
+				border-top: 0;
+		}
+		.toppad
+		{margin-top:20px;
+		}
+
+
+		.modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+	/* Modal Content/Box */
+	.modal-content {
+			background-color: #fefefe;
+			margin: 15% auto; /* 15% from the top and centered */
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%; /* Could be more or less, depending on screen size */
+	}
+
+	/* The Close Button */
+	.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+	}

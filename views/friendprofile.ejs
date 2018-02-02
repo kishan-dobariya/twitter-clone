@@ -3,37 +3,7 @@
   <head>
     <title>Profile</title>
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style type="text/css">
-      .user-row {
-      margin-bottom: 14px;
-      }
-      .user-row:last-child {
-          margin-bottom: 0;
-      }
-      .dropdown-user {
-          margin: 13px 0;
-          padding: 5px;
-          height: 100%;
-      }
-      .dropdown-user:hover {
-          cursor: pointer;
-      }
-      .table-user-information > tbody > tr {
-          border-top: 1px solid rgb(221, 221, 221);
-      }
-      .table-user-information > tbody > tr:first-child {
-          border-top: 0;
-      }
-      .table-user-information > tbody > tr > td {
-          border-top: 0;
-      }
-      .toppad
-      {
-        margin-top:20px;
-      }
-    </style>
+    <% include bootstrapcss %>
   </head>
   <body>
     <% include home-header %>
@@ -91,40 +61,42 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3">
+          <div>
+            <% for( var i=0; i < tweets.length; i++) {%>
+              <div style="padding: 15px;margin: 5px;">
+                <div class="row row-eq-height" style="background-color: lavender;border-radius: 10px;">
+                  <div class="col-md-2" style="margin: 5px;" align="center">
+                    <img class="img-circle img-responsive" alt="ProfilePicture"
+                      src=<%= imgpath %>>
+                  </div>
+                  <div class="col-md-8">
+                    <span style="position: relative;top: 25px;right: 20px;" class="align-middle">
+                      <b><%= tweets[i].username %></b>
+                    </span>
+                  </div>
+                </div>
+                <div class="row row-eq-height" style="border: 2px solid lavender;padding: 10px;
+                         border-radius: 10px;">
+                  <p><%= tweets[i].tweet %></p>
+                  <div class="row row-eq-height">
+                    <div class="col-md-4">
+                      <button class="btn bt">
+                        Like
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div><br>
+            <% } %>
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-      $("#follow_unfollow").click(function(){
-        if(document.getElementById("follow_unfollow").innerHTML == "Follow"){
-          var username = document.getElementById("follow_unfollow").value;
-          $.ajax({
-            url: '/follow',
-            type: 'post',
-            data: { un : username, status : true},
-            success: function( data, textStatus, jQxhr ){
-               document.getElementById("follow_unfollow").innerHTML = data;
-            },
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
-          });
-        }
-        else {
-          var username = document.getElementById("follow_unfollow").value;
-          $.ajax({
-            url: '/follow',
-            type: 'post',
-            data: { un : username, status : false },
-            success: function( data, textStatus, jQxhr ){
-              document.getElementById("follow_unfollow").innerHTML = data;
-            },
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
-          });
-        }
-        });
-    </script>
+    <% include bootstrapjs %>
+    <script type="text/javascript" src="javascript/followunfollow.js"></script>
+    <script type="text/javascript" src="javascript/onready.js"></script>
+    <script type="text/javascript" src="javascript/searchuser.js"></script>
   </body>
 </html>

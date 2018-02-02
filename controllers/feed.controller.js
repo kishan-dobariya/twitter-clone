@@ -15,3 +15,4 @@ exports.insertPost = async function(req, res, next){
   res.send()
   }
 }
+

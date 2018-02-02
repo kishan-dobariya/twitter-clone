@@ -1,178 +1,122 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Home</title>
+	<head>
+		<title>Home</title>
+		<% include bootstrapcss %>
+		<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+		<style type="text/css">
+			.sticky {
+				position: fixed;
+				top: 0;
+				width: 100%;
+			}
+			.sticky + .content {
+				padding-top: 102px;
+			}
+			.container{
+				padding: 16px;
+			}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
-
-    <style type="text/css">
-      nav select{
-        -webkit-appearance: none;
-        appearance: none;
-      }
-      table.table{
-        text-align: center;
-      }
-      .borderless td, .borderless th, .borderless tr{
-        border: none;
-      }
-      button.follow{
-        background-color: transparent;
-      }
-      a.follow{
-        text-decoration: none;
-      }
-      a:hover.follow{
-        color: white;
-      }
-      ul#showuser{
-        position: fixed;
-        top: 43px;
-        right: 233px;
-        z-index: 1;
-      }
-    </style>
-  </head>
-  <body>
-    <% include home-header %>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-xs-6 col-md-3" style="background-color:lavender;">
-          <div class="col-lg-12" align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"/> </div>
-          <div class="row">
-            <div class="col-md-12">
-              <h3 style="text-align: center;"><%=name%></h3>
-              <!-- <h4 style="text-align: center;"><%= username%></h4> -->
-            </div>
-            <div class="col-lg-4">
-              <h3 style="text-align: center;"><a href=""></a></h3>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <table class="table borderless table" align="center">
-              <tr>
-                <th>Tweets</th>
-                <th>Followers</th>
-                <th>Following</th>
-              </tr>
-              <tr>
-                <td>21</td>
-                <td><%=followers%></td>
-                <td><%=folowings%></td>
-              </tr>
-            </table>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-6 col-md-6">
-          <div class="row">
-            <!-- <div id="tweetbox"> -->
-              <div class="col-md-12">
-                <div class="form-group" id="tweetbox" style="background-color: #e8f5fd;padding: 5px;margin: 0">
-                  <input type="text" class="form-control" id="tweet" placeholder="What's happening?" >
-                  <!-- <p style="visibility:hidden;height:5px;" id="space">space</p> --><br>
-                  <button class="btn btn-primary" id="tweetbutton" onclick="click()">Tweet</button>
-                </div>
-              </div>
-              <div>
-                <p><%= tweets %></p>
-                <ul>
-                  <% for ( var i = 0 ; i < tweets.length ; i++ ) { %>
-                   <li>
-                      <%= tweets.Tweet %>
-                   </li>
-                  <% } %>
-                </ul>
-              </div>
-            <!-- </div> -->
-          </div>
-        </div>
-        <div class="col-xs-6 col-md-3" style="background-color:lavender;">.col-sm-4</div>
-      </div>
-    </div>
-    <!-- <p id="searchresult"></p> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        document.getElementById("showuser").style.display = "none";
-        $("#search").click(function(){
-          $(this).css('border', '2px solid #4AB3F4');;
-        });
-        $("p").hover(function(){
-          $(this).css("background-color", "yellow");
-          }, function(){
-          $(this).css("background-color", "pink");
-        });
-      });
-        $("#searchuser").keyup( function(){
-          //alert(document.getElementById("searchuser").value);
-          var keywords = document.getElementById("searchuser").value;
-
-          $.ajax({method: "GET",
-            url : "http://localhost:8080/search?keyword="+keywords,
-            success: function(result){
-              //console.log("result----------->",result);
-              document.getElementById("showuser").style.display = "inline-block";
-              document.getElementById("showuser").innerHTML = result;
-          }});
-
-          $('#searchuser').on('keyup keypress', function(e) {
-            var keyCode = e.keyCode || e.which;
-            if (keyCode === 13) {
-              e.preventDefault();
-              return false;
-            }
-          });
-        });
-
-        $("#tweetbutton").click(function(){
-          Tweet = document.getElementById("tweet").value;
-          $.ajax({
-            url: '/insertfeed',
-            type: 'post',
-            data: { tweet : Tweet },
-            success: function( data, textStatus, jQxhr ){
-              // document.getElementById("follow_unfollow").innerHTML = data;
-              console.log("data---",data);
-            },
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
-          });
-        });
-
-        // $( "#tweet" ).focus(function() {
-        //   // alert( "focus" );
-        //   // alert();
-        //   $("#tweet").addClass("input-lg");
-        //   if(document.getElementById("tweetbutton") == null) {
-        //     $('#tweet').after('<p style="visibility:hidden;height:5px;" id="space">space</p>');
-        //     $("#space").after($('<button class="btn btn-primary" id="tweetbutton" onclick="click()">Tweet</button>'));
-        //   }
-        // });
-        // $("#tweet").blur(function(){
-        //   // alert("blur");
-        //   // alert();
-        //   if(document.getElementById("tweet").value == "") {
-        //     $("#tweet").removeClass("input-lg");
-        //     $( "#space" ).remove();
-        //     $( "#tweetbutton" ).remove();
-        //   }
-        //   else{
-
-        //   }
-        // });
-
-
-        function click() {
-          // body...
-          alert("click");
-        }
-
-
-    </script>
-  </body>
+		</style>
+	</head>
+	<body class="container" style="width: 100%;margin:0;">
+		<div class="row">
+			<% include home-header %>
+		</div>
+		<div class="container-fluid" id="main">
+			<div class="row">
+				<div class="col-md-3 hidden-sm hidden-xs" style="background-color:#f6f6f9;">
+					<div class="col-lg-12" align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"/> </div>
+					<div class="row">
+						<div class="col-md-12">
+							<h3 style="text-align: center;"><%=name%></h3>
+						</div>
+						<div class="col-lg-4">
+							<h3 style="text-align: center;"><a href=""></a></h3>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<table class="table borderless table" align="center">
+							<tr>
+								<th>Tweets</th>
+								<th>Followers</th>
+								<th>Following</th>
+							</tr>
+							<tr>
+								<td><%=tweetcount%></td>
+								<td><%=followers%></td>
+								<td><%=folowings%></td>
+							</tr>
+						</table>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12 col-md-6">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group" id="tweetbox" style="background-color: #f6f6f9;padding: 5px;margin: 0">
+								<input type="text" class="form-control" id="tweet" placeholder="What's happening?" >
+								<br>
+								<button class="btn btn-primary" id="tweetbutton">Tweet</button>
+							</div>
+						</div>
+					</div>
+					<div>
+						<% if(tweets !==	 null){ for( var i=0; i < tweets.length; i++) {%>
+								<div style="padding: 15px;">
+									<div class="row row-eq-height"
+												style="background-color: #f6f6f9;border-radius: 10px;">
+										<div class="col-md-2" align="center" style="align-self: center;">
+											<img class="img-thumbnail img-circle" alt="ProfilePicture"
+													src="<%= tweets[i].path %>"
+													style="width: 50px;height: 50px;">
+										</div>
+										<div class="col-md-10" style="align-self: center;">
+											<span><a
+												style="color: black;"
+												href='/home?un=<%= tweets[i].username %>'>
+												<b><%= tweets[i].name %></b>@<%= tweets[i].username %></a>
+											</span>
+										</div>
+									</div>
+									<div class="row row-eq-height" style="border: 2px solid #f6f6f9;padding: 10px;
+													 border-radius: 10px;">
+										<div class="col-md-12">
+											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
+										</div><br>
+										<div class="col-md-3" id="likebuttondiv">
+											<button class="btn btn-primary like" onclick="like(this)" id="<%= tweets[i]._id %>"
+											 value="<%= tweets[i].likestatus %>">
+												<span id="likestatus"><%= tweets[i].likestatus %></span>
+											</button><br>
+											<span id="<%= tweets[i]._id %>count"><%= tweets[i].likeCount %></span>
+										</div>
+									</div>
+								</div><br>
+							<%}
+						 }%>
+					</div>
+				</div>
+				<div class="col-md-3 hidden-sm hidden-xs" style="background-color:#f6f6f9;">.col-sm-4</div>
+			</div>
+		</div>
+		<% include bootstrapjs %>
+		<script type="text/javascript" src="javascript/tweet.js"></script>
+		<script type="text/javascript" src="javascript/searchuser.js"></script>
+		<script type="text/javascript" src="javascript/like.js"></script>
+		<script type="text/javascript" src="javascript/onready.js"></script>
+		<script>
+			window.onscroll = function() {myFunction()};
+			var header = document.getElementById("navigation");
+			var sticky = header.offsetTop;
+			function myFunction() {
+				if (window.pageYOffset >= sticky) {
+					header.classList.add("sticky");
+				} else {
+					header.classList.remove("sticky");
+				}
+			}
+		</script>
+	</body>
 </html>
