@@ -1,96 +1,97 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Profile</title>
-	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-	<% include bootstrapcss %>
-</head>
-<body>
-	<% include home-header %>
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
-				<div class="panel panel-info">
-					<div class="panel-heading">
-						<button id="following" class=" btn btn-primary">Following</button>
-						<div id="myModal" class="modal">
-							<div class="modal-content">
-								<span class="close">&times;</span>
-								<ul class="list-group" id="showfollowing">
-								</ul>
-							</div>
-						</div>
-						<button id="followers" class=" btn btn-primary">Followers</button>
-						<div id="myModal" class="modal">
-							<div class="modal-content">
-								<span class="close">&times;</span>
-							</div>
-						</div>
-					</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-md-3 col-lg-3 " align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"> </div>
-							<div class=" col-md-9 col-lg-9 ">
-								<table class="table table-user-information">
-									<tbody>
-										<tr>
-											<td>Name</td>
-											<td><%= name %></td>
-										</tr>
-										<tr>
-											<td>Email</td>
-											<td><%= email %></td>
-										</tr>
-										<tr>
-											<td>Date of Birth</td>
-											<td><%= birthdate %></td>
-										</tr>
-										<tr>
-											<tr>
-												<td>Bio</td>
-												<td><%= bio %></td>
-											</tr>
-											<tr>
-												<td>Locations</td>
-												<td><%= location %></td>
-											</tr>
-										</tr>
-									</tbody>
-								</table>
-								<a href="/editprofile" class="btn btn-primary" style="float: right;">Edit</a>
-							</div>
-						</div>
+	<head>
+		<title>Profile</title>
+		<% include bootstrapcss %>
+		<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+		<style type="text/css">
+			.nav-tabs {
+				border: none;
+			}
+			.twitter-profile img.fb-image-lg{
+				z-index: 0;
+				width: 100%;
+				margin-bottom: 10px;
+				height: 50vh;
+			}
+			.twitter-image-profile
+			{
+				margin: -90px 10px 20px 80px;
+				z-index: 9;
+				width: 20%;
+			}
+
+/*------------------------MEDIA QUERY---------------------------*/
+			@media (max-width:768px){
+
+				.twitter-profile-text>h1{
+					font-weight: 700;
+					font-size:16px;
+				}
+				.twitter-image-profile{
+					margin: -45px 10px 0px 25px;
+					z-index: 9;
+					width: 20%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="row" >
+			<% include home-header %>
+		</div>
+		<div class="container-fluid" id="main" style="width: 90%">
+			<div class="row">
+			<div class="twitter-profile">
+					<img align="left" class="fb-image-lg" src="http://lorempixel.com/850/280/nightlife/5/" alt="Profile image example"/>
+					<img align="left" class="twitter-image-profile img-thumbnail img-circle"
+								src="<%= user.imgpath %>" alt="Profile image example"/>
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="#tab_default_1" id="showTweets" data-toggle="tab">
+							Tweets </a>
+						</li>
+						<li>
+							<a href="#tab_default_2" data-toggle="tab">
+						 		Followers
+						 	</a>
+						</li>
+						<li>
+							<a href="#tab_default_3" data-toggle="tab">
+						 		Following
+						 	</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<table class="table borderless" align="center">
+						<tr>
+							<th>Tweets</th>
+							<th>Followers</th>
+							<th>Following</th>
+						</tr>
+						<tr>
+							<td><%= user.tweetcount %></td>
+							<td><%= user.followercount %></td>
+							<td><%= user.followingcount %></td>
+						</tr>
+					</table>
+				</div>
+				<div class="col-md-9">
+					<div class="row showresult" id="result">
+
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<% include bootstrapjs %>
-	<script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
-	<script type="text/javascript" src="javascript/searchuser.js"></script>
-	<script type="text/javascript" src="javascript/onready.js"></script>
-</body>
+		<% include bootstrapjs %>
+		<script type="text/javascript" src="javascript/tweet.js"></script>
+		<script type="text/javascript" src="javascript/searchuser.js"></script>
+		<script type="text/javascript" src="javascript/like.js"></script>
+		<script type="text/javascript" src="javascript/onready.js"></script>
+		<script type="text/javascript" src="javascript/fixheader.js"></script>
+		<script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
+	</body>
 </html>
-
-
-
-		<!-- <script type="text/javascript">
-			$(document).ready(function() {
-				var panels = $('.user-infos');
-				var panelsButton = $('.dropdown-user');
-				panels.hide();
-				panelsButton.click(function() {
-					var dataFor = $(this).attr('data-for');
-					var idFor = $(dataFor);
-					var currentButton = $(this);
-					idFor.slideToggle(400, function() {
-						if(idFor.is(':visible')) {
-							currentButton.html('<i class="glyphicon glyphicon-chevron-up text-muted"></i>');
-						}
-						else {
-							currentButton.html('<i class="glyphicon glyphicon-chevron-down text-muted"></i>');
-						}
-					});
-				});
-			});
-		</script> -->

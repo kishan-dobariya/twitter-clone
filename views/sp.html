@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+  <% include bootstrapcss %>
+</head>
+<body>
+  <% include home-header %>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <button id="following" class=" btn btn-primary">Following</button>
+            <div id="myModal" class="modal">
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <ul class="list-group" id="showfollowing">
+                </ul>
+              </div>
+            </div>
+            <button id="followers" class=" btn btn-primary">Followers</button>
+            <div id="myModal" class="modal">
+              <div class="modal-content">
+                <span class="close">&times;</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-3 col-lg-3 " align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"> </div>
+              <div class=" col-md-9 col-lg-9 ">
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr>
+                      <td>Name</td>
+                      <td><%= name %></td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td><%= email %></td>
+                    </tr>
+                    <tr>
+                      <td>Date of Birth</td>
+                      <td><%= birthdate %></td>
+                    </tr>
+                    <tr>
+                      <tr>
+                        <td>Bio</td>
+                        <td><%= bio %></td>
+                      </tr>
+                      <tr>
+                        <td>Locations</td>
+                        <td><%= location %></td>
+                      </tr>
+                    </tr>
+                  </tbody>
+                </table>
+                <a href="/editprofile" class="btn btn-primary" style="float: right;">Edit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include bootstrapjs %>
+  <script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
+  <script type="text/javascript" src="javascript/searchuser.js"></script>
+  <script type="text/javascript" src="javascript/onready.js"></script>
+</body>
+</html>
+
+
+
+    <!-- <script type="text/javascript">
+      $(document).ready(function() {
+        var panels = $('.user-infos');
+        var panelsButton = $('.dropdown-user');
+        panels.hide();
+        panelsButton.click(function() {
+          var dataFor = $(this).attr('data-for');
+          var idFor = $(dataFor);
+          var currentButton = $(this);
+          idFor.slideToggle(400, function() {
+            if(idFor.is(':visible')) {
+              currentButton.html('<i class="glyphicon glyphicon-chevron-up text-muted"></i>');
+            }
+            else {
+              currentButton.html('<i class="glyphicon glyphicon-chevron-down text-muted"></i>');
+            }
+          });
+        });
+      });
+    </script> -->
+

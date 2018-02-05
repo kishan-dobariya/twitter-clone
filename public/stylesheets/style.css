@@ -1,6 +1,8 @@
 body {
-	padding: 0px 50px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	background-color: #e6ecf0;
+	width: 100%;
+	margin:0;"
 }
 a {
 	color: #00B7FF;
@@ -21,13 +23,50 @@ header a{
 	margin: 0;
 	padding: 3vh;
 }
-header a:hover{
-	/*background-color: red;*/
-	/*text-decoration: none;*/
-	/*color: red;*/
+
+#main {
+	margin: 0 auto;
+}
+/*-----------------NAVIGATION---------------------------*/
+
+
+nav{
+	z-index: 1;
+	/*margin-bottom: 0px;*/
+}
+.navbar {
+	margin-bottom: 0px;
 }
 
+.navbar-default .navbar-nav .active a,
+.navbar-default .navbar-nav .active a:focus,
+.navbar-default .navbar-nav .active a:hover {
+	background-color: #ffffff;
+	color: #1DA1F2;
+}
+.onscrollpadding {
+	padding-top: 122px;
+}
 
+.sticky {
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+.sticky + .content {
+	padding-top: 102px;
+}
+table.table th {
+	color: #657786;
+	text-align: center;
+	border:none;
+}
+table.table td {
+	color: #1DA1F2;
+	font-weight: bold;
+	text-align: center;
+	border:none;
+}
 /*--------------------for login page-----------------------------------*/
 #login {
 		/*padding-top: 50px*/
@@ -132,6 +171,7 @@ header a:hover{
 nav select{
 	-webkit-appearance: none;
 	appearance: none;
+
 }
 table.table{
 	text-align: center;

@@ -138,15 +138,22 @@ function editpath(url) {
 
 exports.showprofileGet = async function(req, res) {
 	let user = await User.getUser({ username : req.session.username});
-	let birthdate = formatDate(user.birthdate);
-	let editedpath = editpath(user.imageURL);
+	let followercount = await Follower.getFollowers({ following : req.session.username, status : true});
+	let followingcount = await Follower.getFollowers({ username : req.session.username, status : true});
+	let tweetcount = await Feed.getTweetCount({ username : req.session.username});
+	user.birthdate = formatDate(user.birthdate);
+	user.imgpath = editpath(user.imageURL);
+	user.followingcount = followercount;
+	user.followercount = followercount;
+	user.tweetcount = tweetcount;
 	res.render('showprofile',{
+		user : user,
 		name : user.name,
 		bio : user.bio,
 		email : user.email,
 		location : user.location,
-		birthdate : birthdate,
-		imgpath : editedpath,
+		// birthdate : birthdate,
+		// imgpath : editedpath,
 	});
 }
 
@@ -231,11 +238,16 @@ exports.searchGet = async function(req, res) {
 
 exports.getfollowingPost = async function(req, res) {
 	let searchresult = await Follower.searchUser({ username : req.session.username});
-	let returnValue = "";
-	searchresult.forEach(function (object) {
-		returnValue = returnValue + "<li class='list-group-item'><a href='http://localhost:8080/home?un="+object.following+"'>"+object.following+"</a></li>";
-	});
-	res.send(returnValue);
+	for(let i = 0; i < searchresult.length; i++) {
+		let user = await User.getUser({ username : searchresult[i].following});
+		searchresult[i].imageURL = user.imageURL;
+		searchresult[i].name = user.name;
+	}
+	// console.log("-->",searchresult);
+	// searchresult.forEach(function (object) {
+	// 	returnValue = returnValue + "<li class='list-group-item'><a href='http://localhost:8080/home?un="+object.following+"'>"+object.following+"</a></li>";
+	// });
+	res.send(searchresult);
 }
 
 exports.getfollowersPost = async function(req, res) {
