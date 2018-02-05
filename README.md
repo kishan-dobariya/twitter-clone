@@ -1,6 +1,6 @@
 # Twitter-clone
 Twitter-clone is the application like twitter written using NodeJs, ExpressJs, MongoDB, EJS etc. 
-##Installation
+*Installation
 You need to install two things.
 1 - Install NodeJs. You can download from https://nodejs.org/en/download/
 2 - Install MongoDB. You can download from https://www.mongodb.com/download-center#community
