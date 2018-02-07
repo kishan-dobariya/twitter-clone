@@ -1,49 +1,32 @@
-var modal = document.getElementById('myModal');
-var btn = document.getElementById("showTweets");
+var following = document.getElementById("following");
 var result = document.getElementById("result");
-btn.onclick = function() {
-	alert("click");
+following.onclick = function() {
 	$.ajax({
 		url: '/getfollowing',
 		type: 'post',
 		success: function( data, textStatus, jQxhr ){
-			// document.getElementById("showfollowing").style.display = "inline-block";
-			// document.getElementById("showfollowing").innerHTML = data;
-			console.log(data);
-			console.log(data.length);
+			$(result).empty();
 			var showfollowing = "";
 			for (var i = 0; i<data.length; i++) {
-				showfollowing += "<div class='col-md-4'>"+
-												"<img align='left' class='fb-image-lg'>"+
-												"src='/images/profilepics/twittericon.png'/>"+
-												"<img align='left' class=' img-thumbnail img-circle'"+
-												"src=''/>" +
-												"<p>"+ data[i].following +"</p>" +
-												"</div>";
+				showfollowing =`<div style="padding:2px" class="col-md-4 col-sm-6">
+																	<div style="background-color:white;margin:0" class="card hovercard">
+																		<div class="cardheader">
+																		</div>
+																		<div class="avatar">
+																			<img alt="" src="`+data[i].imageURL+`">
+																		</div>
+																		<div class="info">
+																			<div class="title">
+																				<a target="_blank" href="`+data[i].imageURL+`">`+data[i].name+`</a>
+																			</div>
+																			<div class="desc">@`+data[i].username+`</div>
+																			<div class="">`+data[i].bio+`</div>
+																			<div class="desc">Tech geek</div>
+																		</div>
+																	</div>
+																</div>`;
+				$(result).append(showfollowing);
 			}
-			$(result).append(showfollowing);
-			// var following = '<div class="twitter-profile col-md-3">
-			// 		<img align="left" class="fb-image-lg"
-			// 				 src="http:/'/'lorempixel.com/850/280/nightlife/5/" alt="Profile image example"/>
-			// 				<img align="left" class="twitter-image-profile img-thumbnail img-circle"
-			// 					src="" alt="Profile image example"/>
-			// 						<ul class="nav nav-tabs">
-			// 							<li class="active">
-			// 								<a href="#tab_default_1" id="showTweets" data-toggle="tab">
-			// 								Tweets </a>
-			// 							</li>
-			// 							<li>
-			// 								<a href="#tab_default_2" data-toggle="tab">
-			// 			 						Followers
-			// 			 					</a>
-			// 							</li>
-			// 							<li>
-			// 								<a href="#tab_default_3" data-toggle="tab">
-			// 			 						Following
-			// 			 					</a>
-			// 								</li>
-			// 							</ul>
-			// 						</div>';
 		},
 		error: function( jqXhr, textStatus, errorThrown ){
 				console.log( errorThrown );
@@ -51,28 +34,191 @@ btn.onclick = function() {
 	});
 }
 
-
-var btn = document.getElementById("followers");
-btn.onclick = function() {
-	modal.style.display = "block";
+var followers = document.getElementById("followers");
+followers.onclick = function() {
 	$.ajax({
 		url: '/getfollowers',
 		type: 'post',
 		success: function( data, textStatus, jQxhr ){
+			$(result).empty();
 			console.log(data);
-			document.getElementById("showfollowing").style.display = "inline-block";
-			document.getElementById("showfollowing").innerHTML = data;
+			for (var i = 0; i<data.length; i++) {
+					console.log(data[i].imageURL);
+
+				var showfollowers = `<div style="padding:2px" class="col-md-4 col-sm-6">
+																	<div style="background-color:white;margin:0" class="card hovercard">
+																		<div class="cardheader">
+																		</div>
+																		<div class="avatar">
+																			<img alt="" src="`+data[i].imageURL+`">
+																		</div>
+																		<div class="info">
+																			<div class="title">
+																				<a target="_blank" href="`+data[i].imageURL+`">`+data[i].name+`</a>
+																			</div>
+																			<div class="desc">@`+data[i].username+`</div>
+																			<div class="">`+data[i].bio+`</div>
+																			<div class="desc">Tech geek</div>
+																		</div>
+																	</div>
+																</div>`;
+				$(result).append(showfollowers);
+			}
 		},
 		error: function( jqXhr, textStatus, errorThrown ){
 				console.log( errorThrown );
 		}
 	});
 }
-span.onclick = function() {
-	modal.style.display = "none";
+
+var tweets = document.getElementById("tweets");
+tweets.onclick = function() {
+	$.ajax({
+		url: '/getTweet',
+		type: 'post',
+		success: function( data, textStatus, jQxhr ){
+			$(result).empty();
+			for (var i = 3; i<data.length; i++) {
+				var likestatus;
+				var likers = "";
+					for(var j = 0; j< data[i].like.length; j++){
+						likers += data[i].like[j]+"\n";
+					}
+				if(data[i].like.includes(data[1])) {
+					 likestatus = "Unlike";
+				}
+				else {
+					likestatus = "Like";
+			 	}
+				var showfollowers = `<div style="padding: 0 15px;">
+										<div class="row"
+												style="padding: 10px 0;background-color: #ffffff;">
+										<div class="col-xs-2" align="center" style="align-self: center;">
+											<img class="img-thumbnail" alt="ProfilePicture"
+													src="`+data[0]+`"
+													style="width: 50px;height: 50px;">
+										</div>
+										<div class="col-xs-10" id="`+data[i]._id+`">
+											<span><a
+												style="color: black;font-size: 14px;"
+												href='/home?un=`+data[1]+`'>
+												<b>`+data[2]+`</b>
+												<span style="color: #657786">@`+data[1]+`</span></a>
+											</span>
+
+											<div class="dropleft" style="float:right">
+											  <span data-toggle="dropdown"
+											  class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
+											  <ul class="dropdown-menu">
+											    <li><a onclick="editeTweet('`+ data[i]._id +`');">
+															Edit
+															</a>
+													</li>
+													<li><a>
+															Delete
+															</a>
+													</li>
+											  </ul>
+											</div>
+											<p style="word-break: break-all;">`+data[i].tweet+`</p>
+											<div id="likebuttondiv">
+											<button class="btn btn-default btn-sm like"
+															onclick="like(this)"
+															id="`+data[i]._id+`"
+											 				value="`+likestatus+`">
+												<span id="likestatus">`+ likestatus +`  </span>
+											</button>
+											<span id="`+data[i]._id+`count" class="likeshow badge tip"
+																data-toggle="tooltip"
+																data-placement="top"
+																title="`+likers+`">`
+																+data[i].like.length+`</span>
+											</div>
+										</div>
+									</div>
+								</div><hr style="margin: 0"><hr style="margin: 0">`;
+				$(result).append(showfollowers);
+			}
+		},
+		error: function( jqXhr, textStatus, errorThrown ){
+				console.log( errorThrown );
+		}
+	});
 }
-window.onclick = function(event) {
-	if (event.target == modal) {
-		modal.style.display = "none";
-	}
+
+function editeTweet(obj) {
+	// console.log("-------",obj,"-------");
+	var element = document.getElementById(obj);
+	var tweetID = element.childNodes[7].childNodes[1].id;
+	$(".twitter-profile").addClass("blur");
+	$("#userInfo").addClass("blur");
+	var element = document.getElementById(obj);
+	var tweet = element.childNodes[5];
+	var likeButton = element.childNodes[8];
+	var tweetValue = element.childNodes[5].innerHTML;
+	var editDiv = document.createElement("DIV");
+	editDiv.setAttribute("id", "editDiv");
+	element.replaceChild(editDiv, tweet);
+
+	var br = document.createElement("br");
+
+	var input = document.createElement("INPUT");
+	input.setAttribute("type", "text");
+	input.setAttribute("value", tweetValue);
+	input.setAttribute("class", "form-control");
+	input.setAttribute("name", "editTweet");
+	input.setAttribute("id", "editTweet");
+
+	editDiv.append(input);
+
+	editDiv.append(br);
+
+	var btnEdit = document.createElement("BUTTON");
+	btnEdit.setAttribute("class", "btn btn-primary editButton");
+	btnEdit.setAttribute("id", tweetID);
+	btnEdit.setAttribute("value", "Edit");
+	btnEdit.setAttribute("onclick", "edit(this);");
+
+
+	editDiv.append(btnEdit);
+
+
+	var btnCancel = document.createElement("BUTTON");
+	btnCancel.setAttribute("class", "btn btn-primary cancelButton");
+	btnCancel.setAttribute("id", "cancel");
+	btnCancel.setAttribute("value", "Cancel");
+	btnCancel.setAttribute("onclick", "cancel1();");
+
+	editDiv.append(btnCancel);
+	document.getElementsByClassName("editButton")[0].innerHTML = "Edit";
+	document.getElementsByClassName("cancelButton")[0].innerHTML = "Cancel";
+
+	// console.log(element.childNodes[5].innerHTML);
+	element.removeChild(element.childNodes[7]);
+	// console.log(element.childNodes);
+	// console.log("------------------",document.getElementById(obj).childNodes[7]);
+}
+
+function edit(button) {
+	var tweetId = button.id;
+	var editedTeet = document.getElementById("editTweet").value;
+	$.ajax({
+		url: '/edittweet',
+		type: 'post',
+		data: { newTweet : editedTeet,
+            tweetId : tweetId },
+		success: function( data, textStatus, jQxhr ){
+			// $(result).empty();
+			console.log(data);
+		},
+		error: function( jqXhr, textStatus, errorThrown ){
+				console.log( errorThrown );
+		}
+	});
+}
+function cancel1() {
+	// alert("delete");
+	$(".twitter-profile").removeClass("blur");
+	$("#userInfo").removeClass("blur");
+	$('#tweets').trigger('click');
 }

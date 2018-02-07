@@ -1,371 +1,71 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Profile</title>
-		<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-		<% include bootstrapcss %>
-		<style type="text/css">
-			.nav-tabs {
-				border: none;
-			}
-			.twitter-profile img.fb-image-lg{
-				z-index: 0;
-				width: 100%;
-				margin-bottom: 10px;
-				height: 50vh;
-			}
-			.twitter-image-profile
-			{
-				margin: -90px 10px 20px 80px;
-				z-index: 9;
-				width: 20%;
-			}
-			.tabbable-panel {
-				border:1px solid #eee;
-				padding: 10px;
-			}
-			.tabbable-line > .nav-tabs {
-				border: none;
-				margin: 0px;
-			}
-			.tabbable-line > .nav-tabs > li {
-				margin-right: 2px;
-			}
-			.tabbable-line > .nav-tabs > li > a {
-				border: 0;
-				margin-right: 0;
-				color: #737373;
-			}
-			.tabbable-line > .nav-tabs > li > a > i {
-				color: #a6a6a6;
-			}
-			.tabbable-line > .nav-tabs > li.open,
-			.tabbable-line > .nav-tabs > li:hover {
-				border-bottom: 4px solid #fbcdcf;
-			}
-			.tabbable-line > .nav-tabs > li.open > a,
-			.tabbable-line > .nav-tabs > li:hover > a {
-				border: 0;
-				background: none !important;
-				color: #333333;
-			}
-			.tabbable-line > .nav-tabs > li.open > a > i,
-			.tabbable-line > .nav-tabs > li:hover > a > i {
-				color: #a6a6a6;
-			}
-			.tabbable-line > .nav-tabs > li.open .dropdown-menu,
-			.tabbable-line > .nav-tabs > li:hover .dropdown-menu {
-				margin-top: 0px;
-			}
-			.tabbable-line > .nav-tabs > li.active {
-				border-bottom: 4px solid #f3565d;
-				position: relative;
-			}
-			.tabbable-line > .nav-tabs > li.active > a {
-				border: 0 !important;
-				color: #333333;
-			}
-			.tabbable-line > .nav-tabs > li.active > a > i {
-				color: #404040;
-			}
-			.tabbable-line > .tab-content {
-				margin-top: -3px;
-				background-color: #fff;
-				border: 0;
-				border-top: 1px solid #eee;
-				padding: 15px 0;
-			}
-			.portlet .tabbable-line > .tab-content {
-				padding-bottom: 0;
-			}
-			.tabbable-line.tabs-below > .nav-tabs > li {
-			}
-			.tabbable-line.tabs-below > .nav-tabs > li > a {
-				margin-top: 0;
-			}
-			.tabbable-line.tabs-below > .nav-tabs > li:hover {
-				border-bottom: 0;
-				border-top: 4px solid #fbcdcf;
-			}
-			.tabbable-line.tabs-below > .nav-tabs > li.active {
-				margin-bottom: -2px;
-				border-bottom: 0;
-				border-top: 4px solid #f3565d;
-			}
-			.tabbable-line.tabs-below > .tab-content {
-				margin-top: -10px;
-				border-top: 0;
-				border-bottom: 1px solid #eee;
-				padding-bottom: 15px;
-			}
+<head>
+  <title></title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-			.menu_title {
-					padding: 15px 10px;
-					border-bottom: 1px solid #eee;
-					margin: 0 5px;
-			}
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-/*------------------------MEDIA QUERY---------------------------*/
-			@media (max-width:768px){
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-				.twitter-profile-text>h1{
-					font-weight: 700;
-					font-size:16px;
-				}
-				.twitter-image-profile{
-					margin: -45px 10px 0px 25px;
-					z-index: 9;
-					width: 20%;
-				}
-			}
-		</style>
-	</head>
+
+  <style type="text/css">
+    #myModal#OR {
+        height: 30px;
+        width: 30px;
+        border: 1px solid #C2C2C2;
+        border-radius: 50%;
+        font-weight: bold;
+        line-height: 28px;
+        text-align: center;
+        font-size: 12px;
+        float: right;
+        position: absolute;
+        right: -16px;
+        top: 40%;
+        z-index: 1;
+        background: #DFDFDF;
+    }
+  </style>
+</head>
 <body>
-	<div class="row" >
-		<% include home-header %>
-	</div>
-	<div class="container-fluid" id="main" style="width: 90%">
-		<div class="row">
-		<div class="twitter-profile">
-				<img align="left" class="fb-image-lg" src="http://lorempixel.com/850/280/nightlife/5/" alt="Profile image example"/>
-				<img align="left" class="twitter-image-profile img-thumbnail img-circle"
-							src="<%= imgpath %>" alt="Profile image example"/>
-				<ul class="nav nav-tabs">
-					<li class="active">
-						<a href="#tab_default_1" data-toggle="tab">
-						About Her </a>
-					</li>
-					<li>
-						<a href="#tab_default_2" data-toggle="tab">
-					 Education& Career</a>
-					</li>
-					<li>
-						<a href="#tab_default_3" data-toggle="tab">
-					 Family Details</a>
-					</li>
-					 <li>
-						<a href="#tab_default_4" data-toggle="tab">
-					 Desire Partner</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div><!--
-	<div class="col-sm-8">
-
-			<div data-spy="scroll" class="tabbable-panel">
-				<div class="tabbable-line">
-					<div class="twitter-profile-text">
-						<h1>Eli Macy</h1>
-				` </div>
-					<div class="tab-content">
-						<div class="tab-pane active" id="tab_default_1">
-
-							<p>
-								My daughter  is good looking, with pleasant personality, smart, well educated, from well cultural and  a religious family background. having respect in heart for others.
-								would like to thanks you for visiting through my daughter;s profile.
-								She has done PG in Human Resources after her graduation.
-								At present working IN INSURANCE sector as Manager Training .
-							</p>
-							<h4>About her Family</h4>
-							<p>
-								About her family she belongs to a religious and a well cultural family background.
-								Father - Retired from a Co-operate Bank as a Manager.
-								Mother - she is a home maker.
-								1 younger brother - works for Life Insurance n manages cluster.
-							</p>
-							<h4>Education </h4>
-							<p>I have done PG in Human Resourses</p>
-							<h4>Occupation</h4>
-							<p>At present Working in Insurance sector</p>
-
-						</div>
-						<div class="tab-pane" id="tab_default_2">
-							<p>
-								Education& Career
-							</p>
-							<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-										 <label for="email">Highest Education:</label>
-											<p> MBA/PGDM</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-							</div>
-							<div class="col-sm-6">
-								 <div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-
-							 </div>
-							</div>
-
-
-
-						</div>
-						<div class="tab-pane" id="tab_default_3">
-							<p>
-								Family Details
-							</p>
-							<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-										 <label for="email">Highest Education:</label>
-											<p> MBA/PGDM</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-							</div>
-							<div class="col-sm-6">
-								 <div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-
-							 </div>
-							</div>
-						</div>
-						 <div class="tab-pane" id="tab_default_4">
-							<p>
-							 Lifestyle
-
-							</p>
-							 <div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-										 <label for="email">Highest Education:</label>
-											<p> MBA/PGDM</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-							</div>
-							<div class="col-sm-6">
-								 <div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-
-							 </div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-	</div>
-	<div class="col-sm-4">
-	 <div class="panel panel-default">
-		<div class="menu_title">
-			 Horoscope
-		</div>
-		<div class="panel-body">
-				<div class="row">
-						<div class="col-lg-12">
-								 <div class="form-group">
-										 <label for="email">Place of Birth:</label>
-											<p> pune, maharashtra</p>
-								 </div>
-									<div class="form-group">
-											<label for="email">Date of Birth:</label>
-											<p> 26 Sep 2017</p>
-									</div>
-									<div class="form-group">
-											<label for="email">Time of Birth:</label>
-											<p> 11:20 min.</p>
-									</div>
-									 <div class="form-group">
-											<label for="email">Horroscoe Match not Necessory</label>
-									 </div>
-										<div class="form-group">
-											<label for="email">Sun Sign:</label>
-											<p> Scorpio</p>
-										</div>
-										<div class="form-group">
-											<label for="email">Rashi/ Moon sign:</label>
-											<p> Mesh</p>
-										</div>
-										 <div class="form-group">
-											<label for="email">Nakshtra:</label>
-											<p> Bharani</p>
-										</div>
-											<div class="form-group">
-											<label for="email">Manglik:</label>
-											<p> Manglik</p>
-										</div>
-								<button type="submit" class="btn btn-danger btn-block">Submit</button>
-						</div>
-				</div>
-		</div>
+  <!-- Large modal -->
+<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    Login modal</button>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
+          <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="Login">
+                <form role="form" class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <input type="email" class="form-control" id="email1" placeholder="" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-2"></div>
+                      <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Submit</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-	</div>
-</div> -->
 </body>
 </html>

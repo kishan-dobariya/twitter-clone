@@ -7,13 +7,17 @@ function like(obj){
     data: { likestatus : value,
             id : id },
     success: function( data, textStatus, jQxhr ){
+      console.log(data);
       var id = data.id;
       console.log(id);
+      console.log("@@",document.getElementById(id));
       document.getElementById(id).childNodes[1].innerHTML = data.status;
       document.getElementById(id+"count").innerHTML = data.tweetcount;
     },
     error: function( jqXhr, textStatus, errorThrown ){
-        console.log( errorThrown );
+        console.log( "error",errorThrown );
     }
   });
 };
+
+

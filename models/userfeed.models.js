@@ -56,9 +56,20 @@ module.exports.getTweetCount = function(user, callback) {
   })
 }
 
-module.exports.updatetweet = function(query, like) {
+module.exports.updateLike = function(query, like) {
   return new Promise((resolve, reject) => {
   Feed.update(query, { $set : { like : like}}, function(err ,data) {
+    if(err) {
+      reject(err);
+    }
+    resolve(data);
+  });
+  })
+}
+
+module.exports.updateTweet = function(query, tweet) {
+  return new Promise((resolve, reject) => {
+  Feed.update(query, { $set : { tweet : tweet}}, function(err ,data) {
     if(err) {
       reject(err);
     }

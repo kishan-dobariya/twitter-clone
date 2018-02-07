@@ -34,10 +34,11 @@ router.post('/editprofile',checkSession, upload.single('profilepicture'), homeCo
 router.post('/follow',checkSession, homeController.addFollowerGet);
 router.get('/search',checkSession, homeController.searchGet);
 router.post('/insertfeed',checkSession, feedController.insertPost);
+router.post('/edittweet',checkSession, feedController.edittweetPost);
 router.post('/getfollowing',checkSession, homeController.getfollowingPost);
 router.post('/getfollowers',checkSession, homeController.getfollowersPost);
+router.post('/getTweet',checkSession, homeController.getTweetPost);
 router.post('/like',checkSession, homeController.likePost);
-
 module.exports = router;
 
 function checkSession(req, res, callback){

@@ -141,7 +141,8 @@ exports.showprofileGet = async function(req, res) {
 	let followercount = await Follower.getFollowers({ following : req.session.username, status : true});
 	let followingcount = await Follower.getFollowers({ username : req.session.username, status : true});
 	let tweetcount = await Feed.getTweetCount({ username : req.session.username});
-	user.birthdate = formatDate(user.birthdate);
+	console.log("dob",user.birthdate);
+	let birthdate = formatDate(user.birthdate);
 	user.imgpath = editpath(user.imageURL);
 	user.followingcount = followercount;
 	user.followercount = followercount;
@@ -152,7 +153,7 @@ exports.showprofileGet = async function(req, res) {
 		bio : user.bio,
 		email : user.email,
 		location : user.location,
-		// birthdate : birthdate,
+		 birthdate : birthdate,
 		// imgpath : editedpath,
 	});
 }
@@ -178,22 +179,27 @@ function formatDate(date) {
 				year = d.getFullYear();
 		if (month.length < 2) month = '0' + month;
 		if (day.length < 2) day = '0' + day;
-		return [year, month, day].join('-');
+		return [day, month, year].join('/');
 }
 
 exports.editprofilePost = async function(req, res) {
 	if(req.file !== undefined){
-		User.updateProfile({username : req.session.username}, req.body.name, req.body.bio, req.body.email, req.body.location, req.body.dob, req.file.path).then(console.log);
+		User.updateProfile({username : req.session.username}, req.body.name, req.body.bio,
+												req.body.email, req.body.location, req.body.dob,
+												req.file.path).then(console.log);
 		res.redirect("/showprofile");
 	}
 	else{
-		User.updateProfile({username : req.session.username}, req.body.name, req.body.bio, req.body.email, req.body.location, req.body.dob, "not difined").then(console.log);
+		User.updateProfile({username : req.session.username}, req.body.name, req.body.bio,
+												req.body.email, req.body.location, req.body.dob,
+												"not difined").then(console.log);
 		res.redirect("/showprofile");
 	}
 }
 
 exports.addFollowerGet = async function(req, res) {
-	let alreadyFollower = await Follower.getFollower( {username : req.session.username, following : req.body.un});
+	let alreadyFollower = await Follower.getFollower( {username : req.session.username,
+																											following : req.body.un});
 	if(alreadyFollower == null){
 		let newUser = Follower({
 			username : req.session.username,
@@ -227,7 +233,8 @@ exports.searchGet = async function(req, res) {
 		let searchresult = await User.searchUser({ username : {$regex : ".*"+req.query.keyword+".*"}});
 		let returnValue = "";
 		searchresult.forEach(function (object) {
-			returnValue = returnValue + "<li class='list-group-item'><a href='http://localhost:8080/home?un="+object.username+"'>"+object.username+"</a></li>";
+			returnValue = returnValue + "<li class='list-group-item'><a href='/home?un="+
+																		object.username+"'>"+object.username+"</a></li>";
 		});
 		res.send(returnValue);
 	}
@@ -237,37 +244,78 @@ exports.searchGet = async function(req, res) {
 }
 
 exports.getfollowingPost = async function(req, res) {
-	let searchresult = await Follower.searchUser({ username : req.session.username});
+	let searchresult = await Follower.searchUser({ username : req.session.username, status : true});
+	console.log("searchresult-->",searchresult);
 	for(let i = 0; i < searchresult.length; i++) {
 		let user = await User.getUser({ username : searchresult[i].following});
-		searchresult[i].imageURL = user.imageURL;
-		searchresult[i].name = user.name;
+		if(user.imageURL != undefined) {
+			let a = JSON.parse(JSON.stringify(searchresult[i]));
+			a["imageURL"] = editpath(user.imageURL);
+			a["name"] = user.name;
+			a["bio"] = user.bio;
+			searchresult[i] = a;
+			console.log("pro",searchresult[i]);
+		}
+		else {
+			let a = JSON.parse(JSON.stringify(searchresult[i]));
+			a["imageURL"] = "images/twittericon.png";
+			searchresult[i] = a;
+		}
 	}
-	// console.log("-->",searchresult);
-	// searchresult.forEach(function (object) {
-	// 	returnValue = returnValue + "<li class='list-group-item'><a href='http://localhost:8080/home?un="+object.following+"'>"+object.following+"</a></li>";
-	// });
+	console.log("-->",searchresult);
 	res.send(searchresult);
 }
 
 exports.getfollowersPost = async function(req, res) {
-	let searchresult = await Follower.searchUser({ following : req.session.username});
-	let returnValue = "";
-	searchresult.forEach(function (object) {
-		returnValue = returnValue + "<li class='list-group-item'><a href='http://localhost:8080/home?un="+object.username+"'>"+object.username+"</a></li>";
-	});
-	res.send(returnValue);
+	let searchresult = await Follower.searchUser({ following : req.session.username, status : true});
+	console.log("searchresult-->",searchresult);
+	for(let i = 0; i < searchresult.length; i++) {
+		let user = await User.getUser({ username : searchresult[i].username});
+		if(user.imageURL != undefined) {
+			let a = JSON.parse(JSON.stringify(searchresult[i]));
+			a["imageURL"] = editpath(user.imageURL);
+			a["name"] = user.name;
+			a["bio"] = user.bio;
+			searchresult[i] = a;
+			console.log("pro",searchresult[i]);
+		}
+		else {
+			let a = JSON.parse(JSON.stringify(searchresult[i]));
+			a["imageURL"] = "images/twittericon.png";
+			searchresult[i] = a;
+		}
+	}
+	console.log("-->",searchresult);
+	res.send(searchresult);
+}
+
+exports.getTweetPost = async function(req, res) {
+	let tweet = await Feed.getTweet({ username : req.session.username});
+	let user = await User.getUser({ username : req.session.username});
+	tweet.sort((a,b) => {
+						if(a.createdAt > b.createdAt)
+							return -1;
+						else if (a.createdAt < b.createdAt)
+							return 1;
+						else
+							return 0;
+					})
+	tweet.unshift(user.name);
+	tweet.unshift(user.username);
+	console.log("tweet",tweet);
+	tweet.unshift(editpath(user.imageURL));
+	res.send(tweet);
 }
 
 exports.likePost = async function(req, res) {
-	console.log(req.body.id);
-	console.log(req.body.likestatus);
-	if(req.body.likestatus == "Like"){
+	console.log(req.body.likestatus)
+	status = req.body.likestatus.trim();
+	if(status == "Like"){
 		let tweet = await Feed.getTweet({ _id : req.body.id});
 		let tweetlike = tweet[0].like;
 		tweetlike.push(req.session.username);
 		let likeCount = tweetlike.length;
-		await Feed.updatetweet({ _id : req.body.id}, tweetlike)
+		await Feed.updateLike({ _id : req.body.id}, tweetlike)
 			.then(function (argument) {
 				console.log(argument)
 				if (argument.nModified == 1){
@@ -276,15 +324,14 @@ exports.likePost = async function(req, res) {
 			}).catch(function(argument) {
 				console.log(argument)
 			});
-
 	}
-	else if (req.body.likestatus == "Unlike") {
+	else if (status == "Unlike") {
 		let tweet = await Feed.getTweet({ _id : req.body.id});
 		let tweetlike = tweet[0].like;
 		const index = tweetlike.indexOf(req.body.id);
 		tweetlike.splice(index, 1);
 		let likeCount = tweetlike.length;
-		await Feed.updatetweet({ _id : req.body.id}, tweetlike)
+		await Feed.updateLike({ _id : req.body.id}, tweetlike)
 			.then(function (argument) {
 				console.log(argument)
 				res.send({id : req.body.id, tweetcount : likeCount, status : "Like"})
@@ -294,5 +341,6 @@ exports.likePost = async function(req, res) {
 	}
 	else{
 		console.log("else");
+		res.send(null);
 	}
 }

@@ -3,8 +3,12 @@
 	<head>
 		<title>Profile</title>
 		<% include bootstrapcss %>
-		<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 		<style type="text/css">
+		.blur {
+			pointer-events: none;
+			opacity: 0.3;
+		}
 			.nav-tabs {
 				border: none;
 			}
@@ -12,7 +16,7 @@
 				z-index: 0;
 				width: 100%;
 				margin-bottom: 10px;
-				height: 50vh;
+				height: 30vh;
 			}
 			.twitter-image-profile
 			{
@@ -42,56 +46,124 @@
 		</div>
 		<div class="container-fluid" id="main" style="width: 90%">
 			<div class="row">
-			<div class="twitter-profile">
-					<img align="left" class="fb-image-lg" src="http://lorempixel.com/850/280/nightlife/5/" alt="Profile image example"/>
+				<div class="twitter-profile">
+					<img align="left" class="fb-image-lg" src="images/twittericon.png"/>
 					<img align="left" class="twitter-image-profile img-thumbnail img-circle"
 								src="<%= user.imgpath %>" alt="Profile image example"/>
 					<ul class="nav nav-tabs">
+						<li>
+							<a href="#tab_default_3" id="tweets" data-toggle="tab">
+								Tweets
+							</a>
+						</li>
 						<li class="active">
-							<a href="#tab_default_1" id="showTweets" data-toggle="tab">
-							Tweets </a>
+							<a href="#tab_default_1" id="following" data-toggle="tab">
+							Following </a>
 						</li>
 						<li>
-							<a href="#tab_default_2" data-toggle="tab">
-						 		Followers
-						 	</a>
+							<a href="#tab_default_2" id="followers" data-toggle="tab">
+								Followers
+							</a>
 						</li>
-						<li>
-							<a href="#tab_default_3" data-toggle="tab">
-						 		Following
-						 	</a>
+						<li style="float: right;" id="editProfile">
+							<a href="" data-toggle="tab" onclick="editProfile();">
+								Edit Profile
+							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-3">
-					<table class="table borderless" align="center">
-						<tr>
-							<th>Tweets</th>
-							<th>Followers</th>
-							<th>Following</th>
-						</tr>
-						<tr>
-							<td><%= user.tweetcount %></td>
-							<td><%= user.followercount %></td>
-							<td><%= user.followingcount %></td>
-						</tr>
-					</table>
-				</div>
-				<div class="col-md-9">
-					<div class="row showresult" id="result">
-
+				<div class="col-md-4" style="margin: 0;padding: 0">
+					<div class="row" id="userInfo">
+						<div class="col-xs-12" >
+							<div class="panel panel-info">
+								<div class="panel-body">
+									<h3 style="text-align: center;"><b><%= name %></b></h3>
+									<p style="text-align: center;"><%= email %></p>
+									<p style="text-align: center;">	<%= birthdate %></p>
+									<p style="text-align: center;"><%= bio %></p>
+									<p style="text-align: center;"><%= location %></p>
+								</div>
+							</div>
+							<form id="editProfileForm" class="form-horizontal" role="form" action="/editprofile"
+													method="post" enctype="multipart/form-data"
+													style="background-color: #e8f5fd">
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input type="file" class="form-control" placeholder="profilepicture" name="profilepicture">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input class="form-control" type="text" placeholder="Name" name="name" value="<%= name %>">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input class="form-control" type="text" placeholder="Bio" name="bio" value="<%= bio %>">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input class="form-control" type="email" placeholder="Email" name="email" value="<%= email %>">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input class="form-control" type="" placeholder="Location" name="location" value="<%= location %>">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input class="form-control" type="date" placeholder="Birthdate" name="dob" value="<%= birthdate %>">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input type="submit" class="btn btn-primary" value="Save Changes">
+										<span></span>
+										<input type="reset" class="btn btn-default" value="Cancel" onclick="cancel();">
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="row showresult" id="result"></div>
 				</div>
 			</div>
 		</div>
+
 		<% include bootstrapjs %>
-		<script type="text/javascript" src="javascript/tweet.js"></script>
-		<script type="text/javascript" src="javascript/searchuser.js"></script>
-		<script type="text/javascript" src="javascript/like.js"></script>
 		<script type="text/javascript" src="javascript/onready.js"></script>
+		<script type="text/javascript" src="javascript/searchuser.js"></script>
+		<script type="text/javascript" src="javascript/tweet.js"></script>
+		<script type="text/javascript" src="javascript/like.js"></script>
 		<script type="text/javascript" src="javascript/fixheader.js"></script>
 		<script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
+		<script type="text/javascript" src="javascript/followunfollow.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#editProfileForm").hide();
+				$(".panel-info").show();
+				$("#editProfileForm").focus();
+				$('#tweets').trigger('click');
+			});
+			function editProfile() {
+				$("#editProfileForm").show();
+				$(".panel-info").hide();
+				$( ".twitter-profile" ).blur();
+				$("#editProfileForm").focus();
+				$( "#editProfileForm" ).css( "opacity", "1" );
+			}
+			function cancel() {
+				$("#editProfileForm").hide();
+				$(".panel-info").show();
+				$( "#main" ).css( "opacity", "1" );
+			}
+		</script>
 	</body>
 </html>
+<button class="btn btn-primary" id=""></button>

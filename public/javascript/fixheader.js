@@ -2,7 +2,6 @@ window.onscroll = function() {myFunction()};
 var header = document.getElementById("navigation");
 var sticky = header.offsetTop;
 function myFunction() {
-  console.log("-------->",window.pageYOffset)
   if (window.pageYOffset === 0) {
     document.getElementById("main").style.marginTop= 52+"px" ;
   }
