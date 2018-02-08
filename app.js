@@ -25,8 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret : "secretkey"}));
 app.use('/', routes);
 
-
-// ========================== Database Connection ==============================
+// ========================== Database Connection ============================ //
 const mongoURL = mongoDb.makeConnectionString();
 console.log(mongoURL);
 mongoose.connect(mongoURL);
@@ -43,7 +42,8 @@ db.on('error', function(error) {
 
 db.on('connected', function() {
   console.log(chalk.green(mongoURL+' => connected'));
-})
+});
+
 db.once('open', function() {
   console.log(chalk.green('MongoDB connection opened!'));
 });

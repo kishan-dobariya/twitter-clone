@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LogIn</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<% include header %>
+<% typeof msg != 'undefined' ? msg : '' %>
+<section id="login">
+    <div class="container">
+      <div class="row">
+          <div class="col-xs-12">
+            <% if(registrationSuccessful !==   null){
+              %>
+                <br>
+                <div class="alert alert-success" role="alert">
+                  <p>Registration successful. Login Here.</p>
+                </div>
+              <%
+            } %>
+              <div class="form-wrap">
+                <h1>Log in</h1>
+                    <form role="form" action="/login" method="post" id="login-form" autocomplete="off">
+                        <div class="form-group">
+                            <label for="username" class="sr-only">Username</label>
+                            <input type="text" name="username" id="username" onchange="return validateUsername()" class="form-control" placeholder="enter username" required="">
+                        </div>
+                        <p id="usernameerror" style="color: red"> </p>
+                        <div class="form-group">
+                            <label for="Password" class="sr-only">Password</label>
+                            <input type="password" name="password" id="password" onchange="return validatePassword()" class="form-control" placeholder="enter Password" required>
+                        </div>
+                        <p id="passworderror" style="color: red"></p>
+                        <input type="submit" id="btn-login" onsubmit="return submit()" class="btn btn-custom btn-lg btn-block btn-primary" value="Log in">
+                        <button type="button" class="btn btn-xs btn-block btn-link"><a href="/resetpassword">Forgot password</a></button>
+                    </form>
+                    <hr>
+              </div>
+        </div> <!-- /.col-xs-12 -->
+      </div> <!-- /.row -->
+    </div> <!-- /.container -->
+</section>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+  function submit(){
+        if(validateUsername() && validatePassword()){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+  function validateUsername(){
+        //alert("Hello");
+        var first = document.getElementById('username').value;
+        var letter = /^[a-zA-Z0-9]+$/;
+        if(!first.match(letter)){
+          document.getElementById('usernameerror').innerHTML = "Only letters allowed";
+          document.getElementById('username').focus();
+          return false;
+        }
+        else{
+          document.getElementById('usernameerror').innerHTML = "";
+          return true;
+        }
+      }
+      function validatePassword(){
+        var first = document.getElementById('password').value;
+        var passwordexp = ("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+        if(!first.match(letterNumber)){
+          document.getElementById('passworderror').innerHTML = "Password must contain a lowercase, uppercase, number and minimum  8 characters";
+          document.getElementById('password').focus();
+          return false;
+        }
+        else{
+          document.getElementById('passworderror').innerHTML = "";
+          return true;
+        }
+      }
+</script>
+</body>
+</html>

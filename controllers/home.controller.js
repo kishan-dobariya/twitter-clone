@@ -22,7 +22,6 @@ async function getTweet(req, res, followerslist) {
 							tweet[l].likestatus = "Like";
 						}
 						tweet[l].likeCount = 	tweet[l].like.length;
-						// console.log("like",tweet[l].likeCount)
 						tweet[l].name = user.name;
 						tweet[l].path = editpath(user.imageURL);
 						tweetArray[k] = tweet[l];
@@ -45,11 +44,9 @@ async function getTweet(req, res, followerslist) {
 							tweet[l].name = user.name;
 							tweet[l].path = editpath(user.imageURL);
 							tweetArray[k] = tweet[l];
-							console.log("--------",tweetArray[k].path);
 							k++;
 						}
 					}
-					console.log("[[",tweetArray)
 					resolve(tweetArray.sort((a,b) => {
 						if(a.createdAt > b.createdAt)
 							return -1;
@@ -144,7 +141,7 @@ exports.showprofileGet = async function(req, res) {
 	console.log("dob",user.birthdate);
 	let birthdate = formatDate(user.birthdate);
 	user.imgpath = editpath(user.imageURL);
-	user.followingcount = followercount;
+	user.followingcount = followingcount;
 	user.followercount = followercount;
 	user.tweetcount = tweetcount;
 	res.render('showprofile',{
@@ -245,7 +242,6 @@ exports.searchGet = async function(req, res) {
 
 exports.getfollowingPost = async function(req, res) {
 	let searchresult = await Follower.searchUser({ username : req.session.username, status : true});
-	console.log("searchresult-->",searchresult);
 	for(let i = 0; i < searchresult.length; i++) {
 		let user = await User.getUser({ username : searchresult[i].following});
 		if(user.imageURL != undefined) {
@@ -262,7 +258,6 @@ exports.getfollowingPost = async function(req, res) {
 			searchresult[i] = a;
 		}
 	}
-	console.log("-->",searchresult);
 	res.send(searchresult);
 }
 
@@ -271,11 +266,21 @@ exports.getfollowersPost = async function(req, res) {
 	console.log("searchresult-->",searchresult);
 	for(let i = 0; i < searchresult.length; i++) {
 		let user = await User.getUser({ username : searchresult[i].username});
+		let reverseFollowing = await Follower.searchUser({username: req.session.username,
+																									following : user.username,
+																									status : true});
+		console.log("reverseFollowing",reverseFollowing.length);
 		if(user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
 			a["imageURL"] = editpath(user.imageURL);
 			a["name"] = user.name;
 			a["bio"] = user.bio;
+			if(reverseFollowing.length == 0) {
+				a["reverseStatus"] = "Follow";
+			}
+			else {
+				a["reverseStatus"] = "Unfollow";
+			}
 			searchresult[i] = a;
 			console.log("pro",searchresult[i]);
 		}
@@ -285,7 +290,6 @@ exports.getfollowersPost = async function(req, res) {
 			searchresult[i] = a;
 		}
 	}
-	console.log("-->",searchresult);
 	res.send(searchresult);
 }
 
@@ -302,7 +306,7 @@ exports.getTweetPost = async function(req, res) {
 					})
 	tweet.unshift(user.name);
 	tweet.unshift(user.username);
-	console.log("tweet",tweet);
+	// console.log("tweet",tweet);
 	tweet.unshift(editpath(user.imageURL));
 	res.send(tweet);
 }

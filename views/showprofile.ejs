@@ -37,6 +37,9 @@
 					z-index: 9;
 					width: 20%;
 				}
+				li.active2 {
+					background-color: red;
+				}
 			}
 		</style>
 	</head>
@@ -46,44 +49,72 @@
 		</div>
 		<div class="container-fluid" id="main" style="width: 90%">
 			<div class="row">
+			<div class="com-xs-12">
 				<div class="twitter-profile">
 					<img align="left" class="fb-image-lg" src="images/twittericon.png"/>
 					<img align="left" class="twitter-image-profile img-thumbnail img-circle"
 								src="<%= user.imgpath %>" alt="Profile image example"/>
 					<ul class="nav nav-tabs">
-						<li>
+						<li class="active2">
 							<a href="#tab_default_3" id="tweets" data-toggle="tab">
 								Tweets
+								<p id="tweetsCount" style="text-align: center;">
+									<%= user.tweetcount %>
+								</p>
 							</a>
 						</li>
-						<li class="active">
+						<li>
 							<a href="#tab_default_1" id="following" data-toggle="tab">
-							Following </a>
+							Following
+							<p id="followingCount" style="text-align: center;">
+								<%= user.followingcount %>
+							</p>
+						</a>
 						</li>
 						<li>
 							<a href="#tab_default_2" id="followers" data-toggle="tab">
 								Followers
+								<p id="followersCount" style="text-align: center;">
+									<%= user.followercount %>
+								</p>
 							</a>
 						</li>
 						<li style="float: right;" id="editProfile">
 							<a href="" data-toggle="tab" onclick="editProfile();">
 								Edit Profile
+								<p> </p>
 							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
+			</div>
 			<div class="row">
 				<div class="col-md-4" style="margin: 0;padding: 0">
 					<div class="row" id="userInfo">
 						<div class="col-xs-12" >
-							<div class="panel panel-info">
+							<div class="panel panel-info hidden-sm hidden-xs">
 								<div class="panel-body">
-									<h3 style="text-align: center;"><b><%= name %></b></h3>
-									<p style="text-align: center;"><%= email %></p>
-									<p style="text-align: center;">	<%= birthdate %></p>
-									<p style="text-align: center;"><%= bio %></p>
-									<p style="text-align: center;"><%= location %></p>
+									<h4 style="text-align: center;">
+										<span class="glyphicon glyphicon-user"></span>
+										<b><%= name %></b>
+									</h4>
+									<p style="text-align: center;">
+										<span class="glyphicon glyphicon-envelope"></span>
+										<%= email %>
+										</p>
+									<p style="text-align: center;">
+										<span class="glyphicon glyphicon-calendar"></span>
+										<%= birthdate %>
+									</p>
+									<p style="text-align: center;">
+										<span class="glyphicon glyphicon-briefcase"></span>
+										<%= bio %>
+									</p>
+									<p style="text-align: center;">
+										<span class="glyphicon glyphicon-map-marker"></span>
+										<%= location %>
+									</p>
 								</div>
 							</div>
 							<form id="editProfileForm" class="form-horizontal" role="form" action="/editprofile"

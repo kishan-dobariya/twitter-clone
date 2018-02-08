@@ -5,6 +5,7 @@ following.onclick = function() {
 		url: '/getfollowing',
 		type: 'post',
 		success: function( data, textStatus, jQxhr ){
+			console.log("data----->",data)
 			$(result).empty();
 			var showfollowing = "";
 			for (var i = 0; i<data.length; i++) {
@@ -17,11 +18,12 @@ following.onclick = function() {
 																		</div>
 																		<div class="info">
 																			<div class="title">
-																				<a target="_blank" href="`+data[i].imageURL+`">`+data[i].name+`</a>
+																				<a target="_blank" href="`+data[i].imageURL+`">`+data[i].following+`</a>
 																			</div>
-																			<div class="desc">@`+data[i].username+`</div>
+																			<div class="desc">@`+data[i].following+`</div>
 																			<div class="">`+data[i].bio+`</div>
-																			<div class="desc">Tech geek</div>
+																		<button class="btn btn-primary" onclick="test(this);"
+																						id="`+data[i].following+`" value="Niraj">Unfollow</button>
 																		</div>
 																	</div>
 																</div>`;
@@ -58,7 +60,9 @@ followers.onclick = function() {
 																			</div>
 																			<div class="desc">@`+data[i].username+`</div>
 																			<div class="">`+data[i].bio+`</div>
-																			<div class="desc">Tech geek</div>
+																			<button class="btn btn-primary" onclick="test(this);"
+																						id="`+data[i].username+`" value="Niraj">
+																						`+ data[i].reverseStatus +`</button>
 																		</div>
 																	</div>
 																</div>`;
@@ -128,9 +132,7 @@ tweets.onclick = function() {
 											 				value="`+likestatus+`">
 												<span id="likestatus">`+ likestatus +`  </span>
 											</button>
-											<span id="`+data[i]._id+`count" class="likeshow badge tip"
-																data-toggle="tooltip"
-																data-placement="top"
+											<span id="`+data[i]._id+`count"
 																title="`+likers+`">`
 																+data[i].like.length+`</span>
 											</div>
@@ -147,7 +149,6 @@ tweets.onclick = function() {
 }
 
 function editeTweet(obj) {
-	// console.log("-------",obj,"-------");
 	var element = document.getElementById(obj);
 	var tweetID = element.childNodes[7].childNodes[1].id;
 	$(".twitter-profile").addClass("blur");
@@ -179,9 +180,7 @@ function editeTweet(obj) {
 	btnEdit.setAttribute("value", "Edit");
 	btnEdit.setAttribute("onclick", "edit(this);");
 
-
 	editDiv.append(btnEdit);
-
 
 	var btnCancel = document.createElement("BUTTON");
 	btnCancel.setAttribute("class", "btn btn-primary cancelButton");
@@ -192,11 +191,7 @@ function editeTweet(obj) {
 	editDiv.append(btnCancel);
 	document.getElementsByClassName("editButton")[0].innerHTML = "Edit";
 	document.getElementsByClassName("cancelButton")[0].innerHTML = "Cancel";
-
-	// console.log(element.childNodes[5].innerHTML);
 	element.removeChild(element.childNodes[7]);
-	// console.log(element.childNodes);
-	// console.log("------------------",document.getElementById(obj).childNodes[7]);
 }
 
 function edit(button) {
@@ -208,8 +203,10 @@ function edit(button) {
 		data: { newTweet : editedTeet,
             tweetId : tweetId },
 		success: function( data, textStatus, jQxhr ){
-			// $(result).empty();
 			console.log(data);
+			$('#tweets').trigger('click');
+			$(".twitter-profile").removeClass("blur");
+			$("#userInfo").removeClass("blur");
 		},
 		error: function( jqXhr, textStatus, errorThrown ){
 				console.log( errorThrown );
@@ -217,7 +214,6 @@ function edit(button) {
 	});
 }
 function cancel1() {
-	// alert("delete");
 	$(".twitter-profile").removeClass("blur");
 	$("#userInfo").removeClass("blur");
 	$('#tweets').trigger('click');

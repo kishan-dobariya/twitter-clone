@@ -38,15 +38,20 @@ nav{
 	margin-bottom: 0px;
 }
 
-.nav-tabs>li.active>a,
-.nav-tabs>li.active>a:focus,
-.nav-tabs>li.active>a:hover {
-    color: #555;
-     cursor: default;
-     background-color: transparent;
-     border: none;
-    /* border-bottom-color: transparent; */
+.twitter-profile .nav-tabs>li>a {
+	color : black;
+	background-color: transparent;
+	border: none;
+	font-weight: bold;
 }
+
+.twitter-profile .nav>li>a:hover {
+	background-color: none;
+	color: #1DA1F2;
+  border-bottom: 2px  solid #1DA1F2;
+  /*border-bottom-width: 2px;*/
+}
+
 
 .onscrollpadding {
 	padding-top: 122px;

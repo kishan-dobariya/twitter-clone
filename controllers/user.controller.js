@@ -4,6 +4,7 @@ let bcrypt = require('bcrypt');
 let jwt = require('Jsonwebtoken');
 let cookie = require('cookie');
 let session = require('express-session');
+
 exports.loginGet = function (req, res) {
 	res.render("login");
 }
@@ -60,9 +61,14 @@ exports.registrationPost = async function (req, res) {
 			if(err) {
 				throw err;
 			}
-			res.render('login', {
-				msg : "Registration Successfull."
+			res.render('login2', {
+				registrationSuccessful : "Registration Successfull."
 			});
+		});
+	}
+	else {
+		res.render("registration2",{
+			alreadyExist : "Usernaem already exist. Please select different Username.",
 		});
 	}
 }

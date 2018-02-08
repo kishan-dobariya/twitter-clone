@@ -28,6 +28,7 @@ router.get('/resetpassword', userController.resetpasswordGet);
 router.post('/resetpassword', userController.resetpasswordPost);
 router.post('/setpassword', userController.setpasswordPost);
 router.get('/home',checkSession, homeController.homePageGet);
+router.get('/',checkSession, homeController.homePageGet);
 router.get('/showprofile',checkSession, homeController.showprofileGet);
 router.get('/editprofile',checkSession, homeController.editprofileGet);
 router.post('/editprofile',checkSession, upload.single('profilepicture'), homeController.editprofilePost);
