@@ -5,7 +5,10 @@ following.onclick = function() {
 		url: '/getfollowing',
 		type: 'post',
 		success: function( data, textStatus, jQxhr ){
-			console.log("data----->",data)
+			$(".following").addClass("active2");
+			$(".followers").removeClass("active2");
+			$(".tweets").removeClass("active2");
+			$(".editProfile").removeClass("active2");
 			$(result).empty();
 			var showfollowing = "";
 			for (var i = 0; i<data.length; i++) {
@@ -42,6 +45,10 @@ followers.onclick = function() {
 		url: '/getfollowers',
 		type: 'post',
 		success: function( data, textStatus, jQxhr ){
+			$(".following").removeClass("active2");
+			$(".followers").addClass("active2");
+			$(".tweets").removeClass("active2");
+			$(".editProfile").removeClass("active2");
 			$(result).empty();
 			console.log(data);
 			for (var i = 0; i<data.length; i++) {
@@ -81,6 +88,10 @@ tweets.onclick = function() {
 		url: '/getTweet',
 		type: 'post',
 		success: function( data, textStatus, jQxhr ){
+			$(".following").removeClass("active2");
+			$(".followers").removeClass("active2");
+			$(".tweets").addClass("active2");
+			$(".editProfile").removeClass("active2");
 			$(result).empty();
 			for (var i = 3; i<data.length; i++) {
 				var likestatus;
@@ -149,7 +160,13 @@ tweets.onclick = function() {
 }
 
 function editeTweet(obj) {
+	alert("kishan");
+	$(".following").removeClass("active2");
+	$(".followers").removeClass("active2");
+	$(".tweets").removeClass("active2");
+	$(".editProfile").addClass("active2");
 	var element = document.getElementById(obj);
+	console.log("-------",obj);
 	var tweetID = element.childNodes[7].childNodes[1].id;
 	$(".twitter-profile").addClass("blur");
 	$("#userInfo").addClass("blur");
@@ -213,6 +230,7 @@ function edit(button) {
 		}
 	});
 }
+
 function cancel1() {
 	$(".twitter-profile").removeClass("blur");
 	$("#userInfo").removeClass("blur");

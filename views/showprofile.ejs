@@ -25,6 +25,7 @@
 				width: 20%;
 			}
 
+
 /*------------------------MEDIA QUERY---------------------------*/
 			@media (max-width:768px){
 
@@ -37,9 +38,7 @@
 					z-index: 9;
 					width: 20%;
 				}
-				li.active2 {
-					background-color: red;
-				}
+
 			}
 		</style>
 	</head>
@@ -51,11 +50,11 @@
 			<div class="row">
 			<div class="com-xs-12">
 				<div class="twitter-profile">
-					<img align="left" class="fb-image-lg" src="images/twittericon.png"/>
-					<img align="left" class="twitter-image-profile img-thumbnail img-circle"
+					<img align="left" class="fb-image-lg" src="images/cover.jpg"/>
+					<img align="left" class="twitter-image-profile img-thumbnail"
 								src="<%= user.imgpath %>" alt="Profile image example"/>
 					<ul class="nav nav-tabs">
-						<li class="active2">
+						<li class="active2 tweets">
 							<a href="#tab_default_3" id="tweets" data-toggle="tab">
 								Tweets
 								<p id="tweetsCount" style="text-align: center;">
@@ -63,7 +62,7 @@
 								</p>
 							</a>
 						</li>
-						<li>
+						<li class="following">
 							<a href="#tab_default_1" id="following" data-toggle="tab">
 							Following
 							<p id="followingCount" style="text-align: center;">
@@ -71,7 +70,7 @@
 							</p>
 						</a>
 						</li>
-						<li>
+						<li class="followers">
 							<a href="#tab_default_2" id="followers" data-toggle="tab">
 								Followers
 								<p id="followersCount" style="text-align: center;">
@@ -79,7 +78,7 @@
 								</p>
 							</a>
 						</li>
-						<li style="float: right;" id="editProfile">
+						<li class="editProfile" style="float: right;" id="editProfile">
 							<a href="" data-toggle="tab" onclick="editProfile();">
 								Edit Profile
 								<p> </p>
@@ -118,40 +117,39 @@
 								</div>
 							</div>
 							<form id="editProfileForm" class="form-horizontal" role="form" action="/editprofile"
-													method="post" enctype="multipart/form-data"
-													style="background-color: #e8f5fd">
+													method="post" enctype="multipart/form-data">
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input type="file" class="form-control" placeholder="profilepicture" name="profilepicture">
 									</div>
 								</div>
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input class="form-control" type="text" placeholder="Name" name="name" value="<%= name %>">
 									</div>
 								</div>
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input class="form-control" type="text" placeholder="Bio" name="bio" value="<%= bio %>">
 									</div>
 								</div>
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input class="form-control" type="email" placeholder="Email" name="email" value="<%= email %>">
 									</div>
 								</div>
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input class="form-control" type="" placeholder="Location" name="location" value="<%= location %>">
 									</div>
 								</div>
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input class="form-control" type="date" placeholder="Birthdate" name="dob" value="<%= birthdate %>">
 									</div>
 								</div>
 								<div class="form-group">
-									<div class="col-xs-12">
+									<div class="col-xs-10">
 										<input type="submit" class="btn btn-primary" value="Save Changes">
 										<span></span>
 										<input type="reset" class="btn btn-default" value="Cancel" onclick="cancel();">
@@ -161,7 +159,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-8" style="position: relative;top: -60px">
 					<div class="row showresult" id="result"></div>
 				</div>
 			</div>
@@ -197,4 +195,3 @@
 		</script>
 	</body>
 </html>
-<button class="btn btn-primary" id=""></button>

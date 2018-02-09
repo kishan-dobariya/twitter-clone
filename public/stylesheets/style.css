@@ -53,6 +53,14 @@ nav{
 }
 
 
+li.active2 {
+    border-bottom: 2px  solid #1DA1F2;
+  }
+  li.active2>a {
+    color: #1DA1F2 !important;
+  }
+
+
 .onscrollpadding {
 	padding-top: 122px;
 }
@@ -509,7 +517,7 @@ ul#showuser{
 }
 
 .card.hovercard .cardheader {
-    background: url("/images/kishan.jpg");
+    background: url("/images/minions.jpg");
     background-size: cover;
     height: 135px;
 }

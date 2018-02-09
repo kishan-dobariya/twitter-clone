@@ -8,6 +8,9 @@
 
 		</style>
 	</head>
+	<!-- <p id="position">
+
+	</p> -->
 	<body class="container" style="width: 100%;margin:0;">
 		<div class="row" >
 			<% include home-header %>
@@ -49,9 +52,9 @@
 					<div class="row">
 						<div class="col-md-12" style="margin-bottom: 10px">
 							<div class="form-group" id="tweetbox" style="padding: 5px;margin: 0">
-								<input type="text" class="form-control" id="tweet" placeholder="What's happening?" >
+								<input type="text" class="form-control" id="tweet"	placeholder="What's happening?" >
 								<br>
-								<button class="btn btn-primary" id="tweetbutton">Tweet</button>
+								<button style="float: right;" class="btn btn-primary" id="tweetbutton">Tweet</button>
 							</div>
 						</div>
 					</div>
@@ -65,13 +68,30 @@
 													src="<%= tweets[i].path %>"
 													style="width: 50px;height: 50px;">
 										</div>
-										<div class="col-xs-9" style="">
+										<div class="col-xs-10" style="">
 											<span><a
 												style="color: black;font-size: 14px;"
 												href='/home?un=<%= tweets[i].username %>'>
 												<b><%= tweets[i].name %></b>
 												<span style="color: #657786">@<%= tweets[i].username %></span></a>
 											</span>
+											<% if (tweets[i].username == username) {
+												%><div class="dropleft" style="float:right">
+											  <span data-toggle="dropdown"
+											  class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
+											  <ul class="dropdown-menu">
+											  	<% var tweetId = tweets[i]._id %>
+											    <li><a onclick="editeTweet(<%= tweetId  %>)">
+															Edit
+															</a>
+													</li>
+													<li><a>
+															Delete
+															</a>
+													</li>
+											  </ul>
+											</div><%
+											}%>
 											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
 											<div id="likebuttondiv">
 											<button class="btn btn-default btn-sm like" onclick="like(this)" id="<%= tweets[i]._id %>"
@@ -83,13 +103,6 @@
 										</div>
 
 									</div>
-								<!-- 	<div class="row row-eq-height" style="border: 2px solid #f6f6f9;padding: 10px;
-													 border-radius: 10px;">
-										<div class="col-md-12">
-											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
-										</div><br>
-
-									</div> -->
 								</div><hr style="margin: 0"><hr style="margin: 0">
 							<%}
 						 }%>

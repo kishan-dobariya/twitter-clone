@@ -18,3 +18,9 @@ $("#searchuser").keyup( function(){
     }
   });
 });
+
+$("#searchuser").focusout( function(){
+  $('#showuser').delay(200).hide(0, function () {
+        $(this).empty();
+  });
+});
