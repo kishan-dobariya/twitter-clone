@@ -40,6 +40,12 @@ router.post('/getfollowing',checkSession, homeController.getfollowingPost);
 router.post('/getfollowers',checkSession, homeController.getfollowersPost);
 router.post('/getTweet',checkSession, homeController.getTweetPost);
 router.post('/like',checkSession, homeController.likePost);
+router.post('/getFriendFollowers', checkSession, feedController.friendFollowersPost);
+router.post('/getFriendFollowing', checkSession, feedController.friendFollowingPost);
+router.post('/getFriendTweet', checkSession, feedController.friendTweetsPost);
+
+
+
 module.exports = router;
 
 function checkSession(req, res, callback){

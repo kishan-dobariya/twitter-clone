@@ -1,102 +1,139 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Profile</title>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <title>FriendProfile</title>
     <% include bootstrapcss %>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <style type="text/css">
+    .blur {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+      .nav-tabs {
+        border: none;
+      }
+      .twitter-profile img.fb-image-lg{
+        z-index: 0;
+        width: 100%;
+        margin-bottom: 10px;
+        height: 30vh;
+      }
+      .twitter-image-profile
+      {
+        margin: -90px 10px 20px 80px;
+        z-index: 9;
+        width: 20%;
+      }
+
+
+/*------------------------MEDIA QUERY---------------------------*/
+      @media (max-width:768px){
+
+        .twitter-profile-text>h1{
+          font-weight: 700;
+          font-size:16px;
+        }
+        .twitter-image-profile{
+          margin: -45px 10px 0px 25px;
+          z-index: 9;
+          width: 20%;
+        }
+
+      }
+    </style>
   </head>
   <body>
-    <% include home-header %>
-    <div class="container">
+    <div class="row" >
+      <% include home-header %>
+    </div>
+    <div class="container-fluid" id="main" style="width: 90%">
       <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
-          <div class="panel panel-info">
-            <div class="panel-heading">
-              <h3 class="panel-title">Profile</h3>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-md-3 col-lg-3 " align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"> </div>
-                <div class=" col-md-9 col-lg-9 ">
-                  <table class="table table-user-information">
-                    <tbody>
-                      <tr>
-                        <td>Name</td>
-                        <td><%= name %></td>
-                      </tr>
-                      <tr>
-                        <td>Email</td>
-                        <td><%= email %></td>
-                      </tr>
-                      <tr>
-                        <td>Date of Birth</td>
-                        <td><%= birthdate %></td>
-                      </tr>
-                      <tr>
-                        <tr>
-                          <td>Bio</td>
-                          <td><%= bio %></td>
-                        </tr>
-                        <tr>
-                          <td>Location</td>
-                          <td><%= location %></td>
-                        </tr>
-                        <tr>
-                          <td>Followers</td>
-                          <td><%= followers %></td>
-                        </tr>
-                        <tr>
-                          <td>Followings</td>
-                          <td><%= folowings %></td>
-                        </tr>
-                        <tr id="button">
-                          <button class="btn btn-primary" onclick="test(this);" id="<%= username %>" value="<%= username %>"><%= status %></button>
-                        </tr>
-                      </tr>
-                    </tbody>
-                  </table>
+      <div class="com-xs-12">
+        <div class="twitter-profile">
+          <img align="left" class="fb-image-lg" src="images/cover.jpg"/>
+          <img align="left" class="twitter-image-profile img-thumbnail"
+                src="<%= imgpath %>" alt="Profile image example"/>
+          <ul class="nav nav-tabs">
+            <li class="active2 tweets" id="<%= user.username %>" onclick="showTweets(this.id)">
+              <a href="#tab_default_3" id="tweets" data-toggle="tab">
+                Tweets
+                <p id="tweetsCount" style="text-align: center;">
+                  <%= user.tweetcount %>
+                </p>
+              </a>
+            </li>
+            <li class="following" id="<%= user.username %>" onclick="showFollowing(this.id)">
+              <a href="#tab_default_1" id="following" data-toggle="tab">
+              Following
+              <p id="followingCount" style="text-align: center;">
+                <%= user.followingcount %>
+              </p>
+            </a>
+            </li>
+            <li class="followers" id="<%= user.username %>" onclick="showFollowers(this.id)">
+              <a href="#tab_default_2" id="followers" data-toggle="tab">
+                Followers
+                <p id="followersCount" style="text-align: center;">
+                  <%= user.followercount %>
+                </p>
+              </a>
+            </li>
+            <li class="followUnfollow" style="float: right;" id="followUnfollow">
+                <button class="btn btn-primary" onclick="test(this);" id="<%= user.username %>" value="<%= user.username %>"><%= user.status %></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4" style="margin: 0;padding: 0">
+          <div class="row" id="userInfo">
+            <div class="col-xs-12" >
+              <div class="panel panel-info hidden-sm hidden-xs">
+                <div class="panel-body">
+                  <h4 style="text-align: center;">
+                    <span class="glyphicon glyphicon-user"></span>
+                    <b><%= user.name %></b>
+                  </h4>
+                  <p style="text-align: center;">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                    <%= user.email %>
+                  </p>
+                  <p style="text-align: center;">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    <%= birthdate %>
+                  </p>
+                  <p style="text-align: center;">
+                    <span class="glyphicon glyphicon-briefcase"></span>
+                    <%= user.bio %>
+                  </p>
+                  <p style="text-align: center;">
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                    <%= user.location %>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3">
-          <div>
-            <% for( var i=0; i < tweets.length; i++) {%>
-              <div style="padding: 15px;margin: 5px;">
-                <div class="row row-eq-height" style="background-color: lavender;border-radius: 10px;">
-                  <div class="col-md-2" style="margin: 5px;" align="center">
-                    <img class="img-circle img-responsive" alt="ProfilePicture"
-                      src=<%= imgpath %>>
-                  </div>
-                  <div class="col-md-8">
-                    <span style="position: relative;top: 25px;right: 20px;" class="align-middle">
-                      <b><%= tweets[i].username %></b>
-                    </span>
-                  </div>
-                </div>
-                <div class="row row-eq-height" style="border: 2px solid lavender;padding: 10px;
-                         border-radius: 10px;">
-                  <p><%= tweets[i].tweet %></p>
-                  <div class="row row-eq-height">
-                    <div class="col-md-4">
-                      <button class="btn bt">
-                        Like
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div><br>
-            <% } %>
-          </div>
+        <div class="col-md-8" style="position: relative;top: -60px">
+          <div class="row showresult" id="result"></div>
         </div>
       </div>
     </div>
+
     <% include bootstrapjs %>
-    <script type="text/javascript" src="javascript/followunfollow.js"></script>
     <script type="text/javascript" src="javascript/onready.js"></script>
     <script type="text/javascript" src="javascript/searchuser.js"></script>
+    <script type="text/javascript" src="javascript/tweet.js"></script>
+    <script type="text/javascript" src="javascript/like.js"></script>
+    <script type="text/javascript" src="javascript/fixheader.js"></script>
+    <script type="text/javascript" src="javascript/followunfollow.js"></script>
+    <script type="text/javascript" src="javascript/friend_profile.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#tweets').trigger('click');
+      });
+    </script>
   </body>
 </html>

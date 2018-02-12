@@ -95,6 +95,7 @@ exports.homePageGet = async function(req, res) {
 			let user = await User.getUser({ username : req.query.un});
 			let friendfollowercount = await Follower.getFollowers({ following : req.query.un, status : true});
 			let friendfollowingcount = await Follower.getFollowers({ username : req.query.un, status : true});
+			let friendtweetcount = await Feed.getTweetCount({ username : req.query.un});
 			let status = await Follower.getFollower({username : req.session.username, following : req.query.un});
 			if(status === null){
 				status = "Follow";
@@ -107,22 +108,18 @@ exports.homePageGet = async function(req, res) {
 					status = "Follow";
 				}
 			}
-			let tweet = await Feed.getTweet({ username : req.query.un});
-			console.log(tweet);
+			let a = JSON.parse(JSON.stringify(user));
+			a["followingcount"] = friendfollowingcount;
+			a["followercount"] = friendfollowercount;
+			a["tweetcount"] = friendtweetcount;
+			a['status'] = status;
+			user = a;
 			let birthdate = formatDate(user.birthdate);
 			let editedpath = editpath(user.imageURL);
 			res.render("friendprofile", {
-				username : user.username,
-				name : user.name,
-				bio : user.bio,
-				email : user.email,
-				location : user.location,
+				user : user,
 				birthdate : birthdate,
 				imgpath : editedpath,
-				followers : friendfollowercount,
-				folowings : friendfollowingcount,
-				status : status,
-				tweets : tweet
 			});
 		}
 }
@@ -138,7 +135,6 @@ exports.showprofileGet = async function(req, res) {
 	let followercount = await Follower.getFollowers({ following : req.session.username, status : true});
 	let followingcount = await Follower.getFollowers({ username : req.session.username, status : true});
 	let tweetcount = await Feed.getTweetCount({ username : req.session.username});
-	console.log("dob",user.birthdate);
 	let birthdate = formatDate(user.birthdate);
 	user.imgpath = editpath(user.imageURL);
 	user.followingcount = followingcount;
@@ -151,7 +147,6 @@ exports.showprofileGet = async function(req, res) {
 		email : user.email,
 		location : user.location,
 		 birthdate : birthdate,
-		// imgpath : editedpath,
 	});
 }
 
@@ -216,7 +211,7 @@ exports.addFollowerGet = async function(req, res) {
 		await Follower.updateStatus({ username : req.session.username, following : req.body.un,
 		}, req.body.status).then(function(data){
 			if (req.body.status !== "false") {
-				res.send("Unfollow")
+				res.send("Unfollow");
 			}
 			else {
 				res.send("Follow");
@@ -242,7 +237,9 @@ exports.searchGet = async function(req, res) {
 
 exports.getfollowingPost = async function(req, res) {
 	let searchresult = await Follower.searchUser({ username : req.session.username, status : true});
+	console.log("searchresult--->",searchresult);
 	for(let i = 0; i < searchresult.length; i++) {
+		console.log("name",searchresult[i].following)
 		let user = await User.getUser({ username : searchresult[i].following});
 		if(user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
@@ -250,7 +247,6 @@ exports.getfollowingPost = async function(req, res) {
 			a["name"] = user.name;
 			a["bio"] = user.bio;
 			searchresult[i] = a;
-			console.log("pro",searchresult[i]);
 		}
 		else {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
@@ -263,30 +259,34 @@ exports.getfollowingPost = async function(req, res) {
 
 exports.getfollowersPost = async function(req, res) {
 	let searchresult = await Follower.searchUser({ following : req.session.username, status : true});
-	console.log("searchresult-->",searchresult);
 	for(let i = 0; i < searchresult.length; i++) {
 		let user = await User.getUser({ username : searchresult[i].username});
-		let reverseFollowing = await Follower.searchUser({username: req.session.username,
-																									following : user.username,
-																									status : true});
-		console.log("reverseFollowing",reverseFollowing.length);
+		let reverseFollowing = await Follower.getFollowers({username: req.session.username,
+																									following : user.username, status: true});
 		if(user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
 			a["imageURL"] = editpath(user.imageURL);
 			a["name"] = user.name;
 			a["bio"] = user.bio;
-			if(reverseFollowing.length == 0) {
+			if(reverseFollowing != 1) {
+				a["reverseStatus"] = "Follow";
+			}
+			else {
+				a['reverseStatus'] = "Unfollow";
+			}
+			searchresult[i] = a;
+		}
+		else {
+			let a = JSON.parse(JSON.stringify(searchresult[i]));
+			a["imageURL"] = "images/twittericon.png";
+			a["name"] = user.name;
+			a["bio"] = user.bio;
+			if(reverseFollowing != 1) {
 				a["reverseStatus"] = "Follow";
 			}
 			else {
 				a["reverseStatus"] = "Unfollow";
 			}
-			searchresult[i] = a;
-			console.log("pro",searchresult[i]);
-		}
-		else {
-			let a = JSON.parse(JSON.stringify(searchresult[i]));
-			a["imageURL"] = "images/twittericon.png";
 			searchresult[i] = a;
 		}
 	}
@@ -306,7 +306,6 @@ exports.getTweetPost = async function(req, res) {
 					})
 	tweet.unshift(user.name);
 	tweet.unshift(user.username);
-	// console.log("tweet",tweet);
 	tweet.unshift(editpath(user.imageURL));
 	res.send(tweet);
 }

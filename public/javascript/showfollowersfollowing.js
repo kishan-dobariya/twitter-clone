@@ -26,7 +26,7 @@ following.onclick = function() {
 																			<div class="desc">@`+data[i].following+`</div>
 																			<div class="">`+data[i].bio+`</div>
 																		<button class="btn btn-primary" onclick="test(this);"
-																						id="`+data[i].following+`" value="Niraj">Unfollow</button>
+																						id="`+data[i].following+`" value="`+data[i].following+`">Unfollow</button>
 																		</div>
 																	</div>
 																</div>`;
@@ -50,10 +50,7 @@ followers.onclick = function() {
 			$(".tweets").removeClass("active2");
 			$(".editProfile").removeClass("active2");
 			$(result).empty();
-			console.log(data);
 			for (var i = 0; i<data.length; i++) {
-					console.log(data[i].imageURL);
-
 				var showfollowers = `<div style="padding:2px" class="col-md-4 col-sm-6">
 																	<div style="background-color:white;margin:0" class="card hovercard">
 																		<div class="cardheader">
@@ -65,10 +62,10 @@ followers.onclick = function() {
 																			<div class="title">
 																				<a target="_blank" href="`+data[i].imageURL+`">`+data[i].name+`</a>
 																			</div>
-																			<div class="desc">@`+data[i].username+`</div>
+					 														<div class="desc">@`+data[i].username+`</div>
 																			<div class="">`+data[i].bio+`</div>
 																			<button class="btn btn-primary" onclick="test(this);"
-																						id="`+data[i].username+`" value="Niraj">
+																						id="`+data[i].username+`" value="`+data[i].username+`">
 																						`+ data[i].reverseStatus +`</button>
 																		</div>
 																	</div>
@@ -166,7 +163,6 @@ function editeTweet(obj) {
 	$(".tweets").removeClass("active2");
 	$(".editProfile").addClass("active2");
 	var element = document.getElementById(obj);
-	console.log("-------",obj);
 	var tweetID = element.childNodes[7].childNodes[1].id;
 	$(".twitter-profile").addClass("blur");
 	$("#userInfo").addClass("blur");
@@ -220,7 +216,6 @@ function edit(button) {
 		data: { newTweet : editedTeet,
             tweetId : tweetId },
 		success: function( data, textStatus, jQxhr ){
-			console.log(data);
 			$('#tweets').trigger('click');
 			$(".twitter-profile").removeClass("blur");
 			$("#userInfo").removeClass("blur");
