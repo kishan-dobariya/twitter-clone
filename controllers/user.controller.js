@@ -4,11 +4,40 @@ let bcrypt = require('bcrypt');
 let jwt = require('Jsonwebtoken');
 let cookie = require('cookie');
 let session = require('express-session');
+let nodemailer = require('nodemailer');
+let transporter = nodemailer.createTransport({
+	service : 'gmail',
+	secure: false,
+	port: 25,
+	auth: {
+		user: 'kishandobariya033@gmail.com',
+		pass: 'Kishan.@&033'
+	},
+	tls:{
+		rejectUnauthorized : false
+	}
+});
+let helperoption = {
+	from : '"Kishan" <kishandobariya033@gmail.com',
+	to : 'mihir.kanzariya@bacancytechnology.com',
+	subject: 'Demo Mail',
+	text: 'Hello form KKD',
+};
 
+// ---------------------WHEN REDIRECT TO LOGIN PAGE---------------------------//
 exports.loginGet = function (req, res) {
+	transporter.sendMail(helperoption, function (err, data) {
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log(data);
+		}
+	})
 	res.render('login');
 };
 
+// ----------------CHECK USERNAME AND PASSWORD FOR LOGIN----------------------//
 exports.loginPost = async function (req, res) {
 	console.log('loginPost');
 	let uname = req.body.username;
@@ -29,15 +58,19 @@ exports.loginPost = async function (req, res) {
 	});
 };
 
+// -------------------------------LOGOUT------------------------------------//
 exports.logoutGet = function (req, res) {
 	req.session.destroy();
 	res.redirect('login');
 };
 
+// -------------------WHEN REDIRECT TO REGISTRATION PAGE----------------------//
 exports.registrationGet = function (req, res) {
 	res.render('registration');
+
 };
 
+// --------------------------REGISTRATION REQUEST------------------------------//
 exports.registrationPost = async function (req, res) {
 	let uname = req.body.name;
 	let uusername = req.body.username;
@@ -62,21 +95,23 @@ exports.registrationPost = async function (req, res) {
 			if (err) {
 				throw err;
 			}
-			res.render('login2', {
-				registrationSuccessful: 'Registration Successfull.'
+			res.render('login', {
+				registrationSuccessful: 'Registration Successfull. Login here.'
 			});
 		});
 	} else {
-		res.render('registration2', {
+		res.render('registration', {
 			alreadyExist: 'Usernaem already exist. Please select different Username.'
 		});
 	}
 };
 
+// -------------------WHEN REDIRECT TO RESETPASSWORD PAGE----------------------//
 exports.resetpasswordGet = function (req, res) {
 	res.render('getmail');
 };
 
+// ----------------------CHECKING EMAIL FOR RESETPASSWORD----------------------//
 exports.resetpasswordPost = async function (req, res) {
 	let uemail = req.body.email;
 	let user = await User.getUser({email: uemail});
@@ -88,14 +123,16 @@ exports.resetpasswordPost = async function (req, res) {
 	}
 };
 
+// ----------------------------UPDATE NEW PASSWORD----------------------------//
 exports.setpasswordPost = async function (req, res) {
 	let upassword = req.body.password;
 	 let passWord = await User.updatePassword({email: tempEmail}, upassword).then(console.log);
 		 res.redirect('/login');
 };
 
-exports.homePageGet = function (req, res) {
-	res.render('index', {
-		title: 'name'
-	});
-};
+//
+// exports.homePageGet = function (req, res) {
+// 	res.render('index', {
+// 		title: 'name'
+// 	});
+// };

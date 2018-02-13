@@ -57,7 +57,7 @@
 						<li class="active2 tweets">
 							<a href="#tab_default_3" id="tweets" data-toggle="tab">
 								Tweets
-								<p id="tweetsCount" style="text-align: center;">
+								<p id="mytweetsCount" style="text-align: center;">
 									<%= user.tweetcount %>
 								</p>
 							</a>
@@ -65,7 +65,7 @@
 						<li class="following">
 							<a href="#tab_default_1" id="following" data-toggle="tab">
 							Following
-							<p id="followingCount" style="text-align: center;">
+							<p id="myfollowingCount" style="text-align: center;">
 								<%= user.followingcount %>
 							</p>
 						</a>
@@ -73,7 +73,7 @@
 						<li class="followers">
 							<a href="#tab_default_2" id="followers" data-toggle="tab">
 								Followers
-								<p id="followersCount" style="text-align: center;">
+								<p id="myfollowersCount" style="text-align: center;">
 									<%= user.followercount %>
 								</p>
 							</a>
@@ -117,36 +117,48 @@
 								</div>
 							</div>
 							<form id="editProfileForm" class="form-horizontal" role="form" action="/editprofile"
-													method="post" enctype="multipart/form-data">
+													method="post" enctype="multipart/form-data"
+													onsubmit="return validateForm()">
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input type="file" class="form-control" placeholder="profilepicture" name="profilepicture">
+										<input type="file" class="form-control" placeholder="profilepicture"
+										 name="profilepicture">
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input class="form-control" type="text" placeholder="Name" name="name" value="<%= name %>">
-									</div>
+										<input class="form-control" type="text" placeholder="Name" name="name"
+										onchange="return validateName()" id="name" value="<%= name %>">
+									</div><br>
+                  <p id="nameerror" style="color: red"> </p>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input class="form-control" type="text" placeholder="Bio" name="bio" value="<%= bio %>">
-									</div>
+										<input class="form-control" type="text" placeholder="Bio" name="bio"
+										onchange="return validateBio()" id="bio" value="<%= bio %>">
+									</div><br>
+									<p id="bioerror" style="color: red"></p>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input class="form-control" type="email" placeholder="Email" name="email" value="<%= email %>">
-									</div>
+										<input class="form-control" type="email" placeholder="Email" name="email"
+										onchange="return validateEmail()" id="email" value="<%= email %>">
+									</div><br>
+                  <p id="emailerror" style="color: red"></p>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input class="form-control" type="" placeholder="Location" name="location" value="<%= location %>">
-									</div>
+										<input class="form-control" type="" placeholder="Location" name="location"
+										onchange="return validateLocation()" id="location" value="<%= location %>">
+									</div><br>
+									<p id="locationerror" style="color: red"></p>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input class="form-control" type="date" placeholder="Birthdate" name="dob" value="<%= birthdate %>">
-									</div>
+										<input class="form-control" type="date" id="date" name="dob"
+										onchange="return validateBirthdate()" value="<%= birthdate %>">
+									</div><br>
+									<p id="emailerror" style="color: red"><%= birthdate %></p>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
@@ -193,5 +205,68 @@
 				$( "#main" ).css( "opacity", "1" );
 			}
 		</script>
+
+		<script type="text/javascript">
+      function validateForm(){
+        if(validateName() && validateEmail() && validateBio() && validateLocation()){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      function validateName(){
+        var first = document.getElementById('name').value;
+        var letter = /^[a-zA-Z\s]+$/;
+        if(!first.match(letter)){
+          document.getElementById('nameerror').innerHTML = "Only letters allowed";
+          document.getElementById('name').focus();
+          return false;
+        }
+        else{
+          document.getElementById('nameerror').innerHTML = "";
+          return true;
+        }
+      }
+      function validateEmail(){
+        var first = document.getElementById('email').value;
+        var emailexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if(!first.match(emailexp)){
+          document.getElementById('emailerror').innerHTML = "Invalid Email";
+          document.getElementById('email').focus();
+          return false;
+        }
+        else{
+          document.getElementById('emailerror').innerHTML = "";
+          return true;
+        }
+      }
+      function validateBio(){
+        var first = document.getElementById('bio').value;
+        var emailexp = /^[a-zA-Z0-9!@#\$%\^\&*\s]+$/;
+        if(!first.match(emailexp)){
+          document.getElementById('bioerror').innerHTML = "Invalid Bio";
+          document.getElementById('bio').focus();
+          return false;
+        }
+        else{
+          document.getElementById('bioerror').innerHTML = "";
+          return true;
+        }
+      }
+      function validateLocation(){
+        var first = document.getElementById('location').value;
+        var emailexp = /^[a-zA-Z0-9!@#\$%\^\&*\s]+$/;
+        if(!first.match(emailexp)){
+          document.getElementById('locationerror').innerHTML = "Invalid Location";
+          document.getElementById('location').focus();
+          return false;
+        }
+        else{
+          document.getElementById('locationerror').innerHTML = "";
+          return true;
+        }
+      }
+    </script>
 	</body>
 </html>

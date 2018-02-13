@@ -2,13 +2,13 @@ let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
 let Feed = require('../models/userfeed.models');
 
-let session = require('express-session');
-
 function editpath (url) {
-	// body...
-	if (url !== null && url !== undefined) { return url.replace('public\\', ''); }
+	if (url !== null && url !== undefined) {
+		return url.replace('public\\', '');
+	}
 }
 
+// -----------------------INSERT TWEET--------------------------//
 exports.insertPost = async function (req, res, next) {
 	if (req.body.tweet !== '') {
 		let newTweet = new Feed({ username: req.session.username,
@@ -23,6 +23,7 @@ exports.insertPost = async function (req, res, next) {
 	}
 };
 
+// ------------------------EDIT TWEET----------------------------//
 exports.edittweetPost = async function (req, res, next) {
 	console.log('body', req.body);
 	await Feed.updateTweet({ _id: req.body.tweetId}, req.body.newTweet)
@@ -35,8 +36,8 @@ exports.edittweetPost = async function (req, res, next) {
 	res.send(null);
 };
 
+// ------------------GET FRIEND'S FOLLOWERS-------------------------//
 exports.friendFollowersPost = async function (req, res) {
-	// console.log(req.body.userName);
 	let searchresult = await Follower.searchUser({ following: req.body.userName, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
 		let user = await User.getUser({ username: searchresult[i].username});
@@ -58,6 +59,7 @@ exports.friendFollowersPost = async function (req, res) {
 	res.send(searchresult);
 };
 
+// ---------------------GET FRIEND'S FOLLOWING--------------------------//
 exports.friendFollowingPost = async function (req, res) {
 	console.log(req.body.userName);
 	let searchresult = await Follower.searchUser({ username: req.body.userName, status: true});
@@ -79,6 +81,7 @@ exports.friendFollowingPost = async function (req, res) {
 	res.send(searchresult);
 };
 
+// --------------------------GET FRIEND'S TWEET----------------------------//
 exports.friendTweetsPost = async function (req, res) {
 	console.log(req.body.userName);
 	let tweet = await Feed.getTweet({ username: req.body.userName});

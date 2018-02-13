@@ -9,11 +9,16 @@
 </head>
 <body>
 <% include header %>
-<% typeof msg != 'undefined' ? msg : '' %>
 <section id="login">
     <div class="container">
       <div class="row">
           <div class="col-xs-12">
+            <% if ( typeof registrationSuccessful != 'undefined' ) { %>
+            <div class="alert alert-success" role="alert">
+              <p><%= registrationSuccessful %></p>
+            </div>
+              <%
+            } %>
               <div class="form-wrap">
                 <h1>Log in</h1>
                     <form role="form" action="/login" method="post" id="login-form" autocomplete="off">

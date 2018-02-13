@@ -40,9 +40,9 @@
 								<th>Following</th>
 							</tr>
 							<tr>
-								<td><%=tweetcount%></td>
-								<td><%=followers%></td>
-								<td><%=folowings%></td>
+								<td><a href="/showprofile"><%=tweetcount%></a></td>
+								<td><a href="/showprofile"><%=followers%></a></td>
+								<td><a href="/showprofile"><%=folowings%></a></td>
 							</tr>
 						</table>
 						</div>
@@ -81,7 +81,7 @@
 											  class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
 											  <ul class="dropdown-menu">
 											  	<% var tweetId = tweets[i]._id %>
-											    <li><a onclick="editeTweet(<%= tweetId  %>)">
+											    <li><a onclick="editeTweet('<%= tweetId  %>')">
 															Edit
 															</a>
 													</li>
@@ -117,5 +117,6 @@
 		<script type="text/javascript" src="javascript/like.js"></script>
 		<script type="text/javascript" src="javascript/onready.js"></script>
 		<script type="text/javascript" src="javascript/fixheader.js"></script>
+		<script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
 	</body>
 </html>

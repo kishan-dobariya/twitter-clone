@@ -5,6 +5,7 @@ let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
 let Feed = require('../models/userfeed.models');
 
+// -------------------------GET TWEET FOR HOMEPAGE-----------------------------//
 async function getTweet (req, res, followerslist) {
 	if ((followerslist.length != 0)) {
 		return new Promise(async (resolve, reject) => {
@@ -58,8 +59,9 @@ async function getTweet (req, res, followerslist) {
 	}
 }
 
+// -------------------------------HOMEPAGE------------------------------------//
 exports.homePageGet = async function (req, res) {
-	if (req.query.un == undefined) {
+	if (req.query.un == undefined || req.query.un == req.session.username) {
 		let user = await User.getUser({ username: req.session.username});
 		let followercount = await Follower.getFollowers({ following: req.session.username, status: true});
 		let followingcount = await Follower.getFollowers({ username: req.session.username, status: true});
@@ -113,11 +115,13 @@ exports.homePageGet = async function (req, res) {
 	}
 };
 
+// --------------------------EDIT PATH FUNCTION FOR IMAGE----------------------//
 function editpath (url) {
 	// body...
 	if (url !== null && url !== undefined) { return url.replace('public\\', ''); }
 }
 
+// ----------------------------USER PROFILE-----------------------------------//
 exports.showprofileGet = async function (req, res) {
 	let user = await User.getUser({ username: req.session.username});
 	let followercount = await Follower.getFollowers({ following: req.session.username, status: true});
@@ -138,6 +142,7 @@ exports.showprofileGet = async function (req, res) {
 	});
 };
 
+// -------------------------------EDIT PROFILE -------------------------------//
 exports.editprofileGet = async function (req, res) {
 	let user = await User.getUser({ username: req.session.username});
 	let birthdate = formatDate(user.birthdate);
@@ -152,16 +157,7 @@ exports.editprofileGet = async function (req, res) {
 	});
 };
 
-function formatDate (date) {
-	var d = new Date(date),
-		month = '' + (d.getMonth() + 1),
-		day = '' + d.getDate(),
-		year = d.getFullYear();
-	if (month.length < 2) month = '0' + month;
-	if (day.length < 2) day = '0' + day;
-	return [day, month, year].join('/');
-}
-
+// --------------------------EDIT PROFILE POST-------------------------------//
 exports.editprofilePost = async function (req, res) {
 	if (req.file !== undefined) {
 		User.updateProfile({username: req.session.username}, req.body.name, req.body.bio,
@@ -176,6 +172,18 @@ exports.editprofilePost = async function (req, res) {
 	}
 };
 
+// ------------------------FORMAT DATE(DD/MM/YYYY)----------------------------//
+function formatDate (date) {
+	var d = new Date(date),
+		month = '' + (d.getMonth() + 1),
+		day = '' + d.getDate(),
+		year = d.getFullYear();
+	if (month.length < 2) month = '0' + month;
+	if (day.length < 2) day = '0' + day;
+	return [day, month, year].join('-');
+}
+
+// -------------------------ADD AND UPDATE FOLLOWERS--------------------------//
 exports.addFollowerGet = async function (req, res) {
 	let alreadyFollower = await Follower.getFollower({username: req.session.username,
 		following: req.body.un});
@@ -204,11 +212,13 @@ exports.addFollowerGet = async function (req, res) {
 	}
 };
 
+// ------------------------------SEARCH USER---------------------------------//
 exports.searchGet = async function (req, res) {
 	if (req.query.keyword != '') {
 		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.query.keyword + '.*'}});
 		let returnValue = '';
 		searchresult.forEach(function (object) {
+			if(object.username != req.session.username)
 			returnValue = returnValue + "<li class='list-group-item'><a href='/home?un=" +
 																		object.username + "'>" + object.username + '</a></li>';
 		});
@@ -218,11 +228,38 @@ exports.searchGet = async function (req, res) {
 	}
 };
 
+// ------------------------SEARCH USER ON NEW PAGE-----------------------------//
+exports.searchUserGet = async function (req, res) {
+	console.log("keyword", req.body.keyword)
+	if (req.body.keyword != '') {
+		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.body.keyword + '.*'}});
+		console.log("searchresult-->",searchresult);
+			for (let i = 0; i < searchresult.length; i++) {
+				let reverseFollowing = await Follower.getFollowers({username: req.session.username,
+				following: searchresult.username,
+				status: true});
+				let a = JSON.parse(JSON.stringify(searchresult[i]));
+				a['imageURL'] = editpath(searchresult[i].imageURL);
+				if (reverseFollowing != 1) {
+					a['reverseStatus'] = 'Follow';
+				} else {
+					a['reverseStatus'] = 'Unfollow';
+				}
+				searchresult[i] = a;
+			}
+			console.log("---------->",searchresult)
+			res.render('searchuser_result',{
+										searchResult : searchresult
+									});
+	} else {
+		res.sendStatus(200);
+	}
+};
+
+// ---------------------GET FORLLOWING FOR USER PROFILE PAGE------------------//
 exports.getfollowingPost = async function (req, res) {
 	let searchresult = await Follower.searchUser({ username: req.session.username, status: true});
-	console.log('searchresult--->', searchresult);
 	for (let i = 0; i < searchresult.length; i++) {
-		console.log('name', searchresult[i].following);
 		let user = await User.getUser({ username: searchresult[i].following});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
@@ -239,6 +276,7 @@ exports.getfollowingPost = async function (req, res) {
 	res.send(searchresult);
 };
 
+// ---------------------GET FORLLOWERS FOR USER PROFILE PAGE------------------//
 exports.getfollowersPost = async function (req, res) {
 	let searchresult = await Follower.searchUser({ following: req.session.username, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
@@ -273,6 +311,7 @@ exports.getfollowersPost = async function (req, res) {
 	res.send(searchresult);
 };
 
+// ------------------------GET TWEETS FOR USER PROFILE PAGE------------------//
 exports.getTweetPost = async function (req, res) {
 	let tweet = await Feed.getTweet({ username: req.session.username});
 	let user = await User.getUser({ username: req.session.username});
@@ -285,6 +324,7 @@ exports.getTweetPost = async function (req, res) {
 	res.send(tweet);
 };
 
+//----------------------------LIKE AND UNLIKE TWEET---------------------------//
 exports.likePost = async function (req, res) {
 	console.log(req.body.likestatus);
 	status = req.body.likestatus.trim();

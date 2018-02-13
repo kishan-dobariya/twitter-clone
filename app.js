@@ -12,6 +12,8 @@ const routes = require('./routes');
 const mongoDb = require('./helpers/mongoDb');
 const app = express();
 const session = require('express-session');
+const flash = require('express-flash');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -23,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret : "secretkey"}));
+app.use(flash());
 app.use('/', routes);
 
 // ========================== Database Connection ============================ //

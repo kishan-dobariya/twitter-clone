@@ -11,10 +11,17 @@
   </head>
   <body>
     <% include header %>
-<section id="login">
-    <div class="container">
-      <div class="row">
+    <section id="login">
+      <div class="container">
+        <div class="row">
           <div class="col-xs-12">
+            <% if ( typeof alreadyExist != 'undefined' ) { %>
+              <br>
+              <div class="alert alert-danger" role="alert">
+                <p><%= alreadyExist %></p>
+              </div>
+            <%
+          } %>
               <div class="form-wrap">
                 <h1>Sign up</h1>
                   <form action="/registration" method="post"  onsubmit="return validateForm()">
@@ -50,7 +57,7 @@
         </div> <!-- /.col-xs-12 -->
       </div> <!-- /.row -->
     </div> <!-- /.container -->
-</section>
+  </section>
 
     <script type="text/javascript">
       function validateForm(){
@@ -73,7 +80,7 @@
       }
       function validateName(){
         var first = document.getElementById('name').value;
-        var letter = /^[a-zA-Z]+$/;
+        var letter = /^[a-zA-Z\s]+$/;
         if(!first.match(letter)){
           document.getElementById('nameerror').innerHTML = "Only letters allowed";
           document.getElementById('name').focus();

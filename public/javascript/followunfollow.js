@@ -9,6 +9,11 @@ function test (data) {
       data: { un: username, status: true},
       success: function (data, textStatus, jQxhr) {
         $('button#' + id).text(data);
+        if ($('p#myfollowingCount').val() != undefined) {
+          console.log(document.getElementById("myfollowingCount").innerHTML);
+          document.getElementById("myfollowingCount").innerHTML++;
+        }
+        console.log("follow");
       },
       error: function (jqXhr, textStatus, errorThrown) {
         console.log(errorThrown);
@@ -22,6 +27,11 @@ function test (data) {
       data: { un: username, status: false },
       success: function (data, textStatus, jQxhr) {
         $('button#' + id).text(data);
+        if ($('p#myfollowingCount').val() != undefined) {
+          console.log(document.getElementById("myfollowingCount").innerHTML);
+          document.getElementById("myfollowingCount").innerHTML--;
+        }
+        console.log("Unfollow");
       },
       error: function (jqXhr, textStatus, errorThrown) {
         console.log(errorThrown);

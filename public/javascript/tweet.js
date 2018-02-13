@@ -1,3 +1,7 @@
+function focusTweetBox() {
+	$( "#tweet" ).focus();
+}
+
 $("#tweetbutton").click(function(){
 	Tweet = document.getElementById("tweet").value;
 	$.ajax({

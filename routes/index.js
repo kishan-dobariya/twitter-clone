@@ -42,6 +42,7 @@ router.post('/like', checkSession, homeController.likePost);
 router.post('/getFriendFollowers', checkSession, feedController.friendFollowersPost);
 router.post('/getFriendFollowing', checkSession, feedController.friendFollowingPost);
 router.post('/getFriendTweet', checkSession, feedController.friendTweetsPost);
+router.post('/searchUser', checkSession, homeController.searchUserGet);
 
 module.exports = router;
 
