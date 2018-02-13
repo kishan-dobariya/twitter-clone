@@ -2,78 +2,78 @@ const mongoose = require('mongoose');
 var FeedSchema = mongoose.Schema({
 	username: {
 		type: String,
-		required: true,
+		required: true
 	},
 	tweet: {
 		type: String,
-		required: true,
+		required: true
 	},
 	status: {
 		type: String,
-		required : true,
+		required: true
 	},
 	like: {
-		type : [String],
+		type: [String]
 	},
 	createdAt: {
-		type:Date,
-		default:function() {
+		type: Date,
+		default: function () {
 			return new Date();
-		},
+		}
 	},
 	updatedAt: {
-		type:Date,
+		type: Date
 		// ref:'User'
-	},
+	}
 });
 
 let Feed = module.exports = mongoose.model('feed', FeedSchema);
 
-module.exports.createTweet = function(newFeed, callback) {
-	console.log("createTweet");
+module.exports.createTweet = function (newFeed, callback) {
+	console.log('createTweet');
 	newFeed.save(callback);
-}
+};
 
-module.exports.getTweet = function(query, callback) {
+module.exports.getTweet = function (query, callback) {
 	return new Promise((resolve, reject) => {
-		Feed.find(query, function(err ,data) {
-			if(err) {
+		Feed.find(query, function (err, data) {
+			if (err) {
 				reject(err);
 			}
 			resolve(data);
 		});
-	})
-}
+	});
+};
 
-module.exports.getTweetCount = function(user, callback) {
-  return new Promise((resolve, reject) => {
-  Feed.count(user, function(err ,data) {
-    if(err) {
-      reject(err);
-    }
-    resolve(data);
-  });
-  })
-}
+module.exports.getTweetCount = function (user, callback) {
+	return new Promise((resolve, reject) => {
+		Feed.count(user, function (err, data) {
+			if (err) {
+				reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
 
-module.exports.updateLike = function(query, like) {
-  return new Promise((resolve, reject) => {
-  Feed.update(query, { $set : { like : like}}, function(err ,data) {
-    if(err) {
-      reject(err);
-    }
-    resolve(data);
-  });
-  })
-}
+module.exports.updateLike = function (query, like) {
+	return new Promise((resolve, reject) => {
+		Feed.update(query, { $set: { like: like}}, function (err, data) {
+			if (err) {
+				reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
 
-module.exports.updateTweet = function(query, tweet) {
-  return new Promise((resolve, reject) => {
-  Feed.update(query, { $set : { tweet : tweet}}, function(err ,data) {
-    if(err) {
-      reject(err);
-    }
-    resolve(data);
-  });
-  })
-}
+module.exports.updateTweet = function (query, tweet) {
+	return new Promise((resolve, reject) => {
+		Feed.update(query, { $set: { tweet: tweet}}, function (err, data) {
+			if (err) {
+				reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
