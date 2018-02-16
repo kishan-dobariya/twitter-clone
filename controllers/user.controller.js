@@ -1,6 +1,6 @@
 // let tempEmail;
 let User = require('../models/users.models');
-let Cipher = require('../models/cipher.models');
+let Hash = require('../models/hash.models');
 let bcrypt = require('bcrypt');
 let jwt = require('Jsonwebtoken');
 let cookie = require('cookie');
@@ -10,15 +10,15 @@ const crypto = require('crypto');
 require('dotenv').config();
 
 let transporter = nodemailer.createTransport({
-	service : 'gmail',
+	service: 'gmail',
 	secure: false,
 	port: 25,
 	auth: {
 		user: 'kishandobariya033@gmail.com',
 		pass: 'Kishan.@&033'
 	},
-	tls:{
-		rejectUnauthorized : false
+	tls: {
+		rejectUnauthorized: false
 	}
 });
 
@@ -40,13 +40,9 @@ exports.loginPost = async function (req, res) {
 	}
 	bcrypt.compare(upassword, user.password).then(function (result) {
 		if (result) {
-			let token = jwt.sign({ email: user.email, name: user.name}, 'kkd');
-			res.cookie('userToken', token);
-			session_obj.sess = token;
-			session_obj.username = user.username;
 			res.redirect('/home');
 		} else {
-			console.log("Invalid un or pw");
+			console.log('Invalid un or pw');
 			req.flash('loginFailed', 'Invalid Username or Password');
 			res.render('login', { messages: req.flash('loginFailed') });
 		}
@@ -84,28 +80,26 @@ exports.registrationPost = async function (req, res) {
 			if (err) {
 				throw err;
 			}
-			let crypted = await createCipherText({username : userInfo.username,
-																	email :	userInfo.email,
-																	createdAt :	userInfo.createdAt});
-			let userCipher = new Cipher({ username : userInfo.username , cipher : crypted });
-		  Cipher.createCipher(userCipher, function (err, cipherInfo) {
-		  	if (err) {
-		  		console.log("err--->",err);
-		  	}
-		  	// console.log(cipherInfo);
-		  })
+			let crypted = await createCipherText({username: userInfo.username,
+				email:	userInfo.email,
+				createdAt:	userInfo.createdAt});
+			let userCipher = new Hash({ username: userInfo.username, cipher: crypted });
+			Hash.createCipher(userCipher, function (err, cipherInfo) {
+				if (err) {
+					console.log('err--->', err);
+				}
+			});
 			let helperoption = {
-				from : '"Kishan" <kishandobariya033@gmail.com',
-				to : 'kishan.dobariya@bacancytechnology.com',
+				from: '"Kishan" <kishandobariya033@gmail.com',
+				to: 'kishan.dobariya@bacancytechnology.com',
 				subject: 'Demo Mail',
-				text: 'click this link to verify your account--->'+
-							'http://localhost:8080/verifyaccount?user='+crypted,
+				text: 'click this link to verify your account--->' +
+							'http://localhost:8080/verifyaccount?user=' + crypted
 			};
 			transporter.sendMail(helperoption, function (err, data) {
-				if(err){
+				if (err) {
 					console.log(err);
-				}
-				else{
+				} else {
 					// console.log(data);
 				}
 			});
@@ -120,45 +114,88 @@ exports.registrationPost = async function (req, res) {
 	}
 };
 
-function createCipherText(user) {
+function createCipherText (user) {
 	let plainText = JSON.stringify(user);
-	let cipher = crypto.createCipher('aes-256-ctr',process.env.SECRET_KEY)
-  let crypted = cipher.update(plainText,'utf8','hex')
-  crypted += cipher.final('hex');
-  return crypted;
+	let cipher = crypto.createCipher('aes-256-ctr', process.env.SECRET_KEY);
+	let crypted = cipher.update(plainText, 'utf8', 'hex');
+	crypted += cipher.final('hex');
+	return crypted;
 }
 
 exports.verifyaccountGet = async function (req, res) {
-	let userCipher = await Cipher.getCipher({cipher : req.query.user});
-	if(userCipher != null) {
-		if(userCipher.Status != false) {
-			await Cipher.updateStatus({cipher: req.query.user},{ $set: {Status : false}});
-			await User.updateUser({ username : userCipher[0].username }, { $set : {Status :true}});
+	let userCipher = await Hash.getCipher({cipher: req.query.user});
+	if (userCipher != null) {
+		if (userCipher.Status != false) {
+			await Hash.updateStatus({cipher: req.query.user}, { $set: {Status: false}});
+			await User.updateUser({ username: userCipher[0].username }, { $set: {Status: true}});
 		}
 	}
 	res.redirect('/login');
 };
 
 // -------------------WHEN REDIRECT TO RESETPASSWORD PAGE----------------------//
-exports.resetpasswordGet = function (req, res) {
+exports.getMailGet = function (req, res) {
 	res.render('getmail');
 };
 
 // ----------------------CHECKING EMAIL FOR RESETPASSWORD----------------------//
-exports.resetpasswordPost = async function (req, res) {
+exports.getMailPost = async function (req, res) {
 	let uemail = req.body.email;
 	let user = await User.getUserHome({email: uemail});
 	if (user) {
-		tempEmail = uemail;
-		res.render('setpassword');
+		let createdAt = new Date();
+		console.log("Date------------>",createdAt);
+		let crypted = await createCipherText({username: user.username,
+			email:	user.email,
+			createdAt:	createdAt});
+		let userCipher = new Hash({ username: user.username, cipher: crypted });
+		Hash.createCipher(userCipher, function (err, cipherInfo) {
+			if (err) {
+				console.log('err--->', err);
+			}
+		});
+		let helperoption = {
+		from: '"Kishan" <kishandobariya033@gmail.com',
+		to: 'kishan.dobariya@bacancytechnology.com',
+		subject: 'Demo Mail',
+		text: 'Click here to reset your Password--->' +
+					'http://localhost:8080/resetpassword?user=' + crypted
+		};
+		transporter.sendMail(helperoption, function (err, data) {
+			if (err) {
+				console.log(err);
+			} else {
+				// console.log(data);
+			}
+		});
+		req.flash('alertClass', 'alert-success');
+		req.flash('messages', 'Check your Email to reset your Password');
+		res.render('login', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
 	} else {
-		res.render('getmail');
+		console.log('email not found');
+		req.flash('alertClass', 'alert-danger');
+		req.flash('messages', 'Email Not Found');
+		res.render('getmail', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
 	}
 };
 
+exports.resetpasswordGet = async function (req, res) {
+	let userCipher = await Hash.getCipher({cipher: req.query.user, Status:true});
+	if (userCipher.length != 0) {
+		if (userCipher.Status != false) {
+			await Hash.updateStatus({cipher: req.query.user}, { $set: {Status: false}});
+			res.render('setpassword',{ hash : req.query.user});
+		}
+	}
+	req.flash('alertClass', 'alert-danger');
+	req.flash('messages', 'Passwordreset link expire, Please try again');
+	res.render('login', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
+};
+
 // ----------------------------UPDATE NEW PASSWORD----------------------------//
-exports.setpasswordPost = async function (req, res) {
+exports.resetpasswordPost = async function (req, res) {
 	let upassword = req.body.password;
-	 let passWord = await User.updatePassword({email: tempEmail}, upassword).then(console.log);
+	let userCipher = await Hash.getCipher({cipher: req.body.hash});
+	let passWord = await User.updatePassword({username: userCipher[0].username}, upassword);
 		 res.redirect('/login');
 };

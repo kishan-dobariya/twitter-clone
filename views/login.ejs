@@ -14,7 +14,8 @@
     <div class="row">
       <div class="col-xs-12">
           <% if ( typeof messages != 'undefined' ) { %>
-          <div class="alert alert-success" role="alert">
+          <div class="alert <%= alertClass %> alert-dismissable"" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <p><%= messages %></p>
           </div>
             <%
@@ -33,7 +34,7 @@
                 </div>
                 <p id="passworderror" style="color: red"></p>
                 <input type="submit" id="btn-login" onsubmit="return submit()" class="btn btn-custom btn-lg btn-block btn-primary" value="Log in">
-                <button type="button" class="btn btn-xs btn-block btn-link"><a href="/resetpassword">Forgot password</a></button>
+                <button type="button" class="btn btn-xs btn-block btn-link"><a href="/getmail">Forgot password</a></button>
               </form>
               <hr>
             </div>

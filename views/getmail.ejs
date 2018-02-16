@@ -12,8 +12,15 @@
   <body>
     <% include header %>
     <div class="container">
+      <% if ( typeof messages != 'undefined' ) { %>
+        <div class="alert <%= alertClass %> alert-dismissable"" role="alert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p><%= messages %></p>
+        </div>
+          <%
+        } %>
       <h2>Enter your email</h2>
-      <form action="/resetpassword" method="post">
+      <form action="/getmail" method="post">
         <div class="form-group">
           <!-- <label for="email">Email:</label> -->
           <input type="email" class="form-control" id="email" onchange="return validateEmail()" placeholder="Enter Email" name="email" required>

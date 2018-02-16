@@ -22,7 +22,7 @@ var cipherSchema = mongoose.Schema({
 	}
 });
 
-var cipher = module.exports = mongoose.model('cipher', cipherSchema);
+var Hash = module.exports = mongoose.model('hash', cipherSchema);
 
 module.exports.createCipher = function (newCipher, callback) {
 	newCipher.save(callback);
@@ -30,7 +30,7 @@ module.exports.createCipher = function (newCipher, callback) {
 
 module.exports.getCipher = function (query, callback) {
 	return new Promise((resolve, reject) => {
-		cipher.find(query, function (err, data) {
+		Hash.find(query, function (err, data) {
 			if (err) {
 				reject(err);
 			}
@@ -41,7 +41,7 @@ module.exports.getCipher = function (query, callback) {
 
 module.exports.updateStatus = function (query, newstatus) {
 	return new Promise((resolve, reject) => {
-		cipher.updateOne(query, newstatus, function (err, data) {
+		Hash.updateOne(query, newstatus, function (err, data) {
 			if (err) {
 				reject(err);
 			}

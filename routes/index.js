@@ -6,7 +6,6 @@ var Strategy = require('passport-local').Strategy;
 const userController = require('../controllers/user.controller.js');
 const homeController = require('../controllers/home.controller.js');
 const feedController = require('../controllers/feed.controller.js');
-const app = require('../app.js');
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -33,13 +32,15 @@ router.get('/registration', userController.registrationGet);
 router.post('/registration', userController.registrationPost);
 // MAIL VERIFICATION REQUEST
 router.get('/verifyaccount', userController.verifyaccountGet);
-// REDIRECT TO PASSWORD RESET PAGE
+// RENDER GET MAIL PAGE
+router.get('/getmail', userController.getMailGet);
+// GET MAIL FROM USER, VERIFY IT AND SEND LINK TO USERMAIL
+router.post('/getmail', userController.getMailPost);
+// CHECK FOR HASH AND RENDER SETPASSWORDPAGE
 router.get('/resetpassword', userController.resetpasswordGet);
-// REDIRECT TO MAIL VERIFICATION
+// UPDATE NEW PASSWORD
 router.post('/resetpassword', userController.resetpasswordPost);
-// REDIRECT TO SET NEW PASSWORD PAGE
-router.post('/setpassword', userController.setpasswordPost);
-// REDRECT TO HAME PAGE
+// REDRECT TO HOME PAGE
 router.get('/home', require('connect-ensure-login').ensureLoggedIn(),
 	homeController.homePageGet);
 // SHOW USER PROFILE
@@ -48,7 +49,6 @@ router.get('/showprofile', require('connect-ensure-login').ensureLoggedIn(),
 // SHOW OTHER USER'S PROFILE
 router.get('/showFriendProfile', require('connect-ensure-login').ensureLoggedIn(),
 	homeController.showFriendProfileGet);
-// router.get('/editprofile', homeController.editprofileGet);
 // EDIT USER'S PROFILE
 router.post('/editprofile', upload.single('profilepicture'),
 	homeController.editprofilePost);

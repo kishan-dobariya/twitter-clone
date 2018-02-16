@@ -145,8 +145,6 @@ module.exports.updatePassword = function (query, newPassword) {
 };
 
 module.exports.updateUser = function (query, updated) {
-	console.log('query-->', query);
-	console.log('updated-->', updated);
 	return new Promise((resolve, reject) => {
 		User.update(query, updated, function (err, data) {
 			if (err) {
