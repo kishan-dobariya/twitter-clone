@@ -4,6 +4,7 @@ function focusTweetBox() {
 
 $("#tweetbutton").click(function(){
 	Tweet = document.getElementById("tweet").value;
+	alert(Tweet);
 	$.ajax({
 		url: '/insertfeed',
 		type: 'post',

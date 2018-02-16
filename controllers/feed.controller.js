@@ -10,8 +10,9 @@ function editpath (url) {
 
 // -----------------------INSERT TWEET--------------------------//
 exports.insertPost = async function (req, res, next) {
+	console.log('insertPost');
 	if (req.body.tweet !== '') {
-		let newTweet = new Feed({ username: req.session.username,
+		let newTweet = new Feed({ username: req.user.username,
 			tweet: req.body.tweet,
 			status: 'new' });
 		await Feed.createTweet(newTweet, function (err, tweetInfo) {
@@ -40,7 +41,7 @@ exports.edittweetPost = async function (req, res, next) {
 exports.friendFollowersPost = async function (req, res) {
 	let searchresult = await Follower.searchUser({ following: req.body.userName, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
-		let user = await User.getUser({ username: searchresult[i].username});
+		let user = await User.getUserHome({ username: searchresult[i].username});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
 			a['imageURL'] = editpath(user.imageURL);
@@ -64,7 +65,7 @@ exports.friendFollowingPost = async function (req, res) {
 	console.log(req.body.userName);
 	let searchresult = await Follower.searchUser({ username: req.body.userName, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
-		let user = await User.getUser({ username: searchresult[i].following});
+		let user = await User.getUserHome({ username: searchresult[i].following});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
 			a['imageURL'] = editpath(user.imageURL);
@@ -85,7 +86,7 @@ exports.friendFollowingPost = async function (req, res) {
 exports.friendTweetsPost = async function (req, res) {
 	console.log(req.body.userName);
 	let tweet = await Feed.getTweet({ username: req.body.userName});
-	let user = await User.getUser({ username: req.body.userName});
+	let user = await User.getUserHome({ username: req.body.userName});
 	tweet.sort((a, b) => {
 		if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
 	});

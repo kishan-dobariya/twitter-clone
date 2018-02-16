@@ -34,7 +34,7 @@ exports.loginPost = async function (req, res) {
 	let upassword = req.body.password;
 	let session_obj = req.session;
 	let flag = false;
-	let user = await User.getUser({ username: uname, Status: true});
+	let user = await User.getUserHome({ username: uname, Status: true});
 	if (user == null) {
 		res.redirect('/login');
 	}
@@ -53,12 +53,6 @@ exports.loginPost = async function (req, res) {
 	});
 };
 
-// -------------------------------LOGOUT------------------------------------//
-exports.logoutGet = function (req, res) {
-	req.session.destroy();
-	res.redirect('login');
-};
-
 // -------------------WHEN REDIRECT TO REGISTRATION PAGE----------------------//
 exports.registrationGet = function (req, res) {
 	res.render('registration');
@@ -72,11 +66,11 @@ exports.registrationPost = async function (req, res) {
 	let uemail = req.body.email;
 	let userexistance = false;
 	let encryptPassword, randomSalt;
-	let user = await User.getUser({ username: uusername});
+	let user = await User.getUserHome({ username: uusername});
 	if (user) {
 		userexistance = true;
 	}
-	user = await User.getUser({ email: uemail});
+	user = await User.getUserHome({ email: uemail});
 	if (user) {
 		userexistance = true;
 	}
@@ -153,7 +147,7 @@ exports.resetpasswordGet = function (req, res) {
 // ----------------------CHECKING EMAIL FOR RESETPASSWORD----------------------//
 exports.resetpasswordPost = async function (req, res) {
 	let uemail = req.body.email;
-	let user = await User.getUser({email: uemail});
+	let user = await User.getUserHome({email: uemail});
 	if (user) {
 		tempEmail = uemail;
 		res.render('setpassword');

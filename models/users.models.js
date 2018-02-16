@@ -19,7 +19,7 @@ var UserSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	Status:{
+	Status: {
 		type: Boolean,
 		default: false,
 		required: true
@@ -58,7 +58,7 @@ var UserSchema = mongoose.Schema({
 	},
 	imageURL: {
 		type: String,
-		default: 'public'+'\\'+'images'+'\\'+'defaultProfile.png'
+		default: 'public' + '\\' + 'images' + '\\' + 'defaultProfile.png'
 	}
 });
 
@@ -76,40 +76,50 @@ module.exports.createUser = function (newUser, callback) {
 };
 
 module.exports.getUser = function (query) {
-	console.log("query-->",query);
 	return new Promise((resolve, reject) => {
-		User.findOne({username : query.username}, function (err, data) {
+		User.findOne({username: query.username}, function (err, data) {
 			if (err) {
-				console.log("err",err)
-				reject(err);
+				console.log('err', err);
+				reject('Invalid Username');
 			}
-			console.log("password",data);
 			if (data != null) {
-				bcrypt.compare(query.password, data.password).then((result) => {
-					if(result) {
-						console.log("data",data);
+				bcrypt.compare(query.password, data.password, function (err2, result) {
+					if (err2) {
+						reject(err2);
+					}
+					if (result) {
 						resolve(data);
+					} else {
+						console.log('.....');
+						reject(result);
 					}
-					else {
-						reject(err);
-					}
-				}).catch(console.log);
-			}
-			else {
+				});
+			} else {
+				console.log('result3');
 				reject(err);
 			}
 		});
 	});
-}
+};
+
+module.exports.getUserHome = function (query) {
+	return new Promise((resolve, reject) => {
+		User.findOne(query, function (err, data) {
+			if (err) {
+				console.log('err', err);
+				reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
 
 module.exports.findById = function (id) {
-	console.log("findById", id);
 	return new Promise((resolve, reject) => {
-		User.findOne({ _id : id }, function (err, data) {
+		User.findOne({ _id: id }, function (err, data) {
 			if (err) {
 				reject(err);
 			}
-			console.log("data",data);
 			resolve(data);
 		});
 	});
@@ -131,19 +141,18 @@ module.exports.updatePassword = function (query, newPassword) {
 				});
 			});
 		});
-		});
-	}
-
+	});
+};
 
 module.exports.updateUser = function (query, updated) {
-	console.log("query-->",query);
-	console.log("updated-->",updated);
+	console.log('query-->', query);
+	console.log('updated-->', updated);
 	return new Promise((resolve, reject) => {
 		User.update(query, updated, function (err, data) {
 			if (err) {
 				reject(err);
 			}
-			console.log(data)
+			console.log(data);
 			resolve(data);
 		});
 	});
@@ -152,16 +161,23 @@ module.exports.updateUser = function (query, updated) {
 module.exports.updateProfile = function (query, name, bio, mail, location, dob, path) {
 	return new Promise((resolve, reject) => {
 		if (path !== 'not difined') {
-			User.update(query, { $set: {name: name, bio: bio, email: mail, location: location, birthdate: dob,
-																	imageURL: path}}, function (err, data) {
+			User.update(query, { $set: {name: name,
+				bio: bio,
+				email: mail,
+				location: location,
+				birthdate: dob,
+				imageURL: path}}, function (err, data) {
 				if (err) {
 					reject(err);
 				}
 				resolve(data);
 			});
 		} else {
-			User.update(query, { $set: {name: name, bio: bio, email: mail,
-																	location: location, birthdate: dob}}, function (err, data) {
+			User.update(query, { $set: {name: name,
+				bio: bio,
+				email: mail,
+				location: location,
+				birthdate: dob}}, function (err, data) {
 				if (err) {
 					reject(err);
 				}

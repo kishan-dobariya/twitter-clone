@@ -14,9 +14,9 @@ async function getTweet (req, res, followerslist) {
 			for (let i = 0; i < followerslist.length; i++) {
 				let tweet = await Feed.getTweet({ username: followerslist[i].following});
 				if (tweet.length != 0) {
-					let user = await User.getUser({ username: followerslist[i].following});
+					let user = await User.getUserHome({ username: followerslist[i].following});
 					for (let l = 0; l < tweet.length; l++) {
-						if (tweet[l].like.includes(req.session.username)) {
+						if (tweet[l].like.includes(req.user.username)) {
 							tweet[l].likestatus = 'Unlike';
 						} else {
 							tweet[l].likestatus = 'Like';
@@ -29,11 +29,11 @@ async function getTweet (req, res, followerslist) {
 					}
 				}
 				if (i === followerslist.length - 1) {
-					let tweet = await Feed.getTweet({ username: req.session.username});
+					let tweet = await Feed.getTweet({ username: req.user.username});
 					if (tweet.length != 0) {
-						let user = await User.getUser({ username: req.session.username});
+						let user = await User.getUserHome({ username: req.user.username});
 						for (let l = 0; l < tweet.length; l++) {
-							if (tweet[l].like.includes(req.session.username)) {
+							if (tweet[l].like.includes(req.user.username)) {
 								tweet[l].likestatus = 'Unlike';
 							} else {
 								tweet[l].likestatus = 'Like';
@@ -61,13 +61,11 @@ async function getTweet (req, res, followerslist) {
 
 // -------------------------------HOMEPAGE------------------------------------//
 exports.homePageGet = async function (req, res) {
-	console.log("in homePageGet")
-	console.log("req user",req.user);
-	let user = await User.getUser({ username: req.session.username});
-	let followercount = await Follower.getFollowers({ following: req.session.username, status: true});
-	let followingcount = await Follower.getFollowers({ username: req.session.username, status: true});
-	let followerslist = await Follower.searchUser({ username: req.session.username, status: true});
-	let tweetcount = await Feed.getTweetCount({ username: req.session.username});
+	let user = await User.getUserHome({ username: req.user.username});
+	let followercount = await Follower.getFollowers({ following: req.user.username, status: true});
+	let followingcount = await Follower.getFollowers({ username: req.user.username, status: true});
+	let followerslist = await Follower.searchUser({ username: req.user.username, status: true});
+	let tweetcount = await Feed.getTweetCount({ username: req.user.username});
 	let birthdate = formatDate(user.birthdate);
 	let editedpath = editpath(user.imageURL);
 
@@ -88,11 +86,11 @@ exports.homePageGet = async function (req, res) {
 };
 
 exports.showFriendProfileGet = async function (req, res) {
-	let user = await User.getUser({ username: req.query.un});
+	let user = await User.getUserHome({ username: req.query.un});
 	let friendfollowercount = await Follower.getFollowers({ following: req.query.un, status: true});
 	let friendfollowingcount = await Follower.getFollowers({ username: req.query.un, status: true});
 	let friendtweetcount = await Feed.getTweetCount({ username: req.query.un});
-	let status = await Follower.getFollower({username: req.session.username, following: req.query.un});
+	let status = await Follower.getFollower({username: req.user.username, following: req.query.un});
 	if (status === null) {
 		status = 'Follow';
 	} else {
@@ -125,10 +123,10 @@ function editpath (url) {
 
 // ----------------------------USER PROFILE-----------------------------------//
 exports.showprofileGet = async function (req, res) {
-	let user = await User.getUser({ username: req.session.username});
-	let followercount = await Follower.getFollowers({ following: req.session.username, status: true});
-	let followingcount = await Follower.getFollowers({ username: req.session.username, status: true});
-	let tweetcount = await Feed.getTweetCount({ username: req.session.username});
+	let user = await User.getUserHome({ username: req.user.username});
+	let followercount = await Follower.getFollowers({ following: req.user.username, status: true});
+	let followingcount = await Follower.getFollowers({ username: req.user.username, status: true});
+	let tweetcount = await Feed.getTweetCount({ username: req.user.username});
 	let birthdate = formatDate(user.birthdate);
 	user.imgpath = editpath(user.imageURL);
 	user.followingcount = followingcount;
@@ -146,9 +144,9 @@ exports.showprofileGet = async function (req, res) {
 
 // -------------------------------EDIT PROFILE -------------------------------//
 exports.editprofileGet = async function (req, res) {
-	let user = await User.getUser({ username: req.session.username});
+	let user = await User.getUserHome({ username: req.user.username});
 	let birthdate = formatDate(user.birthdate);
-	let path = '/images/profilepics/' + req.session.username + '.jpg';
+	let path = '/images/profilepics/' + req.user.username + '.jpg';
 	res.render('editprofile', {
 		name: user.name,
 		bio: user.bio,
@@ -162,12 +160,12 @@ exports.editprofileGet = async function (req, res) {
 // --------------------------EDIT PROFILE POST-------------------------------//
 exports.editprofilePost = async function (req, res) {
 	if (req.file !== undefined) {
-		User.updateProfile({username: req.session.username}, req.body.name, req.body.bio,
+		User.updateProfile({username: req.user.username}, req.body.name, req.body.bio,
 			req.body.email, req.body.location, req.body.dob,
 			req.file.path).then(console.log);
 		res.redirect('/showprofile');
 	} else {
-		User.updateProfile({username: req.session.username}, req.body.name, req.body.bio,
+		User.updateProfile({username: req.user.username}, req.body.name, req.body.bio,
 			req.body.email, req.body.location, req.body.dob,
 			'not difined').then(console.log);
 		res.redirect('/showprofile');
@@ -187,11 +185,11 @@ function formatDate (date) {
 
 // -------------------------ADD AND UPDATE FOLLOWERS--------------------------//
 exports.addFollowerGet = async function (req, res) {
-	let alreadyFollower = await Follower.getFollower({username: req.session.username,
+	let alreadyFollower = await Follower.getFollower({username: req.user.username,
 		following: req.body.un});
 	if (alreadyFollower == null) {
 		let newUser = Follower({
-			username: req.session.username,
+			username: req.user.username,
 			following: req.body.un,
 			status: req.body.status
 		});
@@ -203,7 +201,7 @@ exports.addFollowerGet = async function (req, res) {
 			}
 		});
 	} else {
-		await Follower.updateStatus({ username: req.session.username, following: req.body.un
+		await Follower.updateStatus({ username: req.user.username, following: req.body.un
 		}, req.body.status).then(function (data) {
 			if (req.body.status !== 'false') {
 				res.send('Unfollow');
@@ -220,9 +218,10 @@ exports.searchGet = async function (req, res) {
 		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.query.keyword + '.*'}});
 		let returnValue = '';
 		searchresult.forEach(function (object) {
-			if(object.username != req.session.username)
-			returnValue = returnValue + "<li class='list-group-item'><a href='/showFriendProfile?un=" +
+			if (object.username != req.user.username) {
+				returnValue = returnValue + "<li class='list-group-item'><a href='/showFriendProfile?un=" +
 																		object.username + "'>" + object.username + '</a></li>';
+			}
 		});
 		res.send(returnValue);
 	} else {
@@ -232,27 +231,27 @@ exports.searchGet = async function (req, res) {
 
 // ------------------------SEARCH USER ON NEW PAGE-----------------------------//
 exports.searchUserGet = async function (req, res) {
-	console.log("keyword", req.body.keyword)
+	console.log('keyword', req.body.keyword);
 	if (req.body.keyword != '') {
 		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.body.keyword + '.*'}});
-		console.log("searchresult-->",searchresult);
-			for (let i = 0; i < searchresult.length; i++) {
-				let reverseFollowing = await Follower.getFollowers({username: req.session.username,
+		console.log('searchresult-->', searchresult);
+		for (let i = 0; i < searchresult.length; i++) {
+			let reverseFollowing = await Follower.getFollowers({username: req.user.username,
 				following: searchresult.username,
 				status: true});
-				let a = JSON.parse(JSON.stringify(searchresult[i]));
-				a['imageURL'] = editpath(searchresult[i].imageURL);
-				if (reverseFollowing != 1) {
-					a['reverseStatus'] = 'Follow';
-				} else {
-					a['reverseStatus'] = 'Unfollow';
-				}
-				searchresult[i] = a;
+			let a = JSON.parse(JSON.stringify(searchresult[i]));
+			a['imageURL'] = editpath(searchresult[i].imageURL);
+			if (reverseFollowing != 1) {
+				a['reverseStatus'] = 'Follow';
+			} else {
+				a['reverseStatus'] = 'Unfollow';
 			}
-			console.log("---------->",searchresult)
-			res.render('searchuser_result',{
-										searchResult : searchresult
-									});
+			searchresult[i] = a;
+		}
+		console.log('---------->', searchresult);
+		res.render('searchuser_result', {
+			searchResult: searchresult
+		});
 	} else {
 		res.sendStatus(200);
 	}
@@ -260,9 +259,9 @@ exports.searchUserGet = async function (req, res) {
 
 // ---------------------GET FORLLOWING FOR USER PROFILE PAGE------------------//
 exports.getfollowingPost = async function (req, res) {
-	let searchresult = await Follower.searchUser({ username: req.session.username, status: true});
+	let searchresult = await Follower.searchUser({ username: req.user.username, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
-		let user = await User.getUser({ username: searchresult[i].following});
+		let user = await User.getUserHome({ username: searchresult[i].following});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
 			a['imageURL'] = editpath(user.imageURL);
@@ -280,10 +279,10 @@ exports.getfollowingPost = async function (req, res) {
 
 // ---------------------GET FORLLOWERS FOR USER PROFILE PAGE------------------//
 exports.getfollowersPost = async function (req, res) {
-	let searchresult = await Follower.searchUser({ following: req.session.username, status: true});
+	let searchresult = await Follower.searchUser({ following: req.user.username, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
-		let user = await User.getUser({ username: searchresult[i].username});
-		let reverseFollowing = await Follower.getFollowers({username: req.session.username,
+		let user = await User.getUserHome({ username: searchresult[i].username});
+		let reverseFollowing = await Follower.getFollowers({username: req.user.username,
 			following: user.username,
 			status: true});
 		if (user.imageURL != undefined) {
@@ -315,8 +314,8 @@ exports.getfollowersPost = async function (req, res) {
 
 // ------------------------GET TWEETS FOR USER PROFILE PAGE------------------//
 exports.getTweetPost = async function (req, res) {
-	let tweet = await Feed.getTweet({ username: req.session.username});
-	let user = await User.getUser({ username: req.session.username});
+	let tweet = await Feed.getTweet({ username: req.user.username});
+	let user = await User.getUserHome({ username: req.user.username});
 	tweet.sort((a, b) => {
 		if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
 	});
@@ -326,14 +325,14 @@ exports.getTweetPost = async function (req, res) {
 	res.send(tweet);
 };
 
-//----------------------------LIKE AND UNLIKE TWEET---------------------------//
+// ----------------------------LIKE AND UNLIKE TWEET---------------------------//
 exports.likePost = async function (req, res) {
 	console.log(req.body.likestatus);
 	status = req.body.likestatus.trim();
 	if (status == 'Like') {
 		let tweet = await Feed.getTweet({ _id: req.body.id});
 		let tweetlike = tweet[0].like;
-		tweetlike.push(req.session.username);
+		tweetlike.push(req.user.username);
 		let likeCount = tweetlike.length;
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {

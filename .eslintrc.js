@@ -1,7 +1,7 @@
 module.exports = {
   env: {
   },
-  extends: "eslint:standard",
+  extends: "standard",
   parserOptions: {
       ecmaFeatures: {
           jsx: true
