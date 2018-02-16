@@ -61,58 +61,60 @@ async function getTweet (req, res, followerslist) {
 
 // -------------------------------HOMEPAGE------------------------------------//
 exports.homePageGet = async function (req, res) {
-	if (req.query.un == undefined || req.query.un == req.session.username) {
-		let user = await User.getUser({ username: req.session.username});
-		let followercount = await Follower.getFollowers({ following: req.session.username, status: true});
-		let followingcount = await Follower.getFollowers({ username: req.session.username, status: true});
-		let followerslist = await Follower.searchUser({ username: req.session.username, status: true});
-		let tweetcount = await Feed.getTweetCount({ username: req.session.username});
-		let birthdate = formatDate(user.birthdate);
-		let editedpath = editpath(user.imageURL);
+	console.log("in homePageGet")
+	console.log("req user",req.user);
+	let user = await User.getUser({ username: req.session.username});
+	let followercount = await Follower.getFollowers({ following: req.session.username, status: true});
+	let followingcount = await Follower.getFollowers({ username: req.session.username, status: true});
+	let followerslist = await Follower.searchUser({ username: req.session.username, status: true});
+	let tweetcount = await Feed.getTweetCount({ username: req.session.username});
+	let birthdate = formatDate(user.birthdate);
+	let editedpath = editpath(user.imageURL);
 
-		let tweetArray = await getTweet(req, res, followerslist);
-		res.render('home', {
-			username: user.username,
-			name: user.name,
-			bio: user.bio,
-			email: user.email,
-			location: user.location,
-			birthdate: birthdate,
-			imgpath: editedpath,
-			followers: followercount,
-			folowings: followingcount,
-			tweets: tweetArray,
-			tweetcount: tweetcount
-		});
+	let tweetArray = await getTweet(req, res, followerslist);
+	res.render('home', {
+		username: user.username,
+		name: user.name,
+		bio: user.bio,
+		email: user.email,
+		location: user.location,
+		birthdate: birthdate,
+		imgpath: editedpath,
+		followers: followercount,
+		folowings: followingcount,
+		tweets: tweetArray,
+		tweetcount: tweetcount
+	});
+};
+
+exports.showFriendProfileGet = async function (req, res) {
+	let user = await User.getUser({ username: req.query.un});
+	let friendfollowercount = await Follower.getFollowers({ following: req.query.un, status: true});
+	let friendfollowingcount = await Follower.getFollowers({ username: req.query.un, status: true});
+	let friendtweetcount = await Feed.getTweetCount({ username: req.query.un});
+	let status = await Follower.getFollower({username: req.session.username, following: req.query.un});
+	if (status === null) {
+		status = 'Follow';
 	} else {
-		let user = await User.getUser({ username: req.query.un});
-		let friendfollowercount = await Follower.getFollowers({ following: req.query.un, status: true});
-		let friendfollowingcount = await Follower.getFollowers({ username: req.query.un, status: true});
-		let friendtweetcount = await Feed.getTweetCount({ username: req.query.un});
-		let status = await Follower.getFollower({username: req.session.username, following: req.query.un});
-		if (status === null) {
-			status = 'Follow';
+		if (status.status == true) {
+			status = 'Unfollow';
 		} else {
-			if (status.status == true) {
-				status = 'Unfollow';
-			} else {
-				status = 'Follow';
-			}
+			status = 'Follow';
 		}
-		let a = JSON.parse(JSON.stringify(user));
-		a['followingcount'] = friendfollowingcount;
-		a['followercount'] = friendfollowercount;
-		a['tweetcount'] = friendtweetcount;
-		a['status'] = status;
-		user = a;
-		let birthdate = formatDate(user.birthdate);
-		let editedpath = editpath(user.imageURL);
-		res.render('friendprofile', {
-			user: user,
-			birthdate: birthdate,
-			imgpath: editedpath
-		});
 	}
+	let a = JSON.parse(JSON.stringify(user));
+	a['followingcount'] = friendfollowingcount;
+	a['followercount'] = friendfollowercount;
+	a['tweetcount'] = friendtweetcount;
+	a['status'] = status;
+	user = a;
+	let birthdate = formatDate(user.birthdate);
+	let editedpath = editpath(user.imageURL);
+	res.render('friendprofile', {
+		user: user,
+		birthdate: birthdate,
+		imgpath: editedpath
+	});
 };
 
 // --------------------------EDIT PATH FUNCTION FOR IMAGE----------------------//
@@ -219,7 +221,7 @@ exports.searchGet = async function (req, res) {
 		let returnValue = '';
 		searchresult.forEach(function (object) {
 			if(object.username != req.session.username)
-			returnValue = returnValue + "<li class='list-group-item'><a href='/home?un=" +
+			returnValue = returnValue + "<li class='list-group-item'><a href='/showFriendProfile?un=" +
 																		object.username + "'>" + object.username + '</a></li>';
 		});
 		res.send(returnValue);

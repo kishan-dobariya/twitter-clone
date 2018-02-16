@@ -2,10 +2,13 @@ const express = require('express');
 let session = require('express-session');
 const path = require('path');
 var multer = require('multer');
-
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
 const userController = require('../controllers/user.controller.js');
 const homeController = require('../controllers/home.controller.js');
 const feedController = require('../controllers/feed.controller.js');
+// const app = require('../controllers/feed.controller.js');
+const app = require('../app.js');
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -19,16 +22,19 @@ const upload = multer({
 });
 
 router.get('/login', checkSessionLogin, userController.loginGet);
-router.post('/login', userController.loginPost);
+router.post('/login', passport.authenticate('local', { 	successRedirect: '/home',
+																												failureRedirect: '/login' }));
 router.get('/logout', userController.logoutGet);
 router.get('/registration', userController.registrationGet);
 router.post('/registration', userController.registrationPost);
+router.get('/verifyaccount', userController.verifyaccountGet);
 router.get('/resetpassword', userController.resetpasswordGet);
 router.post('/resetpassword', userController.resetpasswordPost);
 router.post('/setpassword', userController.setpasswordPost);
-router.get('/home', checkSession, homeController.homePageGet);
+router.get('/home', homeController.homePageGet);
 router.get('/', checkSession, homeController.homePageGet);
 router.get('/showprofile', checkSession, homeController.showprofileGet);
+router.get('/showFriendProfile', checkSession, homeController.showFriendProfileGet);
 router.get('/editprofile', checkSession, homeController.editprofileGet);
 router.post('/editprofile', checkSession, upload.single('profilepicture'), homeController.editprofilePost);
 router.post('/follow', checkSession, homeController.addFollowerGet);

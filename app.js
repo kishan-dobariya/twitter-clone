@@ -12,7 +12,10 @@ const routes = require('./routes');
 const mongoDb = require('./helpers/mongoDb');
 const app = express();
 const session = require('express-session');
-const flash = require('express-flash');
+var flash = require('connect-flash');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+let User = require('./models/users.models');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,11 +26,56 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret : "secretkey"}));
+
+app.use(session({secret : process.env.SESSION_SECRET}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
+
+// function(err, user) {
+//       console.log("err",err)
+//       console.log("user",user);
+//       if (err) { console.log("err",err);return cb(err); }
+//       if (!user) { return cb(null, false); }
+//       if (user.password != password) { return cb(null, false); }
+//       console.log("verified");
+//       return cb(null, user);
+//     }
+
+passport.use(new Strategy(
+  async function(username, password, cb) {
+    let user = await User.getUser({ username: username , password : password});
+    if(user != null) {
+      return cb(null, user);
+    }
+    else {
+      return cb(null, false);
+    }
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  console.log("serializeUser",user._id);
+  done(null, user._id);
+});
+
+passport.deserializeUser(async function(id, done) {
+  let user = await User.findById(id);
+  if (user != null) {
+    done(null, user);
+  }
+  // User.findById(id, function (err, user) {
+  //   done(err, user);
+  // });
+});
+
+
 app.use('/', routes);
 
+require('dotenv').config();
+console.log(process.env.DB_HOST);
 // ========================== Database Connection ============================ //
 const mongoURL = mongoDb.makeConnectionString();
 console.log(mongoURL);
@@ -82,3 +130,4 @@ app.use(function(err, req, res, next) {
 });
 app.listen(8080);
 module.exports = app;
+module.exports = passport;

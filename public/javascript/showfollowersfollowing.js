@@ -113,7 +113,7 @@ tweets.onclick = function() {
 										<div class="col-xs-10" id="`+data[i]._id+`">
 											<span><a
 												style="color: black;font-size: 14px;"
-												href='/home?un=`+data[1]+`'>
+												href='/showFriendProfile?un=`+data[1]+`'>
 												<b>`+data[2]+`</b>
 												<span style="color: #657786">@`+data[1]+`</span></a>
 											</span>

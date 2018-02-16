@@ -60,7 +60,7 @@ module.exports.getFollowers = function (user, callback) {
 
 module.exports.updateStatus = function (query, newstatus) {
 	return new Promise((resolve, reject) => {
-		Follower.update(query, { $set: {status: newstatus }}, function (err, data) {
+		Follower.update(query, { $set: {status:newstatus}}, function (err, data) {
 			if (err) {
 				reject(err);
 			}
