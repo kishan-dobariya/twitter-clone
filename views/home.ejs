@@ -5,48 +5,44 @@
 		<% include bootstrapcss %>
 		<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 		<style type="text/css">
-			.sticky {
-				position: fixed;
-				top: 0;
-				width: 100%;
-			}
-			.sticky + .content {
-				padding-top: 102px;
-			}
-			.container{
-				padding: 16px;
-			}
 
 		</style>
 	</head>
+	<!-- <p id="position">
+
+	</p> -->
 	<body class="container" style="width: 100%;margin:0;">
-		<div class="row">
+		<div class="row" >
 			<% include home-header %>
 		</div>
-		<div class="container-fluid" id="main">
+		<div class="container-fluid" id="main" style="width: 90%">
 			<div class="row">
-				<div class="col-md-3 hidden-sm hidden-xs" style="background-color:#f6f6f9;">
-					<div class="col-lg-12" align="center"> <img alt="ProfilePicture" src=<%= imgpath %> class="img-circle img-responsive"/> </div>
+				<div class="col-md-3 hidden-sm hidden-xs" style="background-color: #ffffff">
 					<div class="row">
-						<div class="col-md-12">
-							<h3 style="text-align: center;"><%=name%></h3>
+						<div class="col-md-12" style="height: 150px;background-color: #1DA1F2 !important">
+
 						</div>
-						<div class="col-lg-4">
-							<h3 style="text-align: center;"><a href=""></a></h3>
+						<div class="col-md-5" align="center">
+							<img alt="ProfilePicture" src=<%= imgpath %>
+							class="img-circle img-responsive" style="position:relative;bottom:50px;"/>
+						</div>
+						<div class="col-md-7" style="text-align: center;"><br>
+							<b style="font-size: 18px;"><%=name%></b>
+							<p style="color: #657786"><%= username %></p>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<table class="table borderless table" align="center">
+							<table class="table borderless" align="center">
 							<tr>
 								<th>Tweets</th>
 								<th>Followers</th>
 								<th>Following</th>
 							</tr>
 							<tr>
-								<td><%=tweetcount%></td>
-								<td><%=followers%></td>
-								<td><%=folowings%></td>
+								<td><a href="/showprofile"><%=tweetcount%></a></td>
+								<td><a href="/showprofile"><%=followers%></a></td>
+								<td><a href="/showprofile"><%=folowings%></a></td>
 							</tr>
 						</table>
 						</div>
@@ -54,46 +50,59 @@
 				</div>
 				<div class="col-sm-12 col-md-6">
 					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group" id="tweetbox" style="background-color: #f6f6f9;padding: 5px;margin: 0">
-								<input type="text" class="form-control" id="tweet" placeholder="What's happening?" >
+						<div class="col-md-12" style="margin-bottom: 10px">
+							<div class="form-group" id="tweetbox" style="padding: 5px;margin: 0">
+								<input type="text" class="form-control" id="tweet"	placeholder="What's happening?">
 								<br>
-								<button class="btn btn-primary" id="tweetbutton">Tweet</button>
+								<button style="float: right;" class="btn btn-primary" id="tweetbutton">Tweet</button>
 							</div>
 						</div>
 					</div>
 					<div>
 						<% if(tweets !==	 null){ for( var i=0; i < tweets.length; i++) {%>
-								<div style="padding: 15px;">
-									<div class="row row-eq-height"
-												style="background-color: #f6f6f9;border-radius: 10px;">
-										<div class="col-md-2" align="center" style="align-self: center;">
-											<img class="img-thumbnail img-circle" alt="ProfilePicture"
+								<div style="padding: 0 15px;">
+									<div class="row"
+												style="padding: 10px 0;background-color: #ffffff;">
+										<div class="col-xs-2" align="center" style="align-self: center;">
+											<img class="img-thumbnail" alt="ProfilePicture"
 													src="<%= tweets[i].path %>"
 													style="width: 50px;height: 50px;">
 										</div>
-										<div class="col-md-10" style="align-self: center;">
+										<div class="col-xs-10" style="">
 											<span><a
-												style="color: black;"
-												href='/home?un=<%= tweets[i].username %>'>
-												<b><%= tweets[i].name %></b>@<%= tweets[i].username %></a>
+												style="color: black;font-size: 14px;"
+												href='/showFriendProfile?un=<%= tweets[i].username %>'>
+												<b><%= tweets[i].name %></b>
+												<span style="color: #657786">@<%= tweets[i].username %></span></a>
 											</span>
-										</div>
-									</div>
-									<div class="row row-eq-height" style="border: 2px solid #f6f6f9;padding: 10px;
-													 border-radius: 10px;">
-										<div class="col-md-12">
+											<% if (tweets[i].username == username) {
+												%><div class="dropleft" style="float:right">
+											  <span data-toggle="dropdown"
+											  class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
+											  <ul class="dropdown-menu">
+											  	<% var tweetId = tweets[i]._id %>
+											    <li><a onclick="editeTweet('<%= tweetId  %>')">
+															Edit
+															</a>
+													</li>
+													<li><a>
+															Delete
+															</a>
+													</li>
+											  </ul>
+											</div><%
+											}%>
 											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
-										</div><br>
-										<div class="col-md-3" id="likebuttondiv">
-											<button class="btn btn-primary like" onclick="like(this)" id="<%= tweets[i]._id %>"
+											<div id="likebuttondiv">
+											<button class="btn btn-default btn-sm like" onclick="like(this)" id="<%= tweets[i]._id %>"
 											 value="<%= tweets[i].likestatus %>">
 												<span id="likestatus"><%= tweets[i].likestatus %></span>
-											</button><br>
+											</button>
 											<span id="<%= tweets[i]._id %>count"><%= tweets[i].likeCount %></span>
+											</div>
 										</div>
 									</div>
-								</div><br>
+								</div><hr style="margin: 0"><hr style="margin: 0">
 							<%}
 						 }%>
 					</div>
@@ -106,17 +115,7 @@
 		<script type="text/javascript" src="javascript/searchuser.js"></script>
 		<script type="text/javascript" src="javascript/like.js"></script>
 		<script type="text/javascript" src="javascript/onready.js"></script>
-		<script>
-			window.onscroll = function() {myFunction()};
-			var header = document.getElementById("navigation");
-			var sticky = header.offsetTop;
-			function myFunction() {
-				if (window.pageYOffset >= sticky) {
-					header.classList.add("sticky");
-				} else {
-					header.classList.remove("sticky");
-				}
-			}
-		</script>
+		<script type="text/javascript" src="javascript/fixheader.js"></script>
+		<script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
 	</body>
 </html>

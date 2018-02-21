@@ -5,7 +5,7 @@ $("#searchuser").keyup( function(){
   $.ajax({method: "GET",
     url : "http://localhost:8080/search?keyword="+keywords,
     success: function(result){
-      //console.log("result----------->",result);
+      console.log("result----------->",result);
       document.getElementById("showuser").style.display = "inline-block";
       document.getElementById("showuser").innerHTML = result;
   }});
@@ -16,5 +16,11 @@ $("#searchuser").keyup( function(){
       e.preventDefault();
       return false;
     }
+  });
+});
+
+$("#searchuser").focusout( function(){
+  $('#showuser').delay(200).hide(0, function () {
+        $(this).empty();
   });
 });

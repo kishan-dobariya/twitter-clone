@@ -1,59 +1,94 @@
 const express = require('express');
-let session =require('express-session');
 const path = require('path');
-var multer  = require('multer');
-
+var multer = require('multer');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
 const userController = require('../controllers/user.controller.js');
 const homeController = require('../controllers/home.controller.js');
 const feedController = require('../controllers/feed.controller.js');
 
 const router = express.Router();
 const storage = multer.diskStorage({
-  destination: 'public/images/profilepics/',
-  filename: function(req, file, callback){
-    callback(null, req.session.username+path.extname(file.originalname));
-  }
+	destination: 'public/images/profilepics/',
+	filename: function (req, file, callback) {
+		callback(null, req.session.username + path.extname(file.originalname));
+	}
 });
 const upload = multer({
-  storage : storage
+	storage: storage
 });
 
+router.get('/', (req, res) => { res.redirect('/login'); });
 
-router.get('/login', checkSessionLogin, userController.loginGet);
-router.post('/login', userController.loginPost);
-router.get('/logout', userController.logoutGet);
+router.get('/login', userController.loginGet);
+
+router.post('/login', passport.authenticate('local', { 	successRedirect: '/home',
+	failureRedirect: '/login' }));
+// LOGOUT ACTION
+router.get('/logout', (req, res) => { req.logout(); res.redirect('/login'); });
+// REDIRECT TO REGISTRATION PAGE
 router.get('/registration', userController.registrationGet);
+// REGISTRATION POST REQUEST
 router.post('/registration', userController.registrationPost);
+// MAIL VERIFICATION REQUEST
+router.get('/verifyaccount', userController.verifyaccountGet);
+// RENDER GET MAIL PAGE
+router.get('/getmail', userController.getMailGet);
+// GET MAIL FROM USER, VERIFY IT AND SEND LINK TO USERMAIL
+router.post('/getmail', userController.getMailPost);
+// CHECK FOR HASH AND RENDER SETPASSWORDPAGE
 router.get('/resetpassword', userController.resetpasswordGet);
+// UPDATE NEW PASSWORD
 router.post('/resetpassword', userController.resetpasswordPost);
-router.post('/setpassword', userController.setpasswordPost);
-router.get('/home',checkSession, homeController.homePageGet);
-router.get('/showprofile',checkSession, homeController.showprofileGet);
-router.get('/editprofile',checkSession, homeController.editprofileGet);
-router.post('/editprofile',checkSession, upload.single('profilepicture'), homeController.editprofilePost);
-router.post('/follow',checkSession, homeController.addFollowerGet);
-router.get('/search',checkSession, homeController.searchGet);
-router.post('/insertfeed',checkSession, feedController.insertPost);
-router.post('/getfollowing',checkSession, homeController.getfollowingPost);
-router.post('/getfollowers',checkSession, homeController.getfollowersPost);
-router.post('/like',checkSession, homeController.likePost);
+// REDRECT TO HOME PAGE
+router.get('/home', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.homePageGet);
+// SHOW USER PROFILE
+router.get('/showprofile', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.showprofileGet);
+// SHOW OTHER USER'S PROFILE
+router.get('/showFriendProfile', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.showFriendProfileGet);
+// EDIT USER'S PROFILE
+router.post('/editprofile', upload.single('profilepicture'),
+	homeController.editprofilePost);
+// MAKE FOLLOW-UNFOLLOW
+router.post('/follow', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.addFollowerGet);
+// SHOW SEARCHED USER IN DROPDOWN LIST
+router.get('/search', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.searchGet);
+// SHOW SEARCHED USER ON OTHER PAGE
+router.post('/searchUser', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.searchUserGet);
+// INSERT NEW TWEET
+router.post('/insertfeed', require('connect-ensure-login').ensureLoggedIn(),
+	feedController.insertPost);
+// EDIT TWEET
+router.post('/edittweet', require('connect-ensure-login').ensureLoggedIn(),
+	feedController.edittweetPost);
+// DELETE TWEET
+router.post('/deletetweet', require('connect-ensure-login').ensureLoggedIn(),
+	feedController.deleteTweetPost);
+// GET USER'S FOLLOWINGS
+router.post('/getfollowing', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.getfollowingPost);
+// GET USER'S FOLLOWERS
+router.post('/getfollowers', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.getfollowersPost);
+// GET USER'S TWEET
+router.post('/getTweet', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.getTweetPost);
+// TWEET LIKE-UNLIKE FEATURES
+router.post('/like', require('connect-ensure-login').ensureLoggedIn(),
+	homeController.likePost);
+// GET OTHER USER'S FOLLOWERS
+router.post('/getFriendFollowers', require('connect-ensure-login').ensureLoggedIn(),
+	feedController.friendFollowersPost);
+// GET OTHER USER'S FOLLOWINGS
+router.post('/getFriendFollowing', require('connect-ensure-login').ensureLoggedIn(),
+	feedController.friendFollowingPost);
+// GET OTHER USER'S TWEETS
+router.post('/getFriendTweet', feedController.friendTweetsPost);
 
 module.exports = router;
-
-function checkSession(req, res, callback){
-  if((req.session.sess == undefined)) {
-    res.redirect("/login");
-  }
-  else{
-    callback();
-  }
-}
-
-function checkSessionLogin(req, res, next){
-  if((req.session.sess !== undefined)) {
-    res.redirect("/home");
-  }
-  else{
-    next();
-  }
-}
