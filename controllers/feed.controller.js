@@ -1,6 +1,6 @@
 let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
-let Feed = require('../models/userfeed.models');
+let Feed = require('../models/tweet.models');
 
 function editpath (url) {
 	if (url !== null && url !== undefined) {
@@ -10,7 +10,6 @@ function editpath (url) {
 
 // -----------------------INSERT TWEET--------------------------//
 exports.insertPost = async function (req, res, next) {
-	console.log('insertPost');
 	if (req.body.tweet !== '') {
 		let newTweet = new Feed({ username: req.user.username,
 			tweet: req.body.tweet,
@@ -62,7 +61,6 @@ exports.friendFollowersPost = async function (req, res) {
 
 // ---------------------GET FRIEND'S FOLLOWING--------------------------//
 exports.friendFollowingPost = async function (req, res) {
-	console.log(req.body.userName);
 	let searchresult = await Follower.searchUser({ username: req.body.userName, status: true});
 	for (let i = 0; i < searchresult.length; i++) {
 		let user = await User.getUserHome({ username: searchresult[i].following});
@@ -84,14 +82,29 @@ exports.friendFollowingPost = async function (req, res) {
 
 // --------------------------GET FRIEND'S TWEET----------------------------//
 exports.friendTweetsPost = async function (req, res) {
-	console.log(req.body.userName);
 	let tweet = await Feed.getTweet({ username: req.body.userName});
 	let user = await User.getUserHome({ username: req.body.userName});
 	tweet.sort((a, b) => {
-		if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
+		if (a.createdAt > b.createdAt) {
+			return -1;
+		} else if (a.createdAt < b.createdAt) {
+			return 1;
+		} else {
+			return 0;
+		}
 	});
 	tweet.unshift(user.name);
 	tweet.unshift(user.username);
 	tweet.unshift(editpath(user.imageURL));
 	res.send(tweet);
+};
+
+// --------------------------DELETE TWEET----------------------------//
+exports.deleteTweetPost = async function (req, res) {
+	await Feed.deleteTweet({ _id: req.body.tweetId })
+		.then(function (argument) {
+			res.send(true);
+		}).catch(function (argument) {
+			res.send(false);
+		});
 };

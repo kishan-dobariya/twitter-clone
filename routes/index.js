@@ -67,6 +67,9 @@ router.post('/insertfeed', require('connect-ensure-login').ensureLoggedIn(),
 // EDIT TWEET
 router.post('/edittweet', require('connect-ensure-login').ensureLoggedIn(),
 	feedController.edittweetPost);
+// DELETE TWEET
+router.post('/deletetweet', require('connect-ensure-login').ensureLoggedIn(),
+	feedController.deleteTweetPost);
 // GET USER'S FOLLOWINGS
 router.post('/getfollowing', require('connect-ensure-login').ensureLoggedIn(),
 	homeController.getfollowingPost);

@@ -103,9 +103,9 @@ exports.registrationPost = async function (req, res) {
 					// console.log(data);
 				}
 			});
-			res.render('login', {
-				registrationSuccessful: 'Check your mail for verification.'
-			});
+			req.flash('alertClass', 'alert-success');
+			req.flash('messages', 'Check your mail for verification.');
+			res.render('login', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
 		});
 	} else {
 		res.render('registration', {
@@ -144,7 +144,7 @@ exports.getMailPost = async function (req, res) {
 	let user = await User.getUserHome({email: uemail});
 	if (user) {
 		let createdAt = new Date();
-		console.log("Date------------>",createdAt);
+		console.log('Date------------>', createdAt);
 		let crypted = await createCipherText({username: user.username,
 			email:	user.email,
 			createdAt:	createdAt});
@@ -155,10 +155,10 @@ exports.getMailPost = async function (req, res) {
 			}
 		});
 		let helperoption = {
-		from: '"Kishan" <kishandobariya033@gmail.com',
-		to: 'kishan.dobariya@bacancytechnology.com',
-		subject: 'Demo Mail',
-		text: 'Click here to reset your Password--->' +
+			from: '"Kishan" <kishandobariya033@gmail.com',
+			to: 'kishan.dobariya@bacancytechnology.com',
+			subject: 'Demo Mail',
+			text: 'Click here to reset your Password--->' +
 					'http://localhost:8080/resetpassword?user=' + crypted
 		};
 		transporter.sendMail(helperoption, function (err, data) {
@@ -180,11 +180,11 @@ exports.getMailPost = async function (req, res) {
 };
 
 exports.resetpasswordGet = async function (req, res) {
-	let userCipher = await Hash.getCipher({cipher: req.query.user, Status:true});
+	let userCipher = await Hash.getCipher({cipher: req.query.user, Status: true});
 	if (userCipher.length != 0) {
 		if (userCipher.Status != false) {
 			await Hash.updateStatus({cipher: req.query.user}, { $set: {Status: false}});
-			res.render('setpassword',{ hash : req.query.user});
+			res.render('setpassword', { hash: req.query.user});
 		}
 	}
 	req.flash('alertClass', 'alert-danger');

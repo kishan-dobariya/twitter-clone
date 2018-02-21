@@ -3,7 +3,7 @@ let latestTweets = require('latest-tweets');
 
 let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
-let Feed = require('../models/userfeed.models');
+let Feed = require('../models/tweet.models');
 
 // -------------------------GET TWEET FOR HOMEPAGE-----------------------------//
 async function getTweet (req, res, followerslist) {
@@ -53,8 +53,27 @@ async function getTweet (req, res, followerslist) {
 			}
 		});
 	} else {
+		let tweetArray = [];
+		let tweet = await Feed.getTweet({ username: req.user.username});
+		if (tweet.length != 0) {
+			let user = await User.getUserHome({ username: req.user.username});
+			for (let l = 0; l < tweet.length; l++) {
+				if (tweet[l].like.includes(req.user.username)) {
+					tweet[l].likestatus = 'Unlike';
+				} else {
+					tweet[l].likestatus = 'Like';
+				}
+				tweet[l].likeCount = 	tweet[l].like.length;
+				// console.log("like",tweet[l].likeCount)
+				tweet[l].name = user.name;
+				tweet[l].path = editpath(user.imageURL);
+				tweetArray[l] = tweet[l];
+			}
+		}
 		return new Promise(async (resolve, reject) => {
-			resolve(null);
+			resolve(tweetArray.sort((a, b) => {
+				if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
+			}));
 		});
 	}
 }
@@ -180,7 +199,7 @@ function formatDate (date) {
 		year = d.getFullYear();
 	if (month.length < 2) month = '0' + month;
 	if (day.length < 2) day = '0' + day;
-	return [day, month, year].join('-');
+	return [year, month, day].join('-');
 }
 
 // -------------------------ADD AND UPDATE FOLLOWERS--------------------------//
@@ -215,7 +234,8 @@ exports.addFollowerGet = async function (req, res) {
 // ------------------------------SEARCH USER---------------------------------//
 exports.searchGet = async function (req, res) {
 	if (req.query.keyword != '') {
-		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.query.keyword + '.*'}});
+		let searchresult = await User.searchUser({ username: {$regex: new RegExp('^' + req.query.keyword.toLowerCase(), 'i')}});
+		// let searchresult = await User.searchUser({ username: {$regex: '.*' + req.query.keyword + '.*'}});
 		let returnValue = '';
 		searchresult.forEach(function (object) {
 			if (object.username != req.user.username) {
@@ -223,7 +243,12 @@ exports.searchGet = async function (req, res) {
 																		object.username + "'>" + object.username + '</a></li>';
 			}
 		});
-		res.send(returnValue);
+		if (returnValue == '') {
+			returnValue = '<li class=list-group-item>No Match Found</li>';
+			res.send(returnValue);
+		} else {
+			res.send(returnValue);
+		}
 	} else {
 		res.send('');
 	}
@@ -231,29 +256,35 @@ exports.searchGet = async function (req, res) {
 
 // ------------------------SEARCH USER ON NEW PAGE-----------------------------//
 exports.searchUserGet = async function (req, res) {
-	console.log('keyword', req.body.keyword);
 	if (req.body.keyword != '') {
 		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.body.keyword + '.*'}});
-		console.log('searchresult-->', searchresult);
-		for (let i = 0; i < searchresult.length; i++) {
-			let reverseFollowing = await Follower.getFollowers({username: req.user.username,
-				following: searchresult.username,
-				status: true});
-			let a = JSON.parse(JSON.stringify(searchresult[i]));
-			a['imageURL'] = editpath(searchresult[i].imageURL);
-			if (reverseFollowing != 1) {
-				a['reverseStatus'] = 'Follow';
-			} else {
-				a['reverseStatus'] = 'Unfollow';
+		if (searchresult.length == 0) {
+			res.render('searchuser_result', {
+				Message: 'No Match Found',
+				searchResult: []
+			});
+		} else {
+			for (let i = 0; i < searchresult.length; i++) {
+				let reverseFollowing = await Follower.getFollowers({username: req.user.username,
+					following: searchresult.username,
+					status: true});
+				let a = JSON.parse(JSON.stringify(searchresult[i]));
+				a['imageURL'] = editpath(searchresult[i].imageURL);
+				if (reverseFollowing != 1) {
+					a['reverseStatus'] = 'Follow';
+				} else {
+					a['reverseStatus'] = 'Unfollow';
+				}
+				searchresult[i] = a;
 			}
-			searchresult[i] = a;
+			res.render('searchuser_result', {
+				searchResult: searchresult
+			});
 		}
-		console.log('---------->', searchresult);
-		res.render('searchuser_result', {
-			searchResult: searchresult
-		});
 	} else {
-		res.sendStatus(200);
+		res.render('searchuser_result', {
+			Message: 'No Matched Found'
+		});
 	}
 };
 
@@ -327,7 +358,6 @@ exports.getTweetPost = async function (req, res) {
 
 // ----------------------------LIKE AND UNLIKE TWEET---------------------------//
 exports.likePost = async function (req, res) {
-	console.log(req.body.likestatus);
 	status = req.body.likestatus.trim();
 	if (status == 'Like') {
 		let tweet = await Feed.getTweet({ _id: req.body.id});
@@ -336,7 +366,6 @@ exports.likePost = async function (req, res) {
 		let likeCount = tweetlike.length;
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {
-				console.log(argument);
 				if (argument.nModified == 1) {
 					res.send({id: req.body.id, tweetcount: likeCount, status: 'Unlike'});
 				}
@@ -351,13 +380,11 @@ exports.likePost = async function (req, res) {
 		let likeCount = tweetlike.length;
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {
-				console.log(argument);
 				res.send({id: req.body.id, tweetcount: likeCount, status: 'Like'});
 			}).catch(function (argument) {
 				console.log(argument);
 			});
 	} else {
-		console.log('else');
 		res.send(null);
 	}
 };

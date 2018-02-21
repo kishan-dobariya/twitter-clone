@@ -12,10 +12,10 @@ const routes = require('./routes');
 const mongoDb = require('./helpers/mongoDb');
 const app = express();
 const session = require('express-session');
-var flash = require('connect-flash');
-var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
-let User = require('./models/users.models');
+const flash = require('connect-flash');
+const passport = require('passport');
+const Strategy = require('passport-local').Strategy;
+const User = require('./models/users.models');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

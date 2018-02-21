@@ -16,7 +16,7 @@
 				z-index: 0;
 				width: 100%;
 				margin-bottom: 10px;
-				height: 30vh;
+				height: 40vh;
 			}
 			.twitter-image-profile
 			{
@@ -52,6 +52,7 @@
 				<div class="twitter-profile">
 					<img align="left" class="fb-image-lg" src="images/cover.jpg"/>
 					<img align="left" class="twitter-image-profile img-thumbnail"
+					style="height: 243px;width: 243px"
 								src="<%= user.imgpath %>" alt="Profile image example"/>
 					<ul class="nav nav-tabs">
 						<li class="active2 tweets">
@@ -89,7 +90,7 @@
 			</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4" style="margin: 0;padding: 0">
+				<div class="col-md-3" style="margin: 0;padding: 0">
 					<div class="row" id="userInfo">
 						<div class="col-xs-12" >
 							<div class="panel panel-info hidden-sm hidden-xs">
@@ -101,7 +102,7 @@
 									<p style="text-align: center;">
 										<span class="glyphicon glyphicon-envelope"></span>
 										<%= email %>
-										</p>
+									</p>
 									<p style="text-align: center;">
 										<span class="glyphicon glyphicon-calendar"></span>
 										<%= birthdate %>
@@ -130,35 +131,34 @@
 										<input class="form-control" type="text" placeholder="Name" name="name"
 										onchange="return validateName()" id="name" value="<%= name %>">
 									</div><br>
-                  <p id="nameerror" style="color: red"> </p>
 								</div>
+								<p id="nameerror" style="color: red"></p>
 								<div class="form-group">
 									<div class="col-xs-10">
 										<input class="form-control" type="text" placeholder="Bio" name="bio"
 										onchange="return validateBio()" id="bio" value="<%= bio %>">
 									</div><br>
-									<p id="bioerror" style="color: red"></p>
 								</div>
+								<p id="bioerror" style="color: red"></p>
 								<div class="form-group">
 									<div class="col-xs-10">
 										<input class="form-control" type="email" placeholder="Email" name="email"
 										onchange="return validateEmail()" id="email" value="<%= email %>">
 									</div><br>
-                  <p id="emailerror" style="color: red"></p>
 								</div>
+                <p id="emailerror" style="color: red"></p>
 								<div class="form-group">
 									<div class="col-xs-10">
 										<input class="form-control" type="" placeholder="Location" name="location"
 										onchange="return validateLocation()" id="location" value="<%= location %>">
 									</div><br>
-									<p id="locationerror" style="color: red"></p>
 								</div>
+								<p id="locationerror" style="color: red"></p>
 								<div class="form-group">
 									<div class="col-xs-10">
 										<input class="form-control" type="date" id="date" name="dob"
 										onchange="return validateBirthdate()" value="<%= birthdate %>">
 									</div><br>
-									<p id="emailerror" style="color: red"><%= birthdate %></p>
 								</div>
 								<div class="form-group">
 									<div class="col-xs-10">
@@ -171,7 +171,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8" style="position: relative;top: -60px">
+				<div class="col-md-9">
 					<div class="row showresult" id="result"></div>
 				</div>
 			</div>

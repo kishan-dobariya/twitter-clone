@@ -69,7 +69,7 @@ module.exports.createUser = function (newUser, callback) {
 			if (err) {
 				console.log('err');
 			}
-			// newUser.password = hash;
+			newUser.password = hash;
 			newUser.save(callback);
 		});
 	});
@@ -87,10 +87,9 @@ module.exports.getUser = function (query) {
 					if (err2) {
 						reject(err2);
 					}
-					if (result) {
+					if (result && data.Status) {
 						resolve(data);
 					} else {
-						console.log('.....');
 						reject(result);
 					}
 				});

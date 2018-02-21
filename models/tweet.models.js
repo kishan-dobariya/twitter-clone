@@ -30,7 +30,6 @@ var FeedSchema = mongoose.Schema({
 let Feed = module.exports = mongoose.model('feed', FeedSchema);
 
 module.exports.createTweet = function (newFeed, callback) {
-	console.log('createTweet');
 	newFeed.save(callback);
 };
 
@@ -70,6 +69,17 @@ module.exports.updateLike = function (query, like) {
 module.exports.updateTweet = function (query, tweet) {
 	return new Promise((resolve, reject) => {
 		Feed.update(query, { $set: { tweet: tweet}}, function (err, data) {
+			if (err) {
+				reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
+
+module.exports.deleteTweet = function (query, tweet) {
+	return new Promise((resolve, reject) => {
+		Feed.remove(query, function (err, data) {
 			if (err) {
 				reject(err);
 			}
