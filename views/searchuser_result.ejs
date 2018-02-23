@@ -22,7 +22,6 @@
           </div>
             <%
           } %>
-          <p><%= searchResult %></p>
           <% for ( var i=0; i < searchResult.length; i++) { %>
             <div style="padding:2px" class="col-md-3 col-sm-6 col-xs-12">
               <div style="background-color:white;margin:0" class="card hovercard">
@@ -36,7 +35,6 @@
                     <a target="_blank" href="<%= searchResult[i].imageURL %>"> <%=searchResult[i].name%></a>
                   </div>
                   <div class="desc">@ <%= searchResult[i].username %></div>
-                  <div class=""><%= searchResult[i].bio %></div>
                   <button class="btn btn-primary" onclick="test(this);"
                         id="<%= searchResult[i].username %>" value="<%= searchResult[i].username %>">
                         <%= searchResult[i].reverseStatus %></button>

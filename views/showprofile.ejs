@@ -103,18 +103,27 @@
 										<span class="glyphicon glyphicon-envelope"></span>
 										<%= email %>
 									</p>
-									<p style="text-align: center;">
+									<% if ( birthdate != 'NaN-NaN-NaN' ) { %>
+				          <p style="text-align: center;">
 										<span class="glyphicon glyphicon-calendar"></span>
 										<%= birthdate %>
 									</p>
-									<p style="text-align: center;">
+				            <%
+				          } %>
+									<% if ( typeof bio != 'undefined' ) { %>
+				          <p style="text-align: center;">
 										<span class="glyphicon glyphicon-briefcase"></span>
 										<%= bio %>
 									</p>
-									<p style="text-align: center;">
+				            <%
+				          } %>
+				          <% if ( typeof location != 'undefined' ) { %>
+				          <p style="text-align: center;">
 										<span class="glyphicon glyphicon-map-marker"></span>
 										<%= location %>
 									</p>
+				            <%
+				          } %>
 								</div>
 							</div>
 							<form id="editProfileForm" class="form-horizontal" role="form" action="/editprofile"
@@ -122,10 +131,11 @@
 													onsubmit="return validateForm()">
 								<div class="form-group">
 									<div class="col-xs-10">
-										<input type="file" class="form-control" placeholder="profilepicture"
+										<input type="file" class="form-control" onchange="fileValidation()" placeholder="profilepicture" id="profilepicture"
 										 name="profilepicture">
 									</div>
 								</div>
+								<p id="fileerror" style="color: red"></p>
 								<div class="form-group">
 									<div class="col-xs-10">
 										<input class="form-control" type="text" placeholder="Name" name="name"
@@ -200,6 +210,7 @@
 				$( "#editProfileForm" ).css( "opacity", "1" );
 			}
 			function cancel() {
+				$("#editProfileForm")[0].reset();
 				$("#editProfileForm").hide();
 				$(".panel-info").show();
 				$( "#main" ).css( "opacity", "1" );
@@ -208,7 +219,7 @@
 
 		<script type="text/javascript">
       function validateForm(){
-        if(validateName() && validateEmail() && validateBio() && validateLocation()){
+        if(validateName() && validateEmail() && validateBio() && validateLocation() && fileValidation()){
           return true;
         }
         else{
@@ -241,6 +252,21 @@
           return true;
         }
       }
+      function fileValidation(){
+      	var allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
+        var first = document.getElementById('profilepicture').value;
+        var lastDotIndex = first.lastIndexOf('.');
+        var extension = first.substr(lastDotIndex+1).toLowerCase();
+        if (allowedExtension.includes(extension)) {
+        	document.getElementById('fileerror').innerHTML = "";
+          return true;
+        }
+        else {
+        	document.getElementById('fileerror').innerHTML = "Only jpg/jpeg/png are valid";
+          document.getElementById('profilepicture').focus();
+          return false;
+        }
+      }
       function validateBio(){
         var first = document.getElementById('bio').value;
         var emailexp = /^[a-zA-Z0-9!@#\$%\^\&*\s]+$/;
@@ -268,5 +294,12 @@
         }
       }
     </script>
+    <% if ( typeof error != 'undefined' ) { %>
+    <div class="alert alert-danger alert-dismissable" role="alert">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <p><%= error %></p>
+    </div>
+      <%
+    } %>
 	</body>
 </html>

@@ -87,15 +87,20 @@ module.exports.getUser = function (query) {
 					if (err2) {
 						reject(err2);
 					}
-					if (result && data.Status) {
-						resolve(data);
+					if (result) {
+						if(!data.Status) {
+							resolve("Not verified");
+						}
+						else {
+							console.log("successsss");
+							resolve(data);
+						}
 					} else {
-						reject(result);
+						resolve("Invalid password");
 					}
 				});
 			} else {
-				console.log('result3');
-				reject(err);
+				resolve("Invalid username");
 			}
 		});
 	});
@@ -105,7 +110,6 @@ module.exports.getUserHome = function (query) {
 	return new Promise((resolve, reject) => {
 		User.findOne(query, function (err, data) {
 			if (err) {
-				console.log('err', err);
 				reject(err);
 			}
 			resolve(data);

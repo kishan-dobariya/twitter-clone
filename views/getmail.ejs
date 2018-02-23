@@ -12,13 +12,18 @@
   <body>
     <% include header %>
     <div class="container">
-      <% if ( typeof messages != 'undefined' ) { %>
-        <div class="alert <%= alertClass %> alert-dismissable"" role="alert">
+      <% if ( messages.info) { %>
+        <div class="alert alert-info alert-dismissable" role="alert">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <p><%= messages %></p>
+          <p><%= messages.info %></p>
         </div>
-          <%
-        } %>
+          <% } %>
+          <% if ( messages.error) { %>
+        <div class="alert alert-danger alert-dismissable" role="alert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p><%= messages.error %></p>
+        </div>
+          <% } %>
       <h2>Enter your email</h2>
       <form action="/getmail" method="post">
         <div class="form-group">

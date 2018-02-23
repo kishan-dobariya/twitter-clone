@@ -39,7 +39,6 @@ async function getTweet (req, res, followerslist) {
 								tweet[l].likestatus = 'Like';
 							}
 							tweet[l].likeCount = 	tweet[l].like.length;
-							// console.log("like",tweet[l].likeCount)
 							tweet[l].name = user.name;
 							tweet[l].path = editpath(user.imageURL);
 							tweetArray[k] = tweet[l];
@@ -47,7 +46,13 @@ async function getTweet (req, res, followerslist) {
 						}
 					}
 					resolve(tweetArray.sort((a, b) => {
-						if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
+						if (a.createdAt > b.createdAt) {
+							return -1;
+						} else if (a.createdAt < b.createdAt) {
+							return 1;
+						} else {
+							return 0;
+						}
 					}));
 				}
 			}
@@ -72,7 +77,13 @@ async function getTweet (req, res, followerslist) {
 		}
 		return new Promise(async (resolve, reject) => {
 			resolve(tweetArray.sort((a, b) => {
-				if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
+				if (a.createdAt > b.createdAt) {
+					return -1;
+				} else if (a.createdAt < b.createdAt) {
+					return 1;
+				} else {
+					return 0;
+				}
 			}));
 		});
 	}
@@ -105,6 +116,9 @@ exports.homePageGet = async function (req, res) {
 };
 
 exports.showFriendProfileGet = async function (req, res) {
+	if (req.query.un == req.user.username) {
+		res.redirect('/showprofile');
+	}
 	let user = await User.getUserHome({ username: req.query.un});
 	let friendfollowercount = await Follower.getFollowers({ following: req.query.un, status: true});
 	let friendfollowingcount = await Follower.getFollowers({ username: req.query.un, status: true});
@@ -234,8 +248,8 @@ exports.addFollowerGet = async function (req, res) {
 // ------------------------------SEARCH USER---------------------------------//
 exports.searchGet = async function (req, res) {
 	if (req.query.keyword != '') {
-		let searchresult = await User.searchUser({ username: {$regex: new RegExp('^' + req.query.keyword.toLowerCase(), 'i')}});
-		// let searchresult = await User.searchUser({ username: {$regex: '.*' + req.query.keyword + '.*'}});
+		let searchresult = await User.searchUser({ username: {$regex: new RegExp('^' +
+			                                        req.query.keyword.toLowerCase(), 'i')}});
 		let returnValue = '';
 		searchresult.forEach(function (object) {
 			if (object.username != req.user.username) {
@@ -257,20 +271,24 @@ exports.searchGet = async function (req, res) {
 // ------------------------SEARCH USER ON NEW PAGE-----------------------------//
 exports.searchUserGet = async function (req, res) {
 	if (req.body.keyword != '') {
-		let searchresult = await User.searchUser({ username: {$regex: '.*' + req.body.keyword + '.*'}});
+		let searchresult = await User.searchUser({ username: {$regex: new RegExp('^' +
+																													req.body.keyword.toLowerCase(), 'i')}});
 		if (searchresult.length == 0) {
 			res.render('searchuser_result', {
 				Message: 'No Match Found',
 				searchResult: []
 			});
 		} else {
+			let indexOfUser = searchresult.indexOf(req.user.username);
+			if (indexOfUser >= 0) { searchresult.splice(indexOfUser, 1); }
 			for (let i = 0; i < searchresult.length; i++) {
 				let reverseFollowing = await Follower.getFollowers({username: req.user.username,
-					following: searchresult.username,
+					following: searchresult[i].username,
 					status: true});
+				console.log("reverseFollowing---->",reverseFollowing);
 				let a = JSON.parse(JSON.stringify(searchresult[i]));
 				a['imageURL'] = editpath(searchresult[i].imageURL);
-				if (reverseFollowing != 1) {
+				if (reverseFollowing == 0) {
 					a['reverseStatus'] = 'Follow';
 				} else {
 					a['reverseStatus'] = 'Unfollow';
@@ -348,7 +366,13 @@ exports.getTweetPost = async function (req, res) {
 	let tweet = await Feed.getTweet({ username: req.user.username});
 	let user = await User.getUserHome({ username: req.user.username});
 	tweet.sort((a, b) => {
-		if (a.createdAt > b.createdAt) { return -1; } else if (a.createdAt < b.createdAt) { return 1; } else { return 0; }
+		if (a.createdAt > b.createdAt) {
+			return -1;
+		} else if (a.createdAt < b.createdAt) {
+			return 1;
+		} else {
+			return 0;
+		}
 	});
 	tweet.unshift(user.name);
 	tweet.unshift(user.username);
