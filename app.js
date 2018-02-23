@@ -64,7 +64,6 @@ passport.deserializeUser(async function (id, done) {
 app.use('/', routes);
 
 require('dotenv').config();
-console.log(process.env.DB_HOST);
 // ========================== Database Connection ============================ //
 const mongoURL = mongoDb.makeConnectionString();
 console.log(mongoURL);
