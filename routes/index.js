@@ -15,15 +15,32 @@ const storage = multer.diskStorage({
 	}
 });
 const upload = multer({
-	storage: storage
+	storage: storage,
+	limits: {fileSize: 10000000},
+	fileFilter: function (req, file, cb) {
+		checkFileType(file, cb);
+	}
 });
+
+// CHECK FILE TYPE
+function checkFileType (file, cb) {
+	const fileTypes = /jpeg|jpg|png|gif/;
+	const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+	const mimetype = fileTypes.test(file.mimetype);
+	if (extName && mimetype) {
+		return cb(null, true);
+	} else {
+		cb('Error : Images Only.');
+	}
+}
 
 router.get('/', (req, res) => { res.redirect('/login'); });
 
 router.get('/login', userController.loginGet);
 
-router.post('/login', passport.authenticate('local', { successRedirect: '/home',
-	failureRedirect: '/login' }));
+router.post('/login', passport.authenticate('local', { 	successRedirect: '/home',
+	failureRedirect: '/login',
+	failureFlash: true }));
 // LOGOUT ACTION
 router.get('/logout', (req, res) => { req.logout(); res.redirect('/login'); });
 // REDIRECT TO REGISTRATION PAGE

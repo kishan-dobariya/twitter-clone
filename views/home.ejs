@@ -75,23 +75,6 @@
 												<b><%= tweets[i].name %></b>
 												<span style="color: #657786">@<%= tweets[i].username %></span></a>
 											</span>
-											<% if (tweets[i].username == username) {
-												%><div class="dropleft" style="float:right">
-											  <span data-toggle="dropdown"
-											  class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
-											  <ul class="dropdown-menu">
-											  	<% var tweetId = tweets[i]._id %>
-											    <li><a onclick="editeTweet('<%= tweetId  %>')">
-															Edit
-															</a>
-													</li>
-													<li><a>
-															Delete
-															</a>
-													</li>
-											  </ul>
-											</div><%
-											}%>
 											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
 											<div id="likebuttondiv">
 											<button class="btn btn-default btn-sm like" onclick="like(this)" id="<%= tweets[i]._id %>"
@@ -107,7 +90,7 @@
 						 }%>
 					</div>
 				</div>
-				<div class="col-md-3 hidden-sm hidden-xs" style="background-color:#f6f6f9;">.col-sm-4</div>
+				<div class="col-md-3 hidden-sm hidden-xs" style="background-color:#f6f6f9;"></div>
 			</div>
 		</div>
 		<% include bootstrapjs %>

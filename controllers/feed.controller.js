@@ -25,15 +25,12 @@ exports.insertPost = async function (req, res, next) {
 
 // ------------------------EDIT TWEET----------------------------//
 exports.edittweetPost = async function (req, res, next) {
-	console.log('body', req.body);
 	await Feed.updateTweet({ _id: req.body.tweetId}, req.body.newTweet)
 		.then(function (argument) {
-			console.log(argument);
 			res.send(true);
 		}).catch(function (argument) {
-			console.log(argument);
+			res.send(false);
 		});
-	res.send(null);
 };
 
 // ------------------GET FRIEND'S FOLLOWERS-------------------------//

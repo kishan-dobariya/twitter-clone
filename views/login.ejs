@@ -13,13 +13,24 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
-          <% if ( typeof messages != 'undefined' ) { %>
-          <div class="alert <%= alertClass %> alert-dismissable"" role="alert">
+        <% if ( messages.info) { %>
+          <div class="alert alert-info alert-dismissable" role="alert">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <p><%= messages %></p>
+            <p><%= messages.info %></p>
           </div>
-            <%
-          } %>
+            <% } %>
+            <% if ( messages.error) { %>
+          <div class="alert alert-danger alert-dismissable" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p><%= messages.error %></p>
+          </div>
+            <% } %>
+            <% if ( messages.success) { %>
+          <div class="alert alert-success alert-dismissable" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p><%= messages.success %></p>
+          </div>
+            <% } %>
             <div class="form-wrap">
               <h1>Log in</h1>
               <form role="form" action="/login" method="post" id="login-form" autocomplete="off">

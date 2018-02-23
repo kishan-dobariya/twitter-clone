@@ -1,4 +1,3 @@
-// let tempEmail;
 let User = require('../models/users.models');
 let Hash = require('../models/hash.models');
 let bcrypt = require('bcrypt');
@@ -14,8 +13,8 @@ let transporter = nodemailer.createTransport({
 	secure: false,
 	port: 25,
 	auth: {
-		user: 'kishandobariya033@gmail.com',
-		pass: 'Kishan.@&033'
+		user: 'kishan.dobariya@bacancytechnology.com',
+		pass: 'Kishan.bt021'
 	},
 	tls: {
 		rejectUnauthorized: false
@@ -25,28 +24,6 @@ let transporter = nodemailer.createTransport({
 // ---------------------WHEN REDIRECT TO LOGIN PAGE---------------------------//
 exports.loginGet = function (req, res) {
 	res.render('login');
-};
-
-// ----------------CHECK USERNAME AND PASSWORD FOR LOGIN----------------------//
-exports.loginPost = async function (req, res) {
-	console.log('loginPost');
-	let uname = req.body.username;
-	let upassword = req.body.password;
-	let session_obj = req.session;
-	let flag = false;
-	let user = await User.getUserHome({ username: uname, Status: true});
-	if (user == null) {
-		res.redirect('/login');
-	}
-	bcrypt.compare(upassword, user.password).then(function (result) {
-		if (result) {
-			res.redirect('/home');
-		} else {
-			console.log('Invalid un or pw');
-			req.flash('loginFailed', 'Invalid Username or Password');
-			res.render('login', { messages: req.flash('loginFailed') });
-		}
-	});
 };
 
 // -------------------WHEN REDIRECT TO REGISTRATION PAGE----------------------//
@@ -90,7 +67,7 @@ exports.registrationPost = async function (req, res) {
 				}
 			});
 			let helperoption = {
-				from: '"Kishan" <kishandobariya033@gmail.com',
+				from: '"Kishan" <kishan.dobariya@bacancytechnology.com',
 				to: 'kishan.dobariya@bacancytechnology.com',
 				subject: 'Demo Mail',
 				text: 'click this link to verify your account--->' +
@@ -103,14 +80,12 @@ exports.registrationPost = async function (req, res) {
 					// console.log(data);
 				}
 			});
-			req.flash('alertClass', 'alert-success');
-			req.flash('messages', 'Check your mail for verification.');
-			res.render('login', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
+			req.flash('info', 'Check your mail for verification.');
+			res.render('login');
 		});
 	} else {
-		res.render('registration', {
-			alreadyExist: 'Usernaem already exist. Please select different Username.'
-		});
+		req.flash('error', 'Username already exist, please choose different.');
+		res.render('registration');
 	}
 };
 
@@ -123,14 +98,15 @@ function createCipherText (user) {
 }
 
 exports.verifyaccountGet = async function (req, res) {
-	let userCipher = await Hash.getCipher({cipher: req.query.user});
-	if (userCipher != null) {
-		if (userCipher.Status != false) {
-			await Hash.updateStatus({cipher: req.query.user}, { $set: {Status: false}});
-			await User.updateUser({ username: userCipher[0].username }, { $set: {Status: true}});
-		}
+	let userCipher = await Hash.getCipher({cipher: req.query.user, Status: true});
+	if (userCipher.length != 0) {
+		await Hash.updateStatus({cipher: req.query.user}, { $set: {Status: false}});
+		await User.updateUser({ username: userCipher[0].username }, { $set: {Status: true}});
+		req.flash('success', 'Verify Successful, Login here.');
+	} else {
+		req.flash('error', 'Invalid Link');
 	}
-	res.redirect('/login');
+	res.render('login');
 };
 
 // -------------------WHEN REDIRECT TO RESETPASSWORD PAGE----------------------//
@@ -144,7 +120,6 @@ exports.getMailPost = async function (req, res) {
 	let user = await User.getUserHome({email: uemail});
 	if (user) {
 		let createdAt = new Date();
-		console.log('Date------------>', createdAt);
 		let crypted = await createCipherText({username: user.username,
 			email:	user.email,
 			createdAt:	createdAt});
@@ -155,7 +130,7 @@ exports.getMailPost = async function (req, res) {
 			}
 		});
 		let helperoption = {
-			from: '"Kishan" <kishandobariya033@gmail.com',
+			from: '"Kishan" <kishan.dobariya@bacancytechnology.com',
 			to: 'kishan.dobariya@bacancytechnology.com',
 			subject: 'Demo Mail',
 			text: 'Click here to reset your Password--->' +
@@ -168,14 +143,11 @@ exports.getMailPost = async function (req, res) {
 				// console.log(data);
 			}
 		});
-		req.flash('alertClass', 'alert-success');
-		req.flash('messages', 'Check your Email to reset your Password');
-		res.render('login', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
+		req.flash('info', 'Check your Email to reset your Password');
+		res.render('login');
 	} else {
-		console.log('email not found');
-		req.flash('alertClass', 'alert-danger');
-		req.flash('messages', 'Email Not Found');
-		res.render('getmail', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
+		req.flash('error', 'Email Not Found');
+		res.render('getmail');
 	}
 };
 
@@ -186,10 +158,10 @@ exports.resetpasswordGet = async function (req, res) {
 			await Hash.updateStatus({cipher: req.query.user}, { $set: {Status: false}});
 			res.render('setpassword', { hash: req.query.user});
 		}
+	} else {
+		req.flash('error', 'Passwordreset link expire, Please try again');
+		res.render('login');
 	}
-	req.flash('alertClass', 'alert-danger');
-	req.flash('messages', 'Passwordreset link expire, Please try again');
-	res.render('login', { messages: req.flash('messages'), alertClass: req.flash('alertClass') });
 };
 
 // ----------------------------UPDATE NEW PASSWORD----------------------------//
@@ -197,5 +169,6 @@ exports.resetpasswordPost = async function (req, res) {
 	let upassword = req.body.password;
 	let userCipher = await Hash.getCipher({cipher: req.body.hash});
 	let passWord = await User.updatePassword({username: userCipher[0].username}, upassword);
-		 res.redirect('/login');
+	req.flash('success', 'Password changed successfully');
+	res.redirect('/login');
 };
