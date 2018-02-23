@@ -62,7 +62,7 @@ followers.onclick = function () {
 																			<div class="title">
 																				<a target="_blank" href="` + data[i].imageURL + `">` + data[i].name + `</a>
 																			</div>
-					 														<div class="desc">@` + data[i].username + `</div>
+																			<div class="desc">@` + data[i].username + `</div>
 																			<div class="">` + data[i].bio + `</div>
 																			<button class="btn btn-primary" onclick="test(this);"
 																						id="` + data[i].username + `" value="` + data[i].username + `">
@@ -100,7 +100,7 @@ tweets.onclick = function () {
 					 likestatus = 'Unlike';
 				} else {
 					likestatus = 'Like';
-			 	}
+				}
 				var showfollowers = `<div style="padding: 0 15px;">
 										<div class="row"
 												style="padding: 10px 0;background-color: #ffffff;">
@@ -118,10 +118,10 @@ tweets.onclick = function () {
 											</span>
 
 											<div class="dropleft" style="float:right">
-											  <span data-toggle="dropdown"
-											  class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
-											  <ul class="dropdown-menu">
-											    <li><a onclick="editeTweet('` + data[i]._id + `');">
+												<span data-toggle="dropdown"
+												class="dropdown-submenu pull-left glyphicon glyphicon-menu-left"></span>
+												<ul class="dropdown-menu">
+													<li><a onclick="editeTweet('` + data[i]._id + `');">
 															Edit
 															</a>
 													</li>
@@ -129,14 +129,14 @@ tweets.onclick = function () {
 															Delete
 															</a>
 													</li>
-											  </ul>
+												</ul>
 											</div>
 											<p style="word-break: break-all;">` + data[i].tweet + `</p>
 											<div id="likebuttondiv">
 											<button class="btn btn-default btn-sm like"
 															onclick="like(this)"
 															id="` + data[i]._id + `"
-											 				value="` + likestatus + `">
+															value="` + likestatus + `">
 												<span id="likestatus">` + likestatus + `  </span>
 											</button>
 											<span id="` + data[i]._id + `count"

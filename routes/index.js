@@ -22,7 +22,7 @@ router.get('/', (req, res) => { res.redirect('/login'); });
 
 router.get('/login', userController.loginGet);
 
-router.post('/login', passport.authenticate('local', { 	successRedirect: '/home',
+router.post('/login', passport.authenticate('local', { successRedirect: '/home',
 	failureRedirect: '/login' }));
 // LOGOUT ACTION
 router.get('/logout', (req, res) => { req.logout(); res.redirect('/login'); });
