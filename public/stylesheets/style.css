@@ -48,7 +48,7 @@ nav{
 .twitter-profile .nav>li>a:hover {
 	background-color: none;
 	color: #1DA1F2;
-  border-bottom: 2px  solid #1DA1F2;
+  /*border-bottom: 2px  solid #1DA1F2;*/
   /*border-bottom-width: 2px;*/
 }
 
