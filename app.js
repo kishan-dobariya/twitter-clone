@@ -25,9 +25,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(session({secret: process.env.SESSION_SECRET}));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -47,10 +45,6 @@ passport.use(new Strategy(
 			console.log('success');
 			return cb(null, user);
 		}
-		// if (user == null) {
-		// 	console.log("null");
-		// 	return cb(null, false,{message: 'error'});
-		// }
 	}
 ));
 
@@ -68,7 +62,7 @@ passport.deserializeUser(async function (id, done) {
 app.use('/', routes);
 
 require('dotenv').config();
-// ========================== Database Connection ============================ //
+//========================== Database Connection =============================//
 const mongoURL = mongoDb.makeConnectionString();
 console.log(mongoURL);
 mongoose.connect(mongoURL);
