@@ -21,10 +21,10 @@ following.onclick = function () {
 																		</div>
 																		<div class="info">
 																			<div class="title">
-																				<a target="_blank" href="` + data[i].imageURL + `">` + data[i].following + `</a>
+																				<a target="_blank" href="/showFriendProfile?un=`
+																											+ data[i].following + `">` + data[i].following + `</a>
 																			</div>
 																			<div class="desc">@` + data[i].following + `</div>
-																			<div class="">` + data[i].bio + `</div>
 																		<button class="btn btn-primary" onclick="test(this);"
 																						id="` + data[i].following + `" value="` + data[i].following + `">Unfollow</button>
 																		</div>
@@ -60,10 +60,9 @@ followers.onclick = function () {
 																		</div>
 																		<div class="info">
 																			<div class="title">
-																				<a target="_blank" href="` + data[i].imageURL + `">` + data[i].name + `</a>
+																				<a target="_blank" href="/showFriendProfile?un=` + data[i].username + `">` + data[i].name + `</a>
 																			</div>
 					 														<div class="desc">@` + data[i].username + `</div>
-																			<div class="">` + data[i].bio + `</div>
 																			<button class="btn btn-primary" onclick="test(this);"
 																						id="` + data[i].username + `" value="` + data[i].username + `">
 																						` + data[i].reverseStatus + `</button>

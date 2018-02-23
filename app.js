@@ -12,7 +12,7 @@ const routes = require('./routes');
 const mongoDb = require('./helpers/mongoDb');
 const app = express();
 const session = require('express-session');
-const flash = require('connect-flash');
+const flash = require('express-flash');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const User = require('./models/users.models');
@@ -36,17 +36,21 @@ app.use(flash());
 passport.use(new Strategy(
 	async function (username, password, cb) {
 		let user;
-		try {
-			user = await User.getUser({ username: username, password: password});
-		} catch (e) {
-			if (e == false) {
-				return cb(null, false);
-			}
+		user = await User.getUser({ username: username, password: password});
+		if (user == 'Invalid username') {
+			return cb(null, false, {info: 'Invalid username'});
+		} else if (user == 'Invalid password') {
+			return cb(null, false, {message: 'Invalid password'});
+		} else if (user == 'Not verified') {
+			return cb(null, false, {message: 'Not verified'});
+		} else {
+			console.log('success');
+			return cb(null, user);
 		}
-		if (user == null) {
-			return cb(null, false);
-		}
-		return cb(null, user);
+		// if (user == null) {
+		// 	console.log("null");
+		// 	return cb(null, false,{message: 'error'});
+		// }
 	}
 ));
 
@@ -64,7 +68,6 @@ passport.deserializeUser(async function (id, done) {
 app.use('/', routes);
 
 require('dotenv').config();
-console.log(process.env.DB_HOST);
 // ========================== Database Connection ============================ //
 const mongoURL = mongoDb.makeConnectionString();
 console.log(mongoURL);
