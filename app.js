@@ -27,9 +27,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(session({secret: process.env.SESSION_SECRET}));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -68,7 +66,7 @@ app.use((req, res, next) => {
 app.use('/', routes);
 
 require('dotenv').config();
-// ========================== Database Connection ============================ //
+//========================== Database Connection =============================//
 const mongoURL = mongoDb.makeConnectionString();
 console.log(mongoURL);
 mongoose.connect(mongoURL);

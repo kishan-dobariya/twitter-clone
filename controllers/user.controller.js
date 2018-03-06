@@ -24,7 +24,7 @@ let transporter = nodemailer.createTransport({
 // ---------------------WHEN REDIRECT TO LOGIN PAGE---------------------------//
 exports.loginGet = function (req, res) {
 	res.render('login');
-};
+}
 
 // -------------------WHEN REDIRECT TO REGISTRATION PAGE----------------------//
 exports.registrationGet = function (req, res) {
