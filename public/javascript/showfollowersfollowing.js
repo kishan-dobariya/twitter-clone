@@ -21,8 +21,8 @@ following.onclick = function () {
 																		</div>
 																		<div class="info">
 																			<div class="title">
-																				<a target="_blank" href="/showFriendProfile?un=`
-																											+ data[i].following + `">` + data[i].following + `</a>
+																				<a target="_blank" href="/showFriendProfile?un=` +
+																											data[i].following + `">` + data[i].following + `</a>
 																			</div>
 																			<div class="desc">@` + data[i].following + `</div>
 																		<button class="btn btn-primary" onclick="test(this);"

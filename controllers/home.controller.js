@@ -4,6 +4,7 @@ let latestTweets = require('latest-tweets');
 let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
 let Feed = require('../models/tweet.models');
+let commonFunction = require('./common.controller');
 
 // -------------------------GET TWEET FOR HOMEPAGE-----------------------------//
 async function getTweet (req, res, followerslist) {
@@ -21,9 +22,11 @@ async function getTweet (req, res, followerslist) {
 						} else {
 							tweet[l].likestatus = 'Like';
 						}
+						let time = new Date();
+						tweet[l].timeDifference = commonFunction.timeDifference(time, tweet[l].createdAt);
 						tweet[l].likeCount = 	tweet[l].like.length;
 						tweet[l].name = user.name;
-						tweet[l].path = editpath(user.imageURL);
+						tweet[l].path = commonFunction.editpath(user.imageURL);
 						tweetArray[k] = tweet[l];
 						k++;
 					}
@@ -38,9 +41,11 @@ async function getTweet (req, res, followerslist) {
 							} else {
 								tweet[l].likestatus = 'Like';
 							}
+							let time = new Date();
+							tweet[l].timeDifference = commonFunction.timeDifference(time, tweet[l].createdAt);
 							tweet[l].likeCount = 	tweet[l].like.length;
 							tweet[l].name = user.name;
-							tweet[l].path = editpath(user.imageURL);
+							tweet[l].path = commonFunction.editpath(user.imageURL);
 							tweetArray[k] = tweet[l];
 							k++;
 						}
@@ -71,7 +76,7 @@ async function getTweet (req, res, followerslist) {
 				tweet[l].likeCount = 	tweet[l].like.length;
 				// console.log("like",tweet[l].likeCount)
 				tweet[l].name = user.name;
-				tweet[l].path = editpath(user.imageURL);
+				tweet[l].path = commonFunction.editpath(user.imageURL);
 				tweetArray[l] = tweet[l];
 			}
 		}
@@ -96,8 +101,8 @@ exports.homePageGet = async function (req, res) {
 	let followingcount = await Follower.getFollowers({ username: req.user.username, status: true});
 	let followerslist = await Follower.searchUser({ username: req.user.username, status: true});
 	let tweetcount = await Feed.getTweetCount({ username: req.user.username});
-	let birthdate = formatDate(user.birthdate);
-	let editedpath = editpath(user.imageURL);
+	let birthdate = commonFunction.formatDate(user.birthdate);
+	let editedpath = commonFunction.editpath(user.imageURL);
 
 	let tweetArray = await getTweet(req, res, followerslist);
 	res.render('home', {
@@ -105,6 +110,7 @@ exports.homePageGet = async function (req, res) {
 		name: user.name,
 		bio: user.bio,
 		email: user.email,
+		coverImage: user.coverImage,
 		location: user.location,
 		birthdate: birthdate,
 		imgpath: editedpath,
@@ -139,8 +145,8 @@ exports.showFriendProfileGet = async function (req, res) {
 	a['tweetcount'] = friendtweetcount;
 	a['status'] = status;
 	user = a;
-	let birthdate = formatDate(user.birthdate);
-	let editedpath = editpath(user.imageURL);
+	let birthdate = commonFunction.formatDate(user.birthdate);
+	let editedpath = commonFunction.editpath(user.imageURL);
 	res.render('friendprofile', {
 		user: user,
 		birthdate: birthdate,
@@ -148,19 +154,14 @@ exports.showFriendProfileGet = async function (req, res) {
 	});
 };
 
-// --------------------------EDIT PATH FUNCTION FOR IMAGE----------------------//
-function editpath (url) {
-	if (url !== null && url !== undefined) { return url.replace('public\\', ''); }
-}
-
 // ----------------------------USER PROFILE-----------------------------------//
 exports.showprofileGet = async function (req, res) {
 	let user = await User.getUserHome({ username: req.user.username});
 	let followercount = await Follower.getFollowers({ following: req.user.username, status: true});
 	let followingcount = await Follower.getFollowers({ username: req.user.username, status: true});
 	let tweetcount = await Feed.getTweetCount({ username: req.user.username});
-	let birthdate = formatDate(user.birthdate);
-	user.imgpath = editpath(user.imageURL);
+	let birthdate = commonFunction.formatDate(user.birthdate);
+	user.imgpath = commonFunction.editpath(user.imageURL);
 	user.followingcount = followingcount;
 	user.followercount = followercount;
 	user.tweetcount = tweetcount;
@@ -177,7 +178,7 @@ exports.showprofileGet = async function (req, res) {
 // -------------------------------EDIT PROFILE -------------------------------//
 exports.editprofileGet = async function (req, res) {
 	let user = await User.getUserHome({ username: req.user.username});
-	let birthdate = formatDate(user.birthdate);
+	let birthdate = commonFunction.formatDate(user.birthdate);
 	let path = '/images/profilepics/' + req.user.username + '.jpg';
 	res.render('editprofile', {
 		name: user.name,
@@ -204,16 +205,15 @@ exports.editprofilePost = async function (req, res) {
 	}
 };
 
-// ------------------------FORMAT DATE(DD/MM/YYYY)----------------------------//
-function formatDate (date) {
-	var d = new Date(date),
-		month = '' + (d.getMonth() + 1),
-		day = '' + d.getDate(),
-		year = d.getFullYear();
-	if (month.length < 2) month = '0' + month;
-	if (day.length < 2) day = '0' + day;
-	return [year, month, day].join('-');
-}
+// --------------------------EDIT  PROFILE POST-------------------------------//
+exports.updateCoverImage = async function (req, res) {
+	if (req.file !== undefined) {
+		User.updateCoverImage({username: req.user.username}, req.file.path).then();
+		res.redirect('/showprofile');
+	} else {
+		res.redirect('/showprofile');
+	}
+};
 
 // -------------------------ADD AND UPDATE FOLLOWERS--------------------------//
 exports.addFollowerGet = async function (req, res) {
@@ -286,7 +286,7 @@ exports.searchUserGet = async function (req, res) {
 					status: true});
 				console.log('reverseFollowing---->', reverseFollowing);
 				let a = JSON.parse(JSON.stringify(searchresult[i]));
-				a['imageURL'] = editpath(searchresult[i].imageURL);
+				a['imageURL'] = commonFunction.editpath(searchresult[i].imageURL);
 				if (reverseFollowing == 0) {
 					a['reverseStatus'] = 'Follow';
 				} else {
@@ -311,7 +311,7 @@ exports.getfollowingPost = async function (req, res) {
 		let user = await User.getUserHome({ username: searchresult[i].following});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
-			a['imageURL'] = editpath(user.imageURL);
+			a['imageURL'] = commonFunction.editpath(user.imageURL);
 			a['name'] = user.name;
 			a['bio'] = user.bio;
 			searchresult[i] = a;
@@ -334,7 +334,7 @@ exports.getfollowersPost = async function (req, res) {
 			status: true});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
-			a['imageURL'] = editpath(user.imageURL);
+			a['imageURL'] = commonFunction.editpath(user.imageURL);
 			a['name'] = user.name;
 			a['bio'] = user.bio;
 			if (reverseFollowing != 1) {
@@ -374,7 +374,7 @@ exports.getTweetPost = async function (req, res) {
 	});
 	tweet.unshift(user.name);
 	tweet.unshift(user.username);
-	tweet.unshift(editpath(user.imageURL));
+	tweet.unshift(commonFunction.editpath(user.imageURL));
 	res.send(tweet);
 };
 
@@ -389,7 +389,7 @@ exports.likePost = async function (req, res) {
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {
 				if (argument.nModified == 1) {
-					req.io.emit("like", {likeCount : likeCount , tweetId : req.body.id})
+					req.io.emit('like', {likeCount: likeCount, tweetId: req.body.id});
 					res.send({id: req.body.id, tweetcount: likeCount, status: 'Unlike'});
 				}
 			}).catch(function (argument) {
@@ -403,7 +403,7 @@ exports.likePost = async function (req, res) {
 		let likeCount = tweetlike.length;
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {
-				req.io.emit("like", {likeCount : likeCount , tweetId : req.body.id})
+				req.io.emit('like', {likeCount: likeCount, tweetId: req.body.id});
 				res.send({id: req.body.id, tweetcount: likeCount, status: 'Like'});
 			}).catch(function (argument) {
 				console.log(argument);

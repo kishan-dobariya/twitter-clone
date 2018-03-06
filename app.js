@@ -38,7 +38,7 @@ passport.use(new Strategy(
 		let user;
 		user = await User.getUser({ username: username, password: password});
 		if (user == 'Invalid username') {
-			return cb(null, false, {info: 'Invalid username'});
+			return cb(null, false, {message: 'Invalid username'});
 		} else if (user == 'Invalid password') {
 			return cb(null, false, {message: 'Invalid password'});
 		} else if (user == 'Not verified') {

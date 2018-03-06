@@ -1,12 +1,7 @@
 let User = require('../models/users.models');
 let Follower = require('../models/followers.models');
 let Feed = require('../models/tweet.models');
-
-function editpath (url) {
-	if (url !== null && url !== undefined) {
-		return url.replace('public\\', '');
-	}
-}
+let commonFunction = require('./common.controller');
 
 // -----------------------INSERT TWEET--------------------------//
 exports.insertPost = async function (req, res, next) {
@@ -19,13 +14,13 @@ exports.insertPost = async function (req, res, next) {
 		} else if (req.file !== undefined && req.body.tweet == '') {
 			newTweet = new Feed({ username: req.user.username,
 				status: 'new',
-				imageURL: editpath(req.file.path)
+				imageURL: commonFunction.editpath(req.file.path)
 			});
 		} else {
 			newTweet = new Feed({ username: req.user.username,
 				tweet: req.body.tweet,
 				status: 'new',
-				imageURL: editpath(req.file.path)
+				imageURL: commonFunction.editpath(req.file.path)
 			});
 		}
 		await Feed.createTweet(newTweet, function (err, tweetInfo) {
@@ -57,7 +52,7 @@ exports.friendFollowersPost = async function (req, res) {
 		let user = await User.getUserHome({ username: searchresult[i].username});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
-			a['imageURL'] = editpath(user.imageURL);
+			a['imageURL'] = commonFunction.editpath(user.imageURL);
 			a['name'] = user.name;
 			a['bio'] = user.bio;
 			searchresult[i] = a;
@@ -80,7 +75,7 @@ exports.friendFollowingPost = async function (req, res) {
 		let user = await User.getUserHome({ username: searchresult[i].following});
 		if (user.imageURL != undefined) {
 			let a = JSON.parse(JSON.stringify(searchresult[i]));
-			a['imageURL'] = editpath(user.imageURL);
+			a['imageURL'] = commonFunction.editpath(user.imageURL);
 			a['name'] = user.name;
 			a['bio'] = user.bio;
 			searchresult[i] = a;
@@ -109,7 +104,7 @@ exports.friendTweetsPost = async function (req, res) {
 	});
 	tweet.unshift(user.name);
 	tweet.unshift(user.username);
-	tweet.unshift(editpath(user.imageURL));
+	tweet.unshift(commonFunction.editpath(user.imageURL));
 	res.send(tweet);
 };
 

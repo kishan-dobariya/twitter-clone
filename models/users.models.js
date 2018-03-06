@@ -1,3 +1,5 @@
+let commonFunction = require('../controllers/common.controller');
+
 const mongoose = require('mongoose');
 let bcrypt = require('bcrypt');
 var UserSchema = mongoose.Schema({
@@ -59,6 +61,10 @@ var UserSchema = mongoose.Schema({
 	imageURL: {
 		type: String,
 		default: 'public' + '\\' + 'images' + '\\' + 'defaultProfile.png'
+	},
+	coverImage: {
+		type: String,
+		default: 'images' + '\\' + 'default.png'
 	}
 });
 
@@ -165,7 +171,7 @@ module.exports.updateProfile = function (query, name, bio, mail, location, dob, 
 				email: mail,
 				location: location,
 				birthdate: dob,
-				imageURL: path}}, function (err, data) {
+				imageURL: commonFunction.editpath(path)}}, function (err, data) {
 				if (err) {
 					reject(err);
 				}
@@ -189,6 +195,17 @@ module.exports.updateProfile = function (query, name, bio, mail, location, dob, 
 module.exports.updateStatus = function (query, status) {
 	return new Promise((resolve, reject) => {
 		User.update(query, { $set: {verificationStatus: status}}, function (err, data) {
+			if (err) {
+				reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
+
+module.exports.updateCoverImage = function (query, newPath) {
+	return new Promise((resolve, reject) => {
+		User.update(query, { $set: {coverImage: commonFunction.editpath(newPath)}}, function (err, data) {
 			if (err) {
 				reject(err);
 			}

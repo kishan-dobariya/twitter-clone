@@ -50,7 +50,16 @@
 			<div class="row">
 			<div class="com-xs-12">
 				<div class="twitter-profile">
-					<img align="left" class="fb-image-lg" src="images/cover.jpg"/>
+					<div class="coverImageDiv" style="z-index: -1;position: relative">
+						<img align="left" class="fb-image-lg" src="<%= user.coverImage %>"/>
+						<!-- <form style="position: absolute;top: 0;right: 0" method="post"
+									action="/updateCoverImage" enctype="multipart/form-data" id="coverImageForm">
+							<label style="float: right;" class="btn btn-default btn-file">
+								<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+								<input type="file" id="coverImage" name="coverImage" style="display: none;">
+							</label>
+						</form> -->
+					</div>
 					<img align="left" class="twitter-image-profile img-thumbnail"
 					style="height: 243px;width: 243px"
 								src="<%= user.imgpath %>" alt="Profile image example"/>
@@ -78,6 +87,15 @@
 									<%= user.followercount %>
 								</p>
 							</a>
+						</li>
+						<li class="coverImageForm" style="float: right;">
+							<form method="post"
+									action="/updateCoverImage" enctype="multipart/form-data" id="coverImageForm">
+								<label style="float: right;" class="btn btn-default btn-file">
+									<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+									<input type="file" id="coverImage" name="coverImage" style="display: none;">
+								</label>
+							</form>
 						</li>
 						<li class="editProfile" style="float: right;" id="editProfile">
 							<a href="" data-toggle="tab" onclick="editProfile();">
@@ -201,6 +219,9 @@
 				$(".panel-info").show();
 				$("#editProfileForm").focus();
 				$('#tweets').trigger('click');
+				document.getElementById("coverImage").onchange = function() {
+				    document.getElementById("coverImageForm").submit();
+				};
 			});
 			function editProfile() {
 				$("#editProfileForm").show();

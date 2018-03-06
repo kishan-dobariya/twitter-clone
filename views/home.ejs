@@ -13,8 +13,9 @@
 			<div class="row">
 				<div class="col-md-3 hidden-sm hidden-xs" style="background-color: #ffffff">
 					<div class="row">
-						<div class="col-md-12" style="height: 150px;background-color: #1DA1F2 !important">
-
+						<div class="col-md-12">
+							<img alt="coverPicture" src=<%= coverImage %>
+							class="img-responsive" style="height:25vh;width:100%;position:relative;bottom:100px;top:0px;"/>
 						</div>
 						<div class="col-md-5" align="center">
 							<img alt="ProfilePicture" src=<%= imgpath %>
@@ -50,7 +51,7 @@
 									<input type="text" class="form-control" id="tweet" name="tweet" placeholder="What's happening?">
 									<label style="float: right;" class="btn btn-default btn-file">
 										<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
-											<input type="file" id="imageTweet" name="imageTweet" style="display: none;">
+										<input type="file" id="imageTweet" name="imageTweet" style="display: none;">
 									</label>
 									<br>
 									<button type="submit" form="tweetform" style="float: right;" class="btn btn-primary" id="tweetbutton">Tweet</button>
@@ -74,6 +75,7 @@
 												href='/showFriendProfile?un=<%= tweets[i].username %>'>
 												<b><%= tweets[i].name %></b>
 												<span style="color: #657786">@<%= tweets[i].username %></span></a>
+												<span style="color: #657786">@<%= tweets[i].timeDifference %></span></a>
 											</span>
 											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
 											<% if ( tweets[i].imageURL) { %>

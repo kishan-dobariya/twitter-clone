@@ -54,9 +54,9 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-
 # Ds_Store
 .DS_Store
 
 public/images/profilepics/*
 public/images/tweetImages/*
+public/images/coverpics/*

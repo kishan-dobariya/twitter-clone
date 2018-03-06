@@ -1,4 +1,5 @@
 let User = require('../models/users.models');
+let commonFunction = require('./common.controller');
 let Hash = require('../models/hash.models');
 let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
@@ -14,7 +15,7 @@ let transporter = nodemailer.createTransport({
 	port: 25,
 	auth: {
 		user: 'kishan.dobariya@bacancytechnology.com',
-		pass: 'Kishan.bt021'
+		pass: 'KishaN.bt021'
 	},
 	tls: {
 		rejectUnauthorized: false
@@ -23,8 +24,12 @@ let transporter = nodemailer.createTransport({
 
 // ---------------------WHEN REDIRECT TO LOGIN PAGE---------------------------//
 exports.loginGet = function (req, res) {
-	res.render('login');
-}
+	if (req.user) {
+		res.redirect('/home');
+	} else {
+		res.render('login');
+	}
+};
 
 // -------------------WHEN REDIRECT TO REGISTRATION PAGE----------------------//
 exports.registrationGet = function (req, res) {
