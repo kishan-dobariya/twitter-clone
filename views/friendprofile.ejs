@@ -135,5 +135,14 @@
         $('#tweets').trigger('click');
       });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script>
+      var socket = io('http://localhost:8080/');
+      socket.on('like', function (data) {
+        document.getElementById(data.tweetId+'count').innerHTML = data.likeCount;
+      });
+      socket.emit('my other event', { my: 'kishan' }, function (data) {
+        console.log(data,"ack");});
+    </script>
   </body>
 </html>

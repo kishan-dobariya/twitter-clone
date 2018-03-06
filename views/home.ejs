@@ -4,13 +4,7 @@
 		<title>Home</title>
 		<% include bootstrapcss %>
 		<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-		<style type="text/css">
-
-		</style>
 	</head>
-	<!-- <p id="position">
-
-	</p> -->
 	<body class="container" style="width: 100%;margin:0;">
 		<div class="row" >
 			<% include home-header %>
@@ -51,11 +45,17 @@
 				<div class="col-sm-12 col-md-6">
 					<div class="row">
 						<div class="col-md-12" style="margin-bottom: 10px">
-							<div class="form-group" id="tweetbox" style="padding: 5px;margin: 0">
-								<input type="text" class="form-control" id="tweet"	placeholder="What's happening?">
-								<br>
-								<button style="float: right;" class="btn btn-primary" id="tweetbutton">Tweet</button>
-							</div>
+							<form class="uploadImage" id="tweetform" enctype="multipart/form-data" action="/insertfeed" method="post" onsubmit="return tweetValidation()">
+								<div class="form-group" id="tweetbox" style="padding: 5px;margin: 0">
+									<input type="text" class="form-control" id="tweet" name="tweet" placeholder="What's happening?">
+									<label style="float: right;" class="btn btn-default btn-file">
+										<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+											<input type="file" id="imageTweet" name="imageTweet" style="display: none;">
+									</label>
+									<br>
+									<button type="submit" form="tweetform" style="float: right;" class="btn btn-primary" id="tweetbutton">Tweet</button>
+								</div>
+							</form>
 						</div>
 					</div>
 					<div>
@@ -76,6 +76,9 @@
 												<span style="color: #657786">@<%= tweets[i].username %></span></a>
 											</span>
 											<p style="word-break: break-all;"><%= tweets[i].tweet %></p>
+											<% if ( tweets[i].imageURL) { %>
+												<img class="img-responsive" width="100%" src="<%= tweets[i].imageURL %>"><br>
+													<% } %>
 											<div id="likebuttondiv">
 											<button class="btn btn-default btn-sm like" onclick="like(this)" id="<%= tweets[i]._id %>"
 											 value="<%= tweets[i].likestatus %>">
@@ -94,11 +97,17 @@
 			</div>
 		</div>
 		<% include bootstrapjs %>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+		<script>
+			var socket = io('http://localhost:8080/');
+			socket.on('like', function (data) {
+				document.getElementById(data.tweetId+'count').innerHTML = data.likeCount;
+			});
+		</script>
 		<script type="text/javascript" src="javascript/tweet.js"></script>
 		<script type="text/javascript" src="javascript/searchuser.js"></script>
 		<script type="text/javascript" src="javascript/like.js"></script>
 		<script type="text/javascript" src="javascript/onready.js"></script>
 		<script type="text/javascript" src="javascript/fixheader.js"></script>
-		<script type="text/javascript" src="javascript/showfollowersfollowing.js"></script>
 	</body>
 </html>

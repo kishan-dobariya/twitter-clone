@@ -16,6 +16,8 @@ const flash = require('express-flash');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const User = require('./models/users.models');
+let www = require('./bin/www');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -59,7 +61,10 @@ passport.deserializeUser(async function (id, done) {
 		done(null, user);
 	}
 });
-
+app.use((req, res, next) => {
+  req.io = www.io;
+  next();
+});
 app.use('/', routes);
 
 require('dotenv').config();
@@ -115,6 +120,4 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
 });
-app.listen(8080);
 module.exports = app;
-module.exports = passport;

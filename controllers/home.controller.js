@@ -150,7 +150,6 @@ exports.showFriendProfileGet = async function (req, res) {
 
 // --------------------------EDIT PATH FUNCTION FOR IMAGE----------------------//
 function editpath (url) {
-	// body...
 	if (url !== null && url !== undefined) { return url.replace('public\\', ''); }
 }
 
@@ -195,12 +194,12 @@ exports.editprofilePost = async function (req, res) {
 	if (req.file !== undefined) {
 		User.updateProfile({username: req.user.username}, req.body.name, req.body.bio,
 			req.body.email, req.body.location, req.body.dob,
-			req.file.path).then(console.log);
+			req.file.path).then();
 		res.redirect('/showprofile');
 	} else {
 		User.updateProfile({username: req.user.username}, req.body.name, req.body.bio,
 			req.body.email, req.body.location, req.body.dob,
-			'not difined').then(console.log);
+			'not difined').then();
 		res.redirect('/showprofile');
 	}
 };
@@ -274,9 +273,9 @@ exports.searchUserGet = async function (req, res) {
 		let searchresult = await User.searchUser({ username: {$regex: new RegExp('^' +
 																													req.body.keyword.toLowerCase(), 'i')}});
 		if (searchresult.length == 0) {
+			req.flash('error', 'No user found');
 			res.render('searchuser_result', {
-				Message: 'No Match Found',
-				searchResult: []
+				searchResult: searchresult
 			});
 		} else {
 			let indexOfUser = searchresult.indexOf(req.user.username);
@@ -285,7 +284,7 @@ exports.searchUserGet = async function (req, res) {
 				let reverseFollowing = await Follower.getFollowers({username: req.user.username,
 					following: searchresult[i].username,
 					status: true});
-				console.log("reverseFollowing---->",reverseFollowing);
+				console.log('reverseFollowing---->', reverseFollowing);
 				let a = JSON.parse(JSON.stringify(searchresult[i]));
 				a['imageURL'] = editpath(searchresult[i].imageURL);
 				if (reverseFollowing == 0) {
@@ -300,9 +299,8 @@ exports.searchUserGet = async function (req, res) {
 			});
 		}
 	} else {
-		res.render('searchuser_result', {
-			Message: 'No Matched Found'
-		});
+		req.flash('error', 'No user found');
+		res.render('searchuser_result');
 	}
 };
 
@@ -391,6 +389,7 @@ exports.likePost = async function (req, res) {
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {
 				if (argument.nModified == 1) {
+					req.io.emit("like", {likeCount : likeCount , tweetId : req.body.id})
 					res.send({id: req.body.id, tweetcount: likeCount, status: 'Unlike'});
 				}
 			}).catch(function (argument) {
@@ -404,6 +403,7 @@ exports.likePost = async function (req, res) {
 		let likeCount = tweetlike.length;
 		await Feed.updateLike({ _id: req.body.id}, tweetlike)
 			.then(function (argument) {
+				req.io.emit("like", {likeCount : likeCount , tweetId : req.body.id})
 				res.send({id: req.body.id, tweetcount: likeCount, status: 'Like'});
 			}).catch(function (argument) {
 				console.log(argument);

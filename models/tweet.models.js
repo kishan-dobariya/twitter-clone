@@ -5,8 +5,7 @@ var FeedSchema = mongoose.Schema({
 		required: true
 	},
 	tweet: {
-		type: String,
-		required: true
+		type: String
 	},
 	status: {
 		type: String,
@@ -14,6 +13,9 @@ var FeedSchema = mongoose.Schema({
 	},
 	like: {
 		type: [String]
+	},
+	imageURL: {
+		type: String
 	},
 	createdAt: {
 		type: Date,

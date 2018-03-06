@@ -21,11 +21,12 @@
             <p><%= messages.error %></p>
           </div>
             <% } %>
-          <% for ( var i=0; i < searchResult.length; i++) { %>
-            <div style="padding:2px" class="col-md-3 col-sm-6 col-xs-12">
-              <div style="background-color:white;margin:0" class="card hovercard">
-                <div class="cardheader">
-                </div>
+          <% if ( searchResult ) { %>
+            <% for ( var i=0; i < searchResult.length; i++) { %>
+              <div style="padding:2px" class="col-md-3 col-sm-6 col-xs-12">
+                <div style="background-color:white;margin:0" class="card hovercard">
+                  <div class="cardheader">
+                  </div>
                 <div class="avatar">
                   <img alt="" src="<%= searchResult[i].imageURL %>">
                 </div>
@@ -40,7 +41,7 @@
                 </div>
               </div>
             </div>
-          <%}%>
+          <%}}%>
         </div>
       </div>
     </div>

@@ -11,11 +11,31 @@ const router = express.Router();
 const storage = multer.diskStorage({
 	destination: 'public/images/profilepics/',
 	filename: function (req, file, callback) {
-		callback(null, req.session.username + path.extname(file.originalname));
+		callback(null, req.user.username + path.extname(file.originalname));
 	}
 });
 const upload = multer({
 	storage: storage,
+	limits: {fileSize: 10000000},
+	fileFilter: function (req, file, cb) {
+		checkFileType(file, cb);
+	}
+});
+
+// IMAGE TWEET
+const storageImageTweet = multer.diskStorage({
+	destination: 'public/images/tweetImages/',
+	filename: function (req, file, callback) {
+		var text = '';
+	  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	  for (var i = 0; i < 5; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)); }
+		callback(null, text + path.extname(file.originalname));
+	}
+});
+
+const imageTweetUpload = multer({
+	storage: storageImageTweet,
 	limits: {fileSize: 10000000},
 	fileFilter: function (req, file, cb) {
 		checkFileType(file, cb);
@@ -67,8 +87,12 @@ router.get('/showprofile', require('connect-ensure-login').ensureLoggedIn(),
 router.get('/showFriendProfile', require('connect-ensure-login').ensureLoggedIn(),
 	homeController.showFriendProfileGet);
 // EDIT USER'S PROFILE
-router.post('/editprofile', upload.single('profilepicture'),
-	homeController.editprofilePost);
+router.post('/editprofile', (req, res, next) => {
+	console.log('req..........', req.body);
+	next();
+	// callback();
+}, upload.single('profilepicture'),
+homeController.editprofilePost);
 // MAKE FOLLOW-UNFOLLOW
 router.post('/follow', require('connect-ensure-login').ensureLoggedIn(),
 	homeController.addFollowerGet);
@@ -80,7 +104,14 @@ router.post('/searchUser', require('connect-ensure-login').ensureLoggedIn(),
 	homeController.searchUserGet);
 // INSERT NEW TWEET
 router.post('/insertfeed', require('connect-ensure-login').ensureLoggedIn(),
-	feedController.insertPost);
+	imageTweetUpload.single('imageTweet'), feedController.insertPost);
+// // INSERT NEW TWEET
+// router.post('/insertfeedImage', (req , res, callback) => {
+// 	console.log("insertfeed--------------<<<<<<<<<<<");
+// 	console.log("req.insertfeed--->",req.body);
+// 	callback();
+// }, require('connect-ensure-login').ensureLoggedIn(),
+// 	upload.single('pictureTweet'), feedController.insertPost);
 // EDIT TWEET
 router.post('/edittweet', require('connect-ensure-login').ensureLoggedIn(),
 	feedController.edittweetPost);

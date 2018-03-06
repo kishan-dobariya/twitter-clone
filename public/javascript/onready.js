@@ -9,8 +9,8 @@ $(document).ready(function(){
 	$("#tweet").focusin(function() {
 		$("#tweetbutton").show();
 	});
-	$("#tweet").focusout(function() {
-		$('#tweetbutton').delay(200).hide(0, function () {
-		});
-	});
+	// $("#tweet").focusout(function() {
+	// 	$('#tweetbutton').delay(200).hide(0, function () {
+	// 	});
+	// });
 });

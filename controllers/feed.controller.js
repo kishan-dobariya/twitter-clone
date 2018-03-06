@@ -10,16 +10,33 @@ function editpath (url) {
 
 // -----------------------INSERT TWEET--------------------------//
 exports.insertPost = async function (req, res, next) {
-	if (req.body.tweet !== '') {
-		let newTweet = new Feed({ username: req.user.username,
-			tweet: req.body.tweet,
-			status: 'new' });
+	if (req.body.tweet !== '' || req.file !== undefined) {
+		let newTweet;
+		if (req.file == undefined && req.body.tweet !== '') {
+			newTweet = new Feed({ username: req.user.username,
+				tweet: req.body.tweet,
+				status: 'new' });
+		} else if (req.file !== undefined && req.body.tweet == '') {
+			newTweet = new Feed({ username: req.user.username,
+				status: 'new',
+				imageURL: editpath(req.file.path)
+			});
+		} else {
+			newTweet = new Feed({ username: req.user.username,
+				tweet: req.body.tweet,
+				status: 'new',
+				imageURL: editpath(req.file.path)
+			});
+		}
 		await Feed.createTweet(newTweet, function (err, tweetInfo) {
 			if (err) {
 				throw err;
+			} else {
+				res.redirect('/home');
 			}
 		});
-		res.send();
+	} else {
+		res.redirect('/home');
 	}
 };
 

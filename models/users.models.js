@@ -88,18 +88,17 @@ module.exports.getUser = function (query) {
 						reject(err2);
 					}
 					if (result) {
-						if(!data.Status) {
-							resolve("Not verified");
-						}
-						else {
+						if (!data.Status) {
+							resolve('Not verified');
+						} else {
 							resolve(data);
 						}
 					} else {
-						resolve("Invalid password");
+						resolve('Invalid password');
 					}
 				});
 			} else {
-				resolve("Invalid username");
+				resolve('Invalid username');
 			}
 		});
 	});
