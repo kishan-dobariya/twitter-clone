@@ -12,8 +12,20 @@
   <body>
     <% include header %>
     <div class="container">
+      <% if ( messages.info) { %>
+        <div class="alert alert-info alert-dismissable" role="alert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p><%= messages.info %></p>
+        </div>
+          <% } %>
+          <% if ( messages.error) { %>
+        <div class="alert alert-danger alert-dismissable" role="alert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p><%= messages.error %></p>
+        </div>
+          <% } %>
       <h2>Enter your email</h2>
-      <form action="/resetpassword" method="post">
+      <form action="/getmail" method="post">
         <div class="form-group">
           <!-- <label for="email">Email:</label> -->
           <input type="email" class="form-control" id="email" onchange="return validateEmail()" placeholder="Enter Email" name="email" required>
