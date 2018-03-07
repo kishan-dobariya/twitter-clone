@@ -54,9 +54,13 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# dotenv environment variables file
+.env
+
 # Ds_Store
 .DS_Store
 
 public/images/profilepics/*
 public/images/tweetImages/*
 public/images/coverpics/*
+public/images/New folder/*

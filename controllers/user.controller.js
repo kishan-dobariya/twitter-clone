@@ -14,8 +14,8 @@ let transporter = nodemailer.createTransport({
 	secure: false,
 	port: 25,
 	auth: {
-		user: 'kishan.dobariya@bacancytechnology.com',
-		pass: 'KishaN.bt021'
+		user: process.env.EMAIL_ID,
+		pass: process.env.EMAIL_PASSWORD
 	},
 	tls: {
 		rejectUnauthorized: false
