@@ -22,6 +22,7 @@ let transporter = nodemailer.createTransport({
 	}
 });
 
+
 // ---------------------WHEN REDIRECT TO LOGIN PAGE---------------------------//
 exports.loginGet = function (req, res) {
 	if (req.user) {
