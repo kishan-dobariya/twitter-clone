@@ -60,3 +60,7 @@ typings/
 # Ds_Store
 .DS_Store
 
+public/images/profilepics/*
+public/images/tweetImages/*
+public/images/coverpics/*
+public/images/New folder/*

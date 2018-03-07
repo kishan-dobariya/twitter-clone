@@ -9,32 +9,49 @@
 </head>
 <body>
 <% include header %>
-<% typeof msg != 'undefined' ? msg : '' %>
 <section id="login">
-    <div class="container">
-      <div class="row">
-          <div class="col-xs-12">
-              <div class="form-wrap">
-                <h1>Log in</h1>
-                    <form role="form" action="/login" method="post" id="login-form" autocomplete="off">
-                        <div class="form-group">
-                            <label for="username" class="sr-only">Username</label>
-                            <input type="text" name="username" id="username" onchange="return validateUsername()" class="form-control" placeholder="enter username" required="">
-                        </div>
-                        <p id="usernameerror" style="color: red"> </p>
-                        <div class="form-group">
-                            <label for="Password" class="sr-only">Password</label>
-                            <input type="password" name="password" id="password" onchange="return validatePassword()" class="form-control" placeholder="enter Password" required>
-                        </div>
-                        <p id="passworderror" style="color: red"></p>
-                        <input type="submit" id="btn-login" onsubmit="return submit()" class="btn btn-custom btn-lg btn-block btn-primary" value="Log in">
-                        <button type="button" class="btn btn-xs btn-block btn-link"><a href="/resetpassword">Forgot password</a></button>
-                    </form>
-                    <hr>
-              </div>
-        </div> <!-- /.col-xs-12 -->
-      </div> <!-- /.row -->
-    </div> <!-- /.container -->
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <% if ( messages.info) { %>
+          <div class="alert alert-info alert-dismissable" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p><%= messages.info %></p>
+          </div>
+            <% } %>
+            <% if ( messages.error) { %>
+          <div class="alert alert-danger alert-dismissable" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p><%= messages.error %></p>
+          </div>
+            <% } %>
+            <% if ( messages.success) { %>
+          <div class="alert alert-success alert-dismissable" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p><%= messages.success %></p>
+          </div>
+            <% } %>
+            <div class="form-wrap">
+              <h1>Log in</h1>
+              <form role="form" action="/login" method="post" id="login-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="username" class="sr-only">Username</label>
+                    <input type="text" name="username" id="username" onchange="return validateUsername()" class="form-control" placeholder="Enter Username" required="">
+                </div>
+                <p id="usernameerror" style="color: red"> </p>
+                <div class="form-group">
+                  <label for="Password" class="sr-only">Password</label>
+                  <input type="password" name="password" id="password" onchange="return validatePassword()" class="form-control" placeholder="Enter Password" required>
+                </div>
+                <p id="passworderror" style="color: red"></p>
+                <input type="submit" id="btn-login" onsubmit="return submit()" class="btn btn-custom btn-lg btn-block btn-primary" value="Log in">
+                <button type="button" class="btn btn-xs btn-block btn-link"><a href="/getmail">Forgot password</a></button>
+              </form>
+              <hr>
+            </div>
+      </div> <!-- /.col-xs-12 -->
+    </div> <!-- /.row -->
+  </div> <!-- /.container -->
 </section>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

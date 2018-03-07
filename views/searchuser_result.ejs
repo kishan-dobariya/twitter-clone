@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <% include bootstrapcss %>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <style type="text/css">
+
+    </style>
+  </head>
+  <body class="container" style="width: 100%;margin:0;">
+    <div class="row" >
+      <% include home-header %>
+    </div>
+    <div class="container-fluid" id="main" style="width: 90%">
+      <div class="row">
+        <div class="col-xs-12">
+          <% if ( messages.error) { %>
+          <div class="alert alert-danger alert-dismissable" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p><%= messages.error %></p>
+          </div>
+            <% } %>
+          <% if ( searchResult ) { %>
+            <% for ( var i=0; i < searchResult.length; i++) { %>
+              <div style="padding:2px" class="col-md-3 col-sm-6 col-xs-12">
+                <div style="background-color:white;margin:0" class="card hovercard">
+                  <div class="cardheader">
+                  </div>
+                <div class="avatar">
+                  <img alt="" src="<%= searchResult[i].imageURL %>">
+                </div>
+                <div class="info">
+                  <div class="title">
+                    <a target="_blank" href="<%= searchResult[i].imageURL %>"> <%=searchResult[i].name%></a>
+                  </div>
+                  <div class="desc">@ <%= searchResult[i].username %></div>
+                  <button class="btn btn-primary" onclick="test(this);"
+                        id="<%= searchResult[i].username %>" value="<%= searchResult[i].username %>">
+                        <%= searchResult[i].reverseStatus %></button>
+                </div>
+              </div>
+            </div>
+          <%}}%>
+        </div>
+      </div>
+    </div>
+    <% include bootstrapjs %>
+    <script type="text/javascript" src="javascript/searchuser.js"></script>
+    <script type="text/javascript" src="javascript/onready.js"></script>
+    <script type="text/javascript" src="javascript/fixheader.js"></script>
+    <script type="text/javascript" src="javascript/followunfollow.js"></script>
+  </body>
+</html>
